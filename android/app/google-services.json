@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "338388910272",
+    "project_id": "fir-intro-mobile",
+    "storage_bucket": "fir-intro-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338388910272:android:f22e1e1ebe82f3057fad25",
+        "android_client_info": {
+          "package_name": "com.example.parkflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338388910272-77di43vv1kpct7rhmpoi4hdc57hffnrc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4FI4F-iaFalhEw5E_jZ8fpyhafPBwILE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338388910272-77di43vv1kpct7rhmpoi4hdc57hffnrc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
