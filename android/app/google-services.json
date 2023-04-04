@@ -29,6 +29,13 @@
             {
               "client_id": "338388910272-77di43vv1kpct7rhmpoi4hdc57hffnrc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "338388910272-vuq3ni1e07nhsctrcenetbsmtdo84paa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.parkflow"
+              }
             }
           ]
         }
