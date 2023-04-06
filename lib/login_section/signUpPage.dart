@@ -1,19 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
 
-import 'main.dart';
+import '../main.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  final Function() onClickedSignIn;
+
+  const SignUpPage({
+    Key? key,
+    required this.onClickedSignIn,
+  }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -21,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+
     super.dispose();
   }
 
@@ -55,22 +62,28 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             ElevatedButton.icon(
-              onPressed: signin,
-              icon: const Icon(Icons.lock),
+              onPressed: signUp,
+              icon: const Icon(Icons.arrow_forward),
               label: const Text(
-                'Sign in',
+                'Sign Up',
                 style: TextStyle(fontSize: 24),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('dont have account yet ?'),
-                TextButton(onPressed: () {}, child: const Text('Sign in')),
-              ],
+            RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black, fontSize: 20),
+                text: 'Alreadry have an account?  ',
+                children: [
+                  TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = widget.onClickedSignIn,
+                      text: 'Sign Up',
+                      style: TextStyle(color: Colors.amber))
+                ],
+              ),
             )
           ],
         ),
@@ -78,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future signin() async {
+  Future signUp() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -88,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
       //lading screen, niet aanraken
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseException catch (e) {
