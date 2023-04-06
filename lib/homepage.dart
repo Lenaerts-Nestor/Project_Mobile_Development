@@ -1,41 +1,37 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:parkflow/login.dart';
+import 'package:flutter/material.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({Key? key, required this.user}) : super(key: key);
+import 'components/signOutComp.dart';
 
-  final User? user;
-
-  @override
-  State<Homepage> createState() => _HomepageState();
-}
-
-class _HomepageState extends State<Homepage> {
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Homepage'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text('Welcome, ${widget.user!.email}!'),
+      appBar: AppBar(title: const Text('Home Page')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Signed In as',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                user.email!,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 40),
+              SignOutButton(),
+            ],
           ),
-          const SizedBox(height: 16),
-          Center(
-            child: TextButton(
-              onPressed: _signOut,
-              child: const Text('Sign out'),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

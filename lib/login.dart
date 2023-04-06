@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
 
+import 'main.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -54,11 +56,21 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton.icon(
               onPressed: signin,
-              icon: Icon(Icons.lock),
-              label: Text(
+              icon: const Icon(Icons.lock),
+              label: const Text(
                 'Sign in',
                 style: TextStyle(fontSize: 24),
               ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('dont have account yet ?'),
+                TextButton(onPressed: () {}, child: const Text('Sign in')),
+              ],
             )
           ],
         ),
@@ -67,12 +79,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future signin() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      //lading screen, niet aanraken
+    );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseException catch (e) {
-      print(e);
+      //nog aanpassen
     }
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
   }
 }
