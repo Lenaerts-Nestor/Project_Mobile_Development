@@ -1,6 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:parkflow/login_section/login.dart';
+import 'package:parkflow/login_section/loginPage.dart';
 import 'signUpPage.dart';
 
 class AuthPage extends StatefulWidget {

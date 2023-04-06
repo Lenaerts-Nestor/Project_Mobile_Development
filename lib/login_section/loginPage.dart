@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:parkflow/login_section/forgotPasswordPage.dart';
 
 import '../main.dart';
 
@@ -69,18 +70,34 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(
+              height: 24,
+            ),
+            GestureDetector(
+              child: const Text(
+                'Forgot Password',
+                style: TextStyle(color: Colors.blue, fontSize: 20),
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordPage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
               height: 10,
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: const TextStyle(color: Colors.black, fontSize: 20),
                 text: 'No account?  ',
                 children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
                         ..onTap = widget.onClickSignUp,
                       text: 'Sign Up',
-                      style: TextStyle(color: Colors.amber))
+                      style: const TextStyle(color: Colors.amber))
                 ],
               ),
             )
