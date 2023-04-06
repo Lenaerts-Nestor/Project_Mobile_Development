@@ -54,11 +54,21 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton.icon(
               onPressed: signin,
-              icon: Icon(Icons.lock),
-              label: Text(
+              icon: const Icon(Icons.lock),
+              label: const Text(
                 'Sign in',
                 style: TextStyle(fontSize: 24),
               ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('dont have account yet ?'),
+                TextButton(onPressed: () {}, child: const Text('Sign in')),
+              ],
             )
           ],
         ),
