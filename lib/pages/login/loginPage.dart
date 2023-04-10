@@ -4,22 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:parkflow/pages/login/forgotPasswordPage.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
-class SignUpPage extends StatefulWidget {
-  final Function() onClickedSignIn;
+class LoginPage extends StatefulWidget {
+  final VoidCallback onClickSignUp;
 
-  const SignUpPage({
+  const LoginPage({
     Key? key,
-    required this.onClickedSignIn,
+    required this.onClickSignUp,
   }) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -27,7 +28,6 @@ class _SignUpPageState extends State<SignUpPage> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-
     super.dispose();
   }
 
@@ -62,26 +62,42 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 10,
             ),
             ElevatedButton.icon(
-              onPressed: signUp,
-              icon: const Icon(Icons.arrow_forward),
+              onPressed: signin,
+              icon: const Icon(Icons.login),
               label: const Text(
-                'Sign Up',
+                'Sign in',
                 style: TextStyle(fontSize: 24),
               ),
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            GestureDetector(
+              child: const Text(
+                'Forgot Password',
+                style: TextStyle(color: Colors.blue, fontSize: 20),
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordPage(),
+                  ),
+                );
+              },
             ),
             const SizedBox(
               height: 10,
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(color: Colors.black, fontSize: 20),
-                text: 'Alreadry have an account?  ',
+                style: const TextStyle(color: Colors.black, fontSize: 20),
+                text: 'No account?  ',
                 children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
-                        ..onTap = widget.onClickedSignIn,
+                        ..onTap = widget.onClickSignUp,
                       text: 'Sign Up',
-                      style: TextStyle(color: Colors.amber))
+                      style: const TextStyle(color: Colors.amber))
                 ],
               ),
             )
@@ -91,7 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future signUp() async {
+  Future signin() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -101,7 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
       //lading screen, niet aanraken
     );
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseException catch (e) {
