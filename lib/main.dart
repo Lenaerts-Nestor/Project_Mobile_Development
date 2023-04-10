@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/firebase_options.dart';
 
 import 'package:parkflow/login_section/loginPage.dart';
-import 'package:parkflow/mainpage.dart';
+import 'package:parkflow/login_section/entrancePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
