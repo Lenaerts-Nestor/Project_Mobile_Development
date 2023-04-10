@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:parkflow/model/userModel.dart';
 
 import '../../../main.dart';
 
@@ -72,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ElevatedButton.icon(
               icon: const Icon(Icons.arrow_forward),
               label: const Text(
-                'Sign Up',
+                'Create account',
                 style: TextStyle(fontSize: 24),
               ),
               onPressed: () {
@@ -103,22 +104,29 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future signUp({required String name}) async {
-    final docUser =
-        FirebaseFirestore.instance.collection('users').doc('user' + name);
-    final json = {
-      'name': name,
-      'email': emailController.text.trim(),
-      'password': passwordController.text.trim()
-    };
+    //referentie naar document in firebase.
+    final docUser = FirebaseFirestore.instance.collection('users').doc();
 
+    //informatie creeren
+    final user = User_account(
+        name: name,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+        id: docUser.id);
+
+    //converteren naar json
+    final json = user.tojson();
+
+    //lading screen, niet aanraken
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
-      //lading screen, niet aanraken
     );
+
+    //account aanmaken
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
@@ -126,6 +134,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseException catch (e) {
       //nog aanpassen
     }
+    //creer document en schrijf het op firebase collection.
     await docUser.set(json);
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
