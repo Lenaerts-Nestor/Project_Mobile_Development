@@ -37,28 +37,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: 1,
-        selectedItemColor: _isPressed ? Colors.blue : null,
-        onTap: (int index) {
-          // niks doen als de knop van settings opnieuw ingedrukt wordt:
-          if (index == 1 && !_isPressed) {
-            setState(() {
-              _isPressed = true;
-            });
-          }
-        },
-      ),
     );
   }
 }

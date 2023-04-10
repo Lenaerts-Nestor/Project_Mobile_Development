@@ -1,48 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:parkflow/homepage.dart';
-import 'package:parkflow/instellingen_section/settingsPage.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
-class NavigationBarComp extends StatefulWidget {
-  const NavigationBarComp({Key? key, required this.onTabSelected})
-      : super(key: key);
-
-  final ValueChanged<int> onTabSelected;
-
-  @override
-  _NavigationBarState createState() => _NavigationBarState();
-}
-
-class _NavigationBarState extends State<NavigationBarComp> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _pages = [
-    const HomePage(),
-    const SettingsPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    widget.onTabSelected(index);
-  }
+class MyNavigationBar extends StatelessWidget {
+  void Function(int)? onTabChange;
+  MyNavigationBar({super.key, required this.onTabChange});
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map_outlined),
-          label: 'Map',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: GNav(
+        onTabChange: (value) => onTabChange!(value),
+        activeColor: Colors.cyan[300],
+        tabActiveBorder: Border.all(color: Colors.black),
+        gap: 8,
+        tabs: const [
+          GButton(
+            icon: Icons.map,
+            text: 'Map',
+          ),
+          GButton(
+            icon: Icons.favorite,
+            text: 'Favoriet',
+          ),
+          GButton(
+            icon: Icons.directions_car_outlined,
+            text: 'Parking',
+          ),
+          GButton(
+            icon: Icons.settings,
+            text: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 }
