@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:parkflow/pages/settings/profielPage.dart';
 import '../../components/signOutComp.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -19,8 +22,15 @@ class _SettingsPageState extends State<SettingsPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: () {},
-              child: const Text('Button 1'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfielPage(),
+                  ),
+                );
+              },
+              child: const Text('Login'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -32,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {},
               child: const Text('Button 3'),
             ),
+            const SizedBox(height: 50),
             const SignOutButton()
           ],
         ),

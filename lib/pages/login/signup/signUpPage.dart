@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:parkflow/model/userModel.dart';
 
 import '../../../main.dart';
 
@@ -22,7 +24,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final controller = TextEditingController();
   @override
   void dispose() {
     emailController.dispose();
@@ -39,6 +41,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              controller: controller,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                labelText: 'Naam',
+              ),
+            ),
             const SizedBox(height: 20),
             TextField(
               controller: emailController,
@@ -59,15 +68,18 @@ class _SignUpPageState extends State<SignUpPage> {
               obscureText: true,
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             ElevatedButton.icon(
-              onPressed: signUp,
               icon: const Icon(Icons.arrow_forward),
               label: const Text(
-                'Sign Up',
+                'Create account',
                 style: TextStyle(fontSize: 24),
               ),
+              onPressed: () {
+                final name = controller.text;
+                signUp(name: name);
+              },
             ),
             const SizedBox(
               height: 10,
@@ -91,15 +103,30 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future signUp() async {
+  Future signUp({required String name}) async {
+    //referentie naar document in firebase.
+    final docUser = FirebaseFirestore.instance.collection('users').doc();
+
+    //informatie creeren
+    final user = User_account(
+        name: name,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+        id: docUser.id);
+
+    //converteren naar json
+    final json = user.tojson();
+
+    //lading screen, niet aanraken
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
-      //lading screen, niet aanraken
     );
+
+    //account aanmaken
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
@@ -107,6 +134,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseException catch (e) {
       //nog aanpassen
     }
+    //creer document en schrijf het op firebase collection.
+    await docUser.set(json);
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
     //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
