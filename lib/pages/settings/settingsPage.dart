@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/signOutComp.dart';
+import '../../components/signOutComp.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

@@ -3,9 +3,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:parkflow/homepage.dart';
-import 'package:parkflow/login_section/loginPage.dart';
-import 'package:parkflow/login_section/authentication.dart';
+import 'package:parkflow/pages/home/homepage.dart';
+import 'package:parkflow/pages/login/loginPage.dart';
+import 'package:parkflow/pages/login/authentication/authentication.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});

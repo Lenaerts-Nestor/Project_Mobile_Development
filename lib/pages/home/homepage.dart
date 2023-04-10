@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/navigationbar.dart';
-import 'package:parkflow/instellingen_section/settingsPage.dart';
-import 'package:parkflow/map_section/map.dart';
-
-import 'components/signOutComp.dart';
+import 'package:parkflow/pages/settings/settingsPage.dart';
+import 'package:parkflow/pages/map/map.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
