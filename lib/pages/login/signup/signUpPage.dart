@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final controller = TextEditingController();
   @override
   void dispose() {
     emailController.dispose();
@@ -39,6 +40,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              controller: controller,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                labelText: 'Naam',
+              ),
+            ),
             const SizedBox(height: 20),
             TextField(
               controller: emailController,
@@ -59,15 +67,18 @@ class _SignUpPageState extends State<SignUpPage> {
               obscureText: true,
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             ElevatedButton.icon(
-              onPressed: signUp,
               icon: const Icon(Icons.arrow_forward),
               label: const Text(
                 'Sign Up',
                 style: TextStyle(fontSize: 24),
               ),
+              onPressed: () {
+                final name = controller.text;
+                signUp(name: name);
+              },
             ),
             const SizedBox(
               height: 10,
@@ -91,7 +102,15 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future signUp() async {
+  Future signUp({required String name}) async {
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc('user' + name);
+    final json = {
+      'name': name,
+      'email': emailController.text.trim(),
+      'password': passwordController.text.trim()
+    };
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -107,6 +126,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseException catch (e) {
       //nog aanpassen
     }
+    await docUser.set(json);
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
     //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN

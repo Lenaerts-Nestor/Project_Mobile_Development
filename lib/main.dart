@@ -11,6 +11,7 @@ import 'package:parkflow/pages/login/entrancePage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
   runApp(MainApp());
 }
 
