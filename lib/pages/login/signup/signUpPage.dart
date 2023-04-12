@@ -109,13 +109,14 @@ class _SignUpPageState extends State<SignUpPage> {
     //informatie creeren
     final user = User_account(
       name: name,
+      id: docUser.id,
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
       familiename: '',
     );
 
     //converteren naar json
-    final json = user.tojson();
+    final json = user.toJson();
 
     //lading screen, niet aanraken
     showDialog(

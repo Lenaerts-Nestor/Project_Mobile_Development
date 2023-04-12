@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/user.dart';
+import 'addVehiclesPage.dart';
 
 class VehiclesPage extends StatefulWidget {
   const VehiclesPage({Key? key}) : super(key: key);
@@ -14,7 +17,6 @@ class VehiclesPage extends StatefulWidget {
 class _voertuigenPageState extends State<VehiclesPage> {
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Voertuigen'),
@@ -23,20 +25,17 @@ class _voertuigenPageState extends State<VehiclesPage> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<List<User_account>>(
-              stream: readUsers(),
+            child: FutureBuilder(
+              future: readUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  late final users = snapshot.data!;
-                  return ListView(
-                    children: users.map(buildUsers).toList(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('error ${snapshot.error}'),
-                  );
+                  late final user = snapshot.data;
+
+                  return user == null
+                      ? Center(child: Text('user is empty'))
+                      : buildUsers(user);
                 } else {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Text('no data yet'));
                 }
               },
             ),
@@ -46,7 +45,11 @@ class _voertuigenPageState extends State<VehiclesPage> {
             height: 50,
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddVehicle()),
+                );
+              },
               child: const Text('Add vehicles'),
             ),
           ),
@@ -55,15 +58,31 @@ class _voertuigenPageState extends State<VehiclesPage> {
     );
   }
 
-  //info lezen van database
+  //lees alle users in collectie 'users'
   Stream<List<User_account>> readUsers() =>
       FirebaseFirestore.instance.collection('users').snapshots().map((event) =>
           event.docs.map((e) => User_account.fromJson(e.data())).toList());
 
+  //lees één user.
+  Future<User_account?> readUser() async {
+    final userId = FirebaseAuth.instance.currentUser!;
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userId.uid);
+    final snapshot = await docUser.get();
+    if (snapshot.exists) {
+      return User_account.fromJson(snapshot.data()!);
+    }
+    return null;
+  }
+
   // testen om info af te halen van database alle users.
-  Widget buildUsers(User_account user) => ListTile(
-        leading: CircleAvatar(child: Text('${user.familiename}')),
-        title: Text(user.name),
-        subtitle: Text(user.email),
+  Widget buildUsers(User_account user) => Container(
+        color: Colors.black38,
+        child: ListTile(
+          onTap: () {},
+          leading: Icon(Icons.directions_car_filled, color: Colors.white),
+          title: Text(user.name, style: TextStyle(color: Colors.white)),
+          subtitle: Text(user.email, style: TextStyle(color: Colors.white)),
+        ),
       );
 }
