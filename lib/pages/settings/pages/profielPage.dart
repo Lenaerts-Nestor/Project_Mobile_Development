@@ -16,17 +16,12 @@ class _ProfielPageState extends State<ProfielPage> {
     late final user = FirebaseAuth.instance.currentUser!;
     return Center(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Profiel'),
-          centerTitle: true,
-        ),
         body: Center(
           child: Column(
             children: [
               SizedBox(
                 height: 30,
               ),
-              
             ],
           ),
         ),
