@@ -3,25 +3,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class User_account {
-  String id;
   final String name;
   final String email;
   final String password;
+  final String familiename;
 
   User_account({
-    this.id = '',
+    required this.familiename,
     required this.name,
     required this.email,
     required this.password,
   });
 
   //dit is om info te schrijven naar database
-  Map<String, dynamic> tojson() =>
-      {'id': id, 'name': name, 'email': email, 'password': password};
+  Map<String, dynamic> tojson() => {
+        'name': name,
+        'email': email,
+        'password': password,
+        'familiename': familiename
+      };
 
   //aanvragen informatie van de database.
   static User_account fromJson(Map<String, dynamic> json) => User_account(
-      id: json['id'],
+      familiename: json['familiename'],
       name: json['name'],
       email: json['email'],
       password: json['password']);
