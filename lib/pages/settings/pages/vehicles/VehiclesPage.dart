@@ -24,36 +24,33 @@ class _voertuigenPageState extends State<VehiclesPage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: FutureBuilder(
-              future: readUser(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  late final user = snapshot.data;
+          FutureBuilder<User_account?>(
+            future: readUser(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final user = snapshot.data;
 
-                  return user == null
-                      ? Center(child: Text('user is empty'))
-                      : buildUsers(user);
-                } else {
-                  return const Center(child: Text('no data yet'));
-                }
-              },
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 5),
-            height: 50,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddVehicle()),
-                );
-              },
-              child: const Text('Add vehicles'),
-            ),
+                return user == null
+                    ? Center(child: Text('user is empty'))
+                    : buildUsers(user);
+              } else {
+                return const Center(child: Text('no data yet'));
+              }
+            },
           ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        height: 50,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddVehicle()),
+            );
+          },
+          child: const Text('Add vehicles'),
+        ),
       ),
     );
   }

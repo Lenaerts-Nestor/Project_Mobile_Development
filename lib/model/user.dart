@@ -1,14 +1,11 @@
 // ignore_for_file: camel_case_types
 
-import 'vehicles.dart';
-
 class User_account {
   final String id;
   final String name;
   final String email;
   final String password;
   final String familiename;
-  final List<Vehicle> vehicles;
 
   User_account({
     required this.id,
@@ -16,7 +13,6 @@ class User_account {
     required this.name,
     required this.email,
     required this.password,
-    this.vehicles = const [],
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,7 +20,6 @@ class User_account {
         'email': email,
         'password': password,
         'familiename': familiename,
-        'vehicles': vehicles.map((v) => v.toJson()).toList(),
         'id': id,
       };
 
@@ -33,9 +28,6 @@ class User_account {
         name: json['name'] as String,
         email: json['email'] as String,
         password: json['password'] as String,
-        vehicles: (json['vehicles'] as List<dynamic>)
-            .map((v) => Vehicle.fromJson(v))
-            .toList(),
         id: json['id'],
       );
 }

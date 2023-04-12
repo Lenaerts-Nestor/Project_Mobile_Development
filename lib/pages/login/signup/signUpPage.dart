@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../../model/user.dart';
 
+//bekijk authentication om te kijken welke mails zijn al bezet...........
+
 class SignUpPage extends StatefulWidget {
   final Function() onClickedSignIn;
 
@@ -44,7 +46,15 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: namecontroller,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
-                labelText: 'Naam',
+                labelText: 'Name',
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: familienamecontroller,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                labelText: 'FamilieName',
               ),
             ),
             const SizedBox(height: 20),
@@ -77,7 +87,9 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               onPressed: () {
                 final name = namecontroller.text;
-                signUp(name: name);
+                final familiename = familienamecontroller.text;
+
+                signUp(name: name, familiename: familiename);
               },
             ),
             const SizedBox(
@@ -85,14 +97,14 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: const TextStyle(color: Colors.black, fontSize: 20),
                 text: 'Alreadry have an account?  ',
                 children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
                         ..onTap = widget.onClickedSignIn,
                       text: 'Sign Up',
-                      style: TextStyle(color: Colors.amber))
+                      style: const TextStyle(color: Colors.amber))
                 ],
               ),
             )
@@ -102,22 +114,10 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future signUp({required String name}) async {
-    //referentie naar document in firebase.
-    final docUser = FirebaseFirestore.instance.collection('users').doc();
-
-    //informatie creeren
-    final user = User_account(
-      name: name,
-      id: docUser.id,
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-      familiename: '',
-    );
-
-    //converteren naar json
-    final json = user.toJson();
-
+  Future signUp({
+    required String name,
+    required String familiename,
+  }) async {
     //lading screen, niet aanraken
     showDialog(
       context: context,
@@ -132,11 +132,32 @@ class _SignUpPageState extends State<SignUpPage> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+
+      //als het aanmaken van account lukt gebuert er de volgende =>
+
+      final firebaseUser = await FirebaseAuth.instance.currentUser;
+
+      //referentie naar document in firebase.
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid);
+
+      //informatie creeren
+      final user = User_account(
+        id: docUser.id,
+        name: name,
+        familiename: familiename,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      //converteren naar json
+      final json = user.toJson();
+      //creer document en schrijf het op firebase collection.
+      await docUser.set(json);
     } on FirebaseException catch (e) {
-      //nog aanpassen
+      print(e);
+      return;
     }
-    //creer document en schrijf het op firebase collection.
-    await docUser.set(json);
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
     //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
