@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:parkflow/firebase_options.dart';
-
-import 'package:parkflow/pages/login/loginPage.dart';
 import 'package:parkflow/pages/login/entrancePage.dart';
 
 Future<void> main() async {
