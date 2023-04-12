@@ -2,8 +2,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class ProfielPage extends StatefulWidget {
   const ProfielPage({super.key});
@@ -15,7 +13,7 @@ class ProfielPage extends StatefulWidget {
 class _ProfielPageState extends State<ProfielPage> {
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+    late final user = FirebaseAuth.instance.currentUser!;
     return Center(
       child: Scaffold(
         appBar: AppBar(
@@ -28,6 +26,7 @@ class _ProfielPageState extends State<ProfielPage> {
               SizedBox(
                 height: 30,
               ),
+              
             ],
           ),
         ),
