@@ -21,7 +21,9 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final controller = TextEditingController();
+  final namecontroller = TextEditingController();
+  final familienamecontroller = TextEditingController();
+
   @override
   void dispose() {
     emailController.dispose();
@@ -39,7 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: controller,
+              controller: namecontroller,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 labelText: 'Naam',
@@ -74,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 style: TextStyle(fontSize: 24),
               ),
               onPressed: () {
-                final name = controller.text;
+                final name = namecontroller.text;
                 signUp(name: name);
               },
             ),
@@ -106,13 +108,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
     //informatie creeren
     final user = User_account(
-        name: name,
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-        id: docUser.id);
+      name: name,
+      id: docUser.id,
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      familiename: '',
+    );
 
     //converteren naar json
-    final json = user.tojson();
+    final json = user.toJson();
 
     //lading screen, niet aanraken
     showDialog(

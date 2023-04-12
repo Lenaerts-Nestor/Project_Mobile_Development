@@ -1,19 +1,21 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfielPage extends StatefulWidget {
-  const ProfielPage({super.key});
+  const ProfielPage({Key? key}) : super(key: key);
 
   @override
-  State<ProfielPage> createState() => _ProfielPageState();
+  _ProfielPageState createState() => _ProfielPageState();
 }
 
 class _ProfielPageState extends State<ProfielPage> {
   @override
   Widget build(BuildContext context) {
-    late final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser!;
+    final userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+
     return Center(
       child: Scaffold(
         body: Center(
@@ -22,6 +24,17 @@ class _ProfielPageState extends State<ProfielPage> {
               SizedBox(
                 height: 30,
               ),
+              StreamBuilder<DocumentSnapshot>(
+                stream: userDocRef.snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  final userDoc = snapshot.data!;
+                  final userId = userDoc.id;
+                  return Text(userId);
+                },
+              )
             ],
           ),
         ),

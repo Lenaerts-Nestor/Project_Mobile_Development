@@ -1,28 +1,41 @@
-// ignore_for_file: file_names
+// ignore_for_file: camel_case_types
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'vehicles.dart';
 
 class User_account {
-  String id;
+  final String id;
   final String name;
   final String email;
   final String password;
+  final String familiename;
+  final List<Vehicle> vehicles;
 
   User_account({
-    this.id = '',
+    required this.id,
+    required this.familiename,
     required this.name,
     required this.email,
     required this.password,
+    this.vehicles = const [],
   });
 
-  //dit is om info te schrijven naar database
-  Map<String, dynamic> tojson() =>
-      {'id': id, 'name': name, 'email': email, 'password': password};
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'email': email,
+        'password': password,
+        'familiename': familiename,
+        'vehicles': vehicles.map((v) => v.toJson()).toList(),
+        'id': id,
+      };
 
-  //aanvragen informatie van de database.
   static User_account fromJson(Map<String, dynamic> json) => User_account(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      password: json['password']);
+        familiename: json['familiename'] as String,
+        name: json['name'] as String,
+        email: json['email'] as String,
+        password: json['password'] as String,
+        vehicles: (json['vehicles'] as List<dynamic>)
+            .map((v) => Vehicle.fromJson(v))
+            .toList(),
+        id: json['id'],
+      );
 }
