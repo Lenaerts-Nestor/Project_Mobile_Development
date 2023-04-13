@@ -1,9 +1,8 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, unused_local_variable
+// ignore_for_file: file_names, library_private_types_in_public_api, unused_local_variable, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:parkflow/model/user.dart';
 import 'package:parkflow/model/vehicle.dart';
 
 class AddVehicle extends StatefulWidget {

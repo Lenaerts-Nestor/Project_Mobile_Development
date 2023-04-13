@@ -30,9 +30,11 @@ class _ProfielPageState extends State<ProfielPage> {
                         ? const Center(child: Text('user is empty'))
                         : Container(
                             child: Center(
-                              child: Column(
-                                children: [Text(user.email)],
-                              ),
+                              child: Column(children: [
+                                Text(user.email),
+                                Text(user.name),
+                                Text(user.familiename),
+                              ]),
                             ),
                           );
                   } else {
@@ -49,9 +51,8 @@ class _ProfielPageState extends State<ProfielPage> {
 
   Future<User_account?> readUser() async {
     final userId = FirebaseAuth.instance.currentUser!;
-    final docUser = FirebaseFirestore.instance
-        .collection('users')
-        .doc('');
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userId.uid);
     final snapshot = await docUser.get();
     if (snapshot.exists) {
       return User_account.fromJson(snapshot.data()!);

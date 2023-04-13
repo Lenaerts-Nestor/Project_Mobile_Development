@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/navigationbar.dart';
+import 'package:parkflow/pages/map/map.dart';
 import 'package:parkflow/pages/settings/settingsMain.dart';
-import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     //map page?
-    VehiclesPage(),
+    MapPage(),
     //setting page?
     SettingsPage(),
     //nog extra pages ?
