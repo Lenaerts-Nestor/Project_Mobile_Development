@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:parkflow/model/vehicle.dart';
 
 import '../../../../model/user.dart';
 import 'addVehiclesPage.dart';
@@ -49,13 +50,19 @@ class _VehiclesPageState extends State<VehiclesPage> {
                             subtitle: Text(vehicle.address,
                                 style: const TextStyle(color: Colors.black)),
                             onTap: () {},
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                deleteVehicle(user.id, vehicle);
+                              },
+                            ),
                           ),
                         ),
                       );
                     },
                   );
                 } else {
-                  return const Center(child: Text('no data availble'));
+                  return const Center(child: Text('no data available'));
                 }
               },
             ),
@@ -99,6 +106,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
           vehicles: [],
         );
       }
+    });
+  }
+  //methode om vehicles te verwijderen en simple te houden.
+  Future<void> deleteVehicle(String userId, Vehicle vehicle) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
+    await docUser.update({
+      'vehicles': FieldValue.arrayRemove([vehicle.toJson()])
     });
   }
 }
