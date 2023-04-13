@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/signOutComp.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
+import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _showDefaultPage = true;
   bool _showProfielPage = false;
+  bool _showVehiclesPage = false;
 
   void _onButton1Pressed() {
     setState(() {
@@ -22,10 +24,18 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  void _onButton2Pressed() {
+    setState(() {
+      _showDefaultPage = false;
+      _showVehiclesPage = true;
+    });
+  }
+
   void _onBackButtonPressed() {
     setState(() {
       _showDefaultPage = true;
       _showProfielPage = false;
+      _showVehiclesPage = false; // reset the vehicles page flag as well
     });
   }
 
@@ -34,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        leading: _showProfielPage
+        leading: (_showProfielPage || _showVehiclesPage) // check both flags
             ? IconButton(
                 onPressed: _onBackButtonPressed,
                 icon: const Icon(Icons.arrow_back),
@@ -54,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _onButton2Pressed,
                         child: const Text('Button 2'),
                       ),
                       const SizedBox(height: 20),
@@ -69,6 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 )
               : const SizedBox.shrink(),
           _showProfielPage ? const ProfielPage() : const SizedBox.shrink(),
+          _showVehiclesPage ? const VehiclesPage() : const SizedBox.shrink(),
         ],
       ),
     );

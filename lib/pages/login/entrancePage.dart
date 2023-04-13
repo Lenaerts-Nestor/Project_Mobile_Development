@@ -1,10 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:parkflow/pages/home/homepage.dart';
-import 'package:parkflow/pages/login/loginPage.dart';
 import 'package:parkflow/pages/login/authentication/authentication.dart';
 
 class MainPage extends StatelessWidget {
