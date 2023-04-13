@@ -1,6 +1,10 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, unused_local_variable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:parkflow/model/user.dart';
+import 'package:parkflow/model/vehicle.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -25,7 +29,7 @@ class _AddVehicleState extends State<AddVehicle> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Vehicle'),
+        title: const Text('Voeg een voertuig toe'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,11 +44,11 @@ class _AddVehicleState extends State<AddVehicle> {
               TextFormField(
                 controller: _licensePlateController,
                 decoration: const InputDecoration(
-                  labelText: 'License Plate',
+                  labelText: 'Nummerplaat',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a license plate';
+                    return 'Gelieve een nummerplaat in te voeren';
                   }
                   return null;
                 },
@@ -55,11 +59,11 @@ class _AddVehicleState extends State<AddVehicle> {
               TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(
-                  labelText: 'Address',
+                  labelText: 'Adres',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an address';
+                    return 'Gelieve een adres in te voeren';
                   }
                   return null;
                 },
@@ -70,15 +74,59 @@ class _AddVehicleState extends State<AddVehicle> {
                 height: 60,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      // inputs bewaren =>
                       final licensePlate = _licensePlateController.text;
                       final address = _addressController.text;
 
-                      Navigator.of(context).pop();
+                      // de user van firebase halen =>
+                      final firebaseUser = FirebaseAuth.instance.currentUser;
+                      final userDoc = FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(firebaseUser!.uid);
+
+                      // de inhoud van vehicles bekijken en bewaren =>
+                      final userSnap = await userDoc.get();
+                      final existingVehicles =
+                          userSnap.get('vehicles') as List<dynamic>;
+
+                      // Creer de vehicle met de inputs =>
+                      final newVehicle = Vehicle(
+                        licensePlate: licensePlate,
+                        address: address,
+                      );
+
+                      // controleren als de licensePlate bestaat al =>
+                      final licensePlateExists = existingVehicles
+                          .any((v) => v['licensePlate'] == licensePlate);
+
+                      if (!licensePlateExists) {
+                        // voeg de vehicle in de array die al bestaat, opletten als een user de vehicles array
+                        // niet in heeft zal het niet werken
+                        existingVehicles.add(newVehicle.toJson());
+
+                        // update de user document
+                        await userDoc.update({'vehicles': existingVehicles});
+
+                        // een message aangeven dat het gelukt is =>
+                        //TODO: scaffoldmessenger over all zetten bij login ofzo.
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('vehicle is added!')),
+                        );
+
+                        // terug naar de pagina voertuigen
+                        Navigator.of(context).pop();
+                      } else {
+                        // als de array licensplaat bestaat
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('licensePlate bestaat al!')),
+                        );
+                      }
                     }
                   },
-                  child: const Text('Save Vehicle'),
+                  child: const Text('Add ur vehicle'),
                 ),
               ),
             ],

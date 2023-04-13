@@ -23,6 +23,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  //controllers => 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final namecontroller = TextEditingController();
@@ -143,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final docUser =
           FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid);
 
-      //informatie creeren
+      //informatie creeren van user
       final user = User_account(
         id: docUser.id,
         name: name,
