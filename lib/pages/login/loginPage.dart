@@ -1,9 +1,9 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:parkflow/pages/login/forgotPasswordPage.dart';
 
 import '../../main.dart';
@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseException catch (e) {
-      //nog aanpassen
+      print(e);
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);

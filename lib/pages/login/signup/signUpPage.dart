@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -135,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       //als het aanmaken van account lukt gebuert er de volgende =>
 
-      final firebaseUser = await FirebaseAuth.instance.currentUser;
+      final firebaseUser = FirebaseAuth.instance.currentUser;
 
       //referentie naar document in firebase.
       final docUser =

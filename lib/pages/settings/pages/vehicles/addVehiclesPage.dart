@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api, unused_local_variable
+
 import 'package:flutter/material.dart';
 
 class AddVehicle extends StatefulWidget {
@@ -23,7 +25,7 @@ class _AddVehicleState extends State<AddVehicle> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Vehicle'),
+        title: const Text('Add Vehicle'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -32,12 +34,12 @@ class _AddVehicleState extends State<AddVehicle> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               TextFormField(
                 controller: _licensePlateController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'License Plate',
                 ),
                 validator: (value) {
@@ -47,12 +49,12 @@ class _AddVehicleState extends State<AddVehicle> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               TextFormField(
                 controller: _addressController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Address',
                 ),
                 validator: (value) {
@@ -62,9 +64,9 @@ class _AddVehicleState extends State<AddVehicle> {
                   return null;
                 },
               ),
-              SizedBox(height: 50.0),
+              const SizedBox(height: 50.0),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 40),
+                margin: const EdgeInsets.symmetric(horizontal: 40),
                 height: 60,
                 width: double.infinity,
                 child: ElevatedButton(
@@ -72,11 +74,11 @@ class _AddVehicleState extends State<AddVehicle> {
                     if (_formKey.currentState!.validate()) {
                       final licensePlate = _licensePlateController.text;
                       final address = _addressController.text;
-                      // TODO: Save the vehicle to the database
+
                       Navigator.of(context).pop();
                     }
                   },
-                  child: Text('Save Vehicle'),
+                  child: const Text('Save Vehicle'),
                 ),
               ),
             ],

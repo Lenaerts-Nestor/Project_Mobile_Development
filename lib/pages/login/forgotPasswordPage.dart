@@ -1,7 +1,7 @@
+// ignore_for_file: file_names
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../main.dart';
 
@@ -26,10 +26,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forgot password area'),
+        title: const Text('Forgot password area'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: formkey,
           child: Column(
@@ -37,9 +37,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             children: [
               TextField(
                 controller: emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton.icon(

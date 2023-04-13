@@ -1,6 +1,6 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class MyNavigationBar extends StatelessWidget {
@@ -10,7 +10,7 @@ class MyNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.only(bottom: 5.0),
       child: GNav(
         onTabChange: (value) => onTabChange!(value),
         activeColor: Colors.cyan[300],
