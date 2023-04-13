@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, avoid_unnecessary_containers, unused_local_variable
+// ignore_for_file: file_names, library_private_types_in_public_api
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,16 @@ class ProfielPage extends StatefulWidget {
 }
 
 class _ProfielPageState extends State<ProfielPage> {
+  //controllers =>
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController familyNameController = TextEditingController();
+  bool _isChanged = false;
+  //bewaren de initial data, want anders krijgen we rare bugs
+  String? initialEmail;
+  String? initialName;
+  String? initialFamilyName;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -23,17 +33,35 @@ class _ProfielPageState extends State<ProfielPage> {
               FutureBuilder<User_account?>(
                 future: readUser(),
                 builder: (context, snapshot) {
+                  //controls met if =>
                   if (snapshot.hasData) {
                     final user = snapshot.data;
-
+                    //als het leeg is zetten we '' om errors te voorkomen
+                    if (initialEmail == null) {
+                      initialEmail = user?.email;
+                      emailController.text = initialEmail ?? '';
+                    }
+                    if (initialName == null) {
+                      initialName = user?.name;
+                      nameController.text = initialName ?? '';
+                    }
+                    if (initialFamilyName == null) {
+                      initialFamilyName = user?.familiename;
+                      familyNameController.text = initialFamilyName ?? '';
+                    }
+                    //kijken als de user leeg is, anders =>
                     return user == null
                         ? const Center(child: Text('user is empty'))
                         : Container(
+                            margin: const EdgeInsets.all(16.0),
                             child: Center(
                               child: Column(children: [
-                                Text(user.email),
-                                Text(user.name),
-                                Text(user.familiename),
+                                _buildTextField(
+                                    'Email', emailController, user.id),
+                                _buildTextField(
+                                    'Name', nameController, user.id),
+                                _buildTextField('Family Name',
+                                    familyNameController, user.id),
                               ]),
                             ),
                           );
@@ -42,6 +70,14 @@ class _ProfielPageState extends State<ProfielPage> {
                   }
                 },
               ),
+              //om de knop te laten zichtbaar maken, futuristische haha
+              if (_isChanged)
+                ElevatedButton(
+                  onPressed: () {
+                    updateUser();
+                  },
+                  child: const Text('Update Profile'),
+                )
             ],
           ),
         ),
@@ -49,6 +85,28 @@ class _ProfielPageState extends State<ProfielPage> {
     );
   }
 
+  //creert de Textfield =>
+  Widget _buildTextField(
+      String label, TextEditingController controller, String userId) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        onChanged: (value) {
+          setState(() {
+            _isChanged = true;
+          });
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(fontSize: 18.0),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+    );
+  }
+
+  //lees de user =>
   Future<User_account?> readUser() async {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
@@ -58,5 +116,20 @@ class _ProfielPageState extends State<ProfielPage> {
       return User_account.fromJson(snapshot.data()!);
     }
     return null;
+  }
+
+  Future<void> updateUser() async {
+    final userId = FirebaseAuth.instance.currentUser!;
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userId.uid);
+    await docUser.update({
+      'email': emailController.text,
+      'name': nameController.text,
+      'familiename': familyNameController.text,
+    });
+
+    setState(() {
+      _isChanged = false;
+    });
   }
 }
