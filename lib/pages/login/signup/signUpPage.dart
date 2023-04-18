@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
-import '../../../main.dart';
 import '../../../model/user.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -25,24 +24,38 @@ class _SignUpPageState extends State<SignUpPage> {
   final nameController = TextEditingController();
   final familyNameController = TextEditingController();
 
-  bool _isMounted = false;
+  String _passwordStrength = '';
 
   @override
   void initState() {
     super.initState();
-    _isMounted = true;
+    passwordController.addListener(_checkPasswordStrength);
   }
 
+  //source: https://stackoverflow.com/questions/59558604/why-do-we-use-the-dispose-method-in-flutter-dart-code.
+  //Deze methode ruimt de geheugenruimte op die door de tekstveldcontrollers wordt gebruikt wanneer het widget wordt vernietigd, om te voorkomen dat geheugen lekt.
   @override
   void dispose() {
-    _isMounted = false;
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     nameController.dispose();
     familyNameController.dispose();
-
     super.dispose();
+  }
+
+  //nodig om te kijken als de password is niet te klein. /laat het in engles staan.
+  void _checkPasswordStrength() {
+    final length = passwordController.text.length;
+    setState(() {
+      if (length < 6) {
+        _passwordStrength = 'zwak';
+      } else if (length < 12) {
+        _passwordStrength = 'medium';
+      } else {
+        _passwordStrength = 'goed';
+      }
+    });
   }
 
   @override
@@ -64,6 +77,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 passwordController, 'Wachtwoord', TextInputAction.next,
                 obscureText: true),
             const SizedBox(height: 10),
+            Text('Wachtwoord sterkte: $_passwordStrength'),
+            const SizedBox(height: 10),
             _buildTextField(confirmPasswordController, 'Bevestig Wachtwoord',
                 TextInputAction.done,
                 obscureText: true),
@@ -74,12 +89,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 'Creeër account',
                 style: TextStyle(fontSize: 24),
               ),
-              onPressed: () {
-                final name = nameController.text;
-                final familyName = familyNameController.text;
+              onPressed: _passwordStrength == 'zwak'
+                  ? null
+                  : () {
+                      final name = nameController.text;
+                      final familyName = familyNameController.text;
 
-                signUp(name: name, familyName: familyName);
-              },
+                      signUp(name: name, familyName: familyName);
+                    },
             ),
             const SizedBox(height: 10),
             RichText(
@@ -154,34 +171,28 @@ class _SignUpPageState extends State<SignUpPage> {
       final json = user.toJson();
       await docUser.set(json);
 
-      if (_isMounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account is aangemaakt met succes')),
-        );
-      }
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account is aangemaakt met succes')),
+      );
     } on FirebaseAuthException catch (e) {
-      if (_isMounted) {
-        Navigator.of(context).pop();
+      Navigator.of(context).pop();
 
-        String errorMessage;
-        if (e.code == 'email-already-in-use') {
-          errorMessage = 'deze email is al in gebruik.';
-        } else {
-          errorMessage = 'er is een error, probeer opnieuw';
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
-        );
+      String errorMessage;
+      if (e.code == 'email-already-in-use') {
+        errorMessage = 'deze email is al in gebruik.';
+      } else {
+        errorMessage = 'er is een error, probeer opnieuw';
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
       print(e);
       return;
     }
-
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
