@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, avoid_print
+// ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future signin() async {
+  Future<void> signin() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -116,15 +116,27 @@ class _LoginPageState extends State<LoginPage> {
       ),
       //lading screen, niet aanraken
     );
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-    } on FirebaseException catch (e) {
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('E-mailadres of wachtwoord is onjuist'),
+          ),
+        );
+      } else {
+        print(e);
+      }
+    } catch (e) {
       print(e);
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
+     //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
   }
 }
