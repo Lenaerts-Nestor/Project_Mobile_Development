@@ -21,7 +21,9 @@ class _MapPageState extends State<MapPage> {
     return FlutterMap(
       options: MapOptions(
         center: LatLng(51.2172, 4.4212),
+        //aangezien we niet gaan user location gebruiken maar een vaste plaats. we pakken central station.
         zoom: 17,
+        enableScrollWheel: false,
       ),
       children: [
         TileLayer(

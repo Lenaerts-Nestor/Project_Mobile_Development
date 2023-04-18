@@ -46,7 +46,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 onPressed: resetPassword,
                 icon: const Icon(Icons.mail_rounded),
                 label: const Text(
-                  'Reset Password',
+                  'wachtwoord resetten',
                   style: TextStyle(fontSize: 24),
                 ),
               ),

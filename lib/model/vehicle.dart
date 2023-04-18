@@ -1,19 +1,23 @@
 class Vehicle {
   final String licensePlate;
-  final String address;
+  final String brand;
+  final String color;
 
   Vehicle({
     required this.licensePlate,
-    required this.address,
+    required this.brand,
+    required this.color,
   });
 
   Map<String, dynamic> toJson() => {
-        'licensePlate': licensePlate,
-        'address': address,
+        'NummerPlaat': licensePlate,
+        'brand': brand,
+        'kleur': color,
       };
 
   static Vehicle fromJson(Map<String, dynamic> json) => Vehicle(
-        licensePlate: json['licensePlate'] as String,
-        address: json['address'] as String,
+        licensePlate: json['NummerPlaat'] as String,
+        brand: json['brand'] as String,
+        color: json['kleur'] as String,
       );
 }

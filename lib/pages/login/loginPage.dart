@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               controller: passwordController,
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
-                labelText: 'Password',
+                labelText: 'Wachtwoord',
               ),
               obscureText: true,
             ),
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: signin,
               icon: const Icon(Icons.login),
               label: const Text(
-                'Sign in',
+                'Log in',
                 style: TextStyle(fontSize: 24),
               ),
             ),
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             GestureDetector(
               child: const Text(
-                'Forgot Password',
+                'Wachtwoord resetten',
                 style: TextStyle(color: Colors.blue, fontSize: 20),
               ),
               onTap: () {

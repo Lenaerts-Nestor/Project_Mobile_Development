@@ -59,14 +59,14 @@ class _ProfielPageState extends State<ProfielPage> {
                                 _buildTextField(
                                     'Email', emailController, user.id),
                                 _buildTextField(
-                                    'Name', nameController, user.id),
-                                _buildTextField('Family Name',
+                                    'Naam', nameController, user.id),
+                                _buildTextField('FamilieNaam',
                                     familyNameController, user.id),
                               ]),
                             ),
                           );
                   } else {
-                    return const Center(child: Text('no data yet'));
+                    return const CircularProgressIndicator();
                   }
                 },
               ),
@@ -123,9 +123,9 @@ class _ProfielPageState extends State<ProfielPage> {
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userId.uid);
     await docUser.update({
-      'email': emailController.text,
-      'name': nameController.text,
-      'familiename': familyNameController.text,
+      'Email': emailController.text,
+      'Naam': nameController.text,
+      'FamilieNaam': familyNameController.text,
     });
 
     setState(() {

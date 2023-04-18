@@ -47,7 +47,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
                                 color: Colors.black),
                             title: Text(vehicle.licensePlate,
                                 style: const TextStyle(color: Colors.black)),
-                            subtitle: Text(vehicle.address,
+                            subtitle: Text(vehicle.brand,
                                 style: const TextStyle(color: Colors.black)),
                             onTap: () {},
                             trailing: IconButton(
@@ -62,14 +62,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
                     },
                   );
                 } else {
-                  return const Center(child: Text('no data available'));
+                  return Center(child: const CircularProgressIndicator());
                 }
               },
             ),
           ),
         ],
       ),
-      //knop om voertuigen toevoegen
       bottomNavigationBar: Container(
         height: 55,
         margin: EdgeInsets.only(bottom: 5),
@@ -80,15 +79,12 @@ class _VehiclesPageState extends State<VehiclesPage> {
               MaterialPageRoute(builder: (context) => const AddVehicle()),
             );
           },
-          //terug naar pagina gaan.
-          child: const Text('add vehicles'),
+          child: const Text('Voertuig toevoegen'),
         ),
       ),
     );
   }
 
-  // Lees één user. , dit lees de hele user  om de vehicles te lezen.
-  //toch hebben we vehicles array alleen nodig, laat het zo. we kunnen het copypasten.
   Stream<User_account> readUser() {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
@@ -102,17 +98,17 @@ class _VehiclesPageState extends State<VehiclesPage> {
           familiename: '',
           name: '',
           email: '',
-          password: '',
+          wachtwoord: '',
           vehicles: [],
         );
       }
     });
   }
-  //methode om vehicles te verwijderen en simple te houden.
+
   Future<void> deleteVehicle(String userId, Vehicle vehicle) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     await docUser.update({
-      'vehicles': FieldValue.arrayRemove([vehicle.toJson()])
+      'Vervoeren': FieldValue.arrayRemove([vehicle.toJson()])
     });
   }
 }

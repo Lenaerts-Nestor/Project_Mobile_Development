@@ -21,6 +21,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
   final familyNameController = TextEditingController();
 
@@ -37,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
     _isMounted = false;
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     nameController.dispose();
     familyNameController.dispose();
 
@@ -51,21 +53,25 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildTextField(nameController, 'Name', TextInputAction.next),
+            _buildTextField(nameController, 'Naam', TextInputAction.next),
             const SizedBox(height: 20),
             _buildTextField(
-                familyNameController, 'Family Name', TextInputAction.next),
+                familyNameController, 'Familie Naam', TextInputAction.next),
             const SizedBox(height: 20),
             _buildTextField(emailController, 'Email', TextInputAction.next),
             const SizedBox(height: 10),
             _buildTextField(
-                passwordController, 'Password', TextInputAction.done,
+                passwordController, 'Wachtwoord', TextInputAction.next,
+                obscureText: true),
+            const SizedBox(height: 10),
+            _buildTextField(confirmPasswordController, 'Bevestig Wachtwoord',
+                TextInputAction.done,
                 obscureText: true),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               icon: const Icon(Icons.arrow_forward),
               label: const Text(
-                'Create account',
+                'Creeër account',
                 style: TextStyle(fontSize: 24),
               ),
               onPressed: () {
@@ -79,12 +85,12 @@ class _SignUpPageState extends State<SignUpPage> {
             RichText(
               text: TextSpan(
                 style: const TextStyle(color: Colors.black, fontSize: 20),
-                text: 'Already have an account? ',
+                text: 'heb je al een account? ',
                 children: [
                   TextSpan(
                     recognizer: TapGestureRecognizer()
                       ..onTap = widget.onClickedSignIn,
-                    text: 'Sign Up',
+                    text: 'Log In',
                     style: const TextStyle(color: Colors.amber),
                   ),
                 ],
@@ -113,7 +119,13 @@ class _SignUpPageState extends State<SignUpPage> {
     required String name,
     required String familyName,
   }) async {
-    //lading screen, niet aanraken
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Wachtwoorden komen niet overeen')),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -136,36 +148,27 @@ class _SignUpPageState extends State<SignUpPage> {
         name: name,
         familiename: familyName,
         email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        wachtwoord: passwordController.text.trim(),
       );
-      //convereteren naar json
+
       final json = user.toJson();
-      //creer document en schrijf het op firebase collection
       await docUser.set(json);
 
-      //om errors laad error te voorkomen =>
       if (_isMounted) {
-        //sluit de progress dialoog en terug gaan
         Navigator.of(context).pop();
-
-        // toon message dat het gelukt is
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account created successfully')),
+          const SnackBar(content: Text('Account is aangemaakt met succes')),
         );
       }
     } on FirebaseAuthException catch (e) {
-      // Nieuw: controleer of de widget nog gemount is voordat u de context gebruikt
-      //om errors laad error te voorkomen =>
       if (_isMounted) {
-        // sluit de progress dialoog als het niet gelukt is
         Navigator.of(context).pop();
 
-        //toon errors op basis van de situatie =>
         String errorMessage;
         if (e.code == 'email-already-in-use') {
-          errorMessage = 'The email address is already in use';
+          errorMessage = 'deze email is al in gebruik.';
         } else {
-          errorMessage = 'An error occurred, please try again';
+          errorMessage = 'er is een error, probeer opnieuw';
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -175,7 +178,6 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         );
       }
-      //print het op de terminal.
       print(e);
       return;
     }

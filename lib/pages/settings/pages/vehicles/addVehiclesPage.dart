@@ -15,12 +15,14 @@ class AddVehicle extends StatefulWidget {
 class _AddVehicleState extends State<AddVehicle> {
   final _formKey = GlobalKey<FormState>();
   final _licensePlateController = TextEditingController();
-  final _addressController = TextEditingController();
+  final _brandController = TextEditingController();
+  final _colorController = TextEditingController();
 
   @override
   void dispose() {
     _licensePlateController.dispose();
-    _addressController.dispose();
+    _brandController.dispose();
+    _colorController.dispose();
     super.dispose();
   }
 
@@ -56,13 +58,28 @@ class _AddVehicleState extends State<AddVehicle> {
                 height: 30,
               ),
               TextFormField(
-                controller: _addressController,
+                controller: _brandController,
                 decoration: const InputDecoration(
-                  labelText: 'Adres',
+                  labelText: 'Merk',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Gelieve een adres in te voeren';
+                    return 'Gelieve een merk in te voeren';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              TextFormField(
+                controller: _colorController,
+                decoration: const InputDecoration(
+                  labelText: 'Kleur',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Gelieve een kleur in te voeren';
                   }
                   return null;
                 },
@@ -75,57 +92,46 @@ class _AddVehicleState extends State<AddVehicle> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // inputs bewaren =>
                       final licensePlate = _licensePlateController.text;
-                      final address = _addressController.text;
+                      final brand = _brandController.text;
+                      final color = _colorController.text;
 
-                      // de user van firebase halen =>
                       final firebaseUser = FirebaseAuth.instance.currentUser;
                       final userDoc = FirebaseFirestore.instance
                           .collection('users')
                           .doc(firebaseUser!.uid);
 
-                      // de inhoud van vehicles bekijken en bewaren =>
                       final userSnap = await userDoc.get();
                       final existingVehicles =
-                          userSnap.get('vehicles') as List<dynamic>;
+                          userSnap.get('Vervoeren') as List<dynamic>;
 
-                      // Creer de vehicle met de inputs =>
                       final newVehicle = Vehicle(
                         licensePlate: licensePlate,
-                        address: address,
+                        brand: brand,
+                        color: color,
                       );
 
-                      // controleren als de licensePlate bestaat al =>
                       final licensePlateExists = existingVehicles
-                          .any((v) => v['licensePlate'] == licensePlate);
+                          .any((v) => v['NummerPlaat'] == licensePlate);
 
                       if (!licensePlateExists) {
-                        // voeg de vehicle in de array die al bestaat, opletten als een user de vehicles array
-                        // niet in heeft zal het niet werken
                         existingVehicles.add(newVehicle.toJson());
+                        await userDoc.update({'Vervoeren': existingVehicles});
 
-                        // update de user document
-                        await userDoc.update({'vehicles': existingVehicles});
-
-                        // een message aangeven dat het gelukt is =>
-                        //TODO: scaffoldmessenger over all zetten bij login ofzo.
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('vehicle is added!')),
+                          const SnackBar(content: Text('Voertuig toegevoegd!')),
                         );
 
-                        // terug naar de pagina voertuigen
                         Navigator.of(context).pop();
                       } else {
-                        // als de array licensplaat bestaat
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('licensePlate bestaat al!')),
+                              content: Text('Nummerplaat bestaat al!')),
                         );
                       }
                     }
                   },
-                  child: const Text('Add ur vehicle'),
+                  child: const Text('Voeg uw voertuig toe'),
                 ),
               ),
             ],
