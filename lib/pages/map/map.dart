@@ -1,34 +1,50 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 //error => naar hier [https://docs.fleaflet.dev/usage/basics ]
 //toekomst => https://pub.dev/packages/material_floating_search_bar,
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({Key? key}) : super(key: key);
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  bool shownavigationBar = false;
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
         center: LatLng(51.2172, 4.4212),
         //aangezien we niet gaan user location gebruiken maar een vaste plaats. we pakken central station.
-        zoom: 17,
-        enableScrollWheel: false,
+        zoom: 16,
       ),
       children: [
         TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c']),
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: const ['a', 'b', 'c'],
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: LatLng(51.2172, 4.4212),
+              width: 80,
+              height: 80,
+              builder: (context) => GestureDetector(
+                onTap: () {
+                  //werkt :D
+                  print('der is geklicked');
+                },
+                child: const Icon(
+                  Icons.ac_unit_outlined,
+                  size: 30,
+                  color: Colors.yellow,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
