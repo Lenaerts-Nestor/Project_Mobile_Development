@@ -1,6 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:parkflow/pages/home/home_page.dart';
+import 'package:parkflow/pages/login/authentication/entrance_page.dart';
+import 'package:parkflow/pages/login/authentication/login_page.dart';
 import 'style/designStyle.dart' as myFontstyle;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +29,7 @@ class SignOutButton extends StatelessWidget {
     await prefs.remove('userId');
 
     // ga naar de login page =>
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const entrance_page()));
   }
 }
