@@ -2,39 +2,43 @@
 
 import 'package:parkflow/model/vehicle.dart';
 
-class UserAcount {
+class UserAccount {
   final String id; //moet unique zijn
   final String name;
+  final String username;
   final String email;
   final String password;
   final String familyname;
   final List<Vehicle> vehicles;
 
-  UserAcount({
+  UserAccount({
     required this.id,
     required this.familyname,
     required this.name,
+    required this.username,
     required this.email,
     required this.password,
     this.vehicles = const [],
   });
 
   Map<String, dynamic> toJson() => {
-        'Naam': name,
+        'naam': name,
+        'userNaam': username,
         'Email': email,
         'password': password,
-        'FamilieNaam': familyname,
-        'Vervoeren': vehicles.map((v) => v.toJson()).toList(),
+        'familieNaam': familyname,
+        'vervoeren': vehicles.map((v) => v.toJson()).toList(),
         'id': id,
       };
 
-  static UserAcount fromJson(Map<String, dynamic> json) => UserAcount(
-        familyname: json['FamilieNaam'] as String,
-        name: json['Naam'] as String,
-        email: json['Email'] as String,
+  static UserAccount fromJson(Map<String, dynamic> json) => UserAccount(
+        familyname: json['familieNaam'] as String,
+        name: json['naam'] as String,
+        username: json['userNaam'] as String,
+        email: json['email'] as String,
         password: json['password'] as String,
         id: json['id'],
-        vehicles: (json['Vervoeren'] as List<dynamic>)
+        vehicles: (json['vervoeren'] as List<dynamic>)
             .map((v) => Vehicle.fromJson(v))
             .toList(),
       );

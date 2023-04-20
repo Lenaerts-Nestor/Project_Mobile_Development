@@ -8,7 +8,7 @@ import 'package:parkflow/pages/login/authentication/entrance_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
   runApp(MainApp());
 }
 
@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       title: 'parkflow',
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: entrance_page(),
     );
   }
 }
