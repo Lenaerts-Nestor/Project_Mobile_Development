@@ -16,6 +16,7 @@ dependencies:
   flutter_map: ^3.1.0
   google_nav_bar: ^5.0.6
   latlong2: ^0.8.1
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
