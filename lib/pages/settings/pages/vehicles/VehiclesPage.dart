@@ -95,10 +95,10 @@ class _VehiclesPageState extends State<VehiclesPage> {
       } else {
         return UserAcount(
           id: userId.uid,
-          familiename: '',
+          familyname: '',
           name: '',
           email: '',
-          wachtwoord: '',
+          password: '',
           vehicles: [],
         );
       }

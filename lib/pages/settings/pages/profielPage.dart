@@ -46,7 +46,7 @@ class _ProfielPageState extends State<ProfielPage> {
                       nameController.text = initialName ?? '';
                     }
                     if (initialFamilyName == null) {
-                      initialFamilyName = user?.familiename;
+                      initialFamilyName = user?.familyname;
                       familyNameController.text = initialFamilyName ?? '';
                     }
                     //kijken als de user leeg is, anders =>
