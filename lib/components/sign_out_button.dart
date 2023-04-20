@@ -1,7 +1,7 @@
-// ignore_for_file: file_names
-
+// sign_out_button.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'style/designStyle.dart' as myFontstyle;
 
 class SignOutButton extends StatelessWidget {
   const SignOutButton({Key? key}) : super(key: key);
@@ -11,9 +11,9 @@ class SignOutButton extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: () => FirebaseAuth.instance.signOut(),
       icon: const Icon(Icons.arrow_back),
-      label: const Text(
+      label: Text(
         'Sign Out',
-        style: TextStyle(fontSize: 24),
+        style: TextStyle(fontSize: myFontstyle.fontSize1),
       ),
     );
   }

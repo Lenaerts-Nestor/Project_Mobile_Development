@@ -1,7 +1,7 @@
 // ignore_for_file: implementation_imports
 
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:parkflow/pages/login/loginPage.dart';
+import 'package:parkflow/pages/login/signIn/sign_in.dart';
 import '../signup/signUpPage.dart';
 
 class AuthPage extends StatefulWidget {

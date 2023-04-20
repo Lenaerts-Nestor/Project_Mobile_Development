@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
-import '../../../model/user.dart';
+import '../../../model/user_account.dart';
 
 class SignUpPage extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -77,11 +77,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 passwordController, 'Wachtwoord', TextInputAction.next,
                 obscureText: true),
             const SizedBox(height: 10),
-            Text('Wachtwoord sterkte: $_passwordStrength'),
-            const SizedBox(height: 10),
             _buildTextField(confirmPasswordController, 'Bevestig Wachtwoord',
                 TextInputAction.done,
                 obscureText: true),
+            const SizedBox(height: 10),
+            Text('Wachtwoord sterkte: $_passwordStrength'),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               icon: const Icon(Icons.arrow_forward),
@@ -160,7 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final firebaseUser = FirebaseAuth.instance.currentUser;
       final docUser =
           FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid);
-      final user = User_account(
+      final user = UserAcount(
         id: docUser.id,
         name: name,
         familiename: familyName,

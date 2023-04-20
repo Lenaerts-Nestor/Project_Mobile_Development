@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/navigationbar.dart';
-import 'package:parkflow/pages/map/map.dart';
+import 'package:parkflow/pages/map/map_page.dart';
 import 'package:parkflow/pages/settings/settingsMain.dart';
 
 class HomePage extends StatefulWidget {

@@ -16,7 +16,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   bool _isAddingMarkers = false;
   List<Marker> _markers = [];
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,6 +121,7 @@ void _showPopup(BuildContext context, LatLng latLng) {
                 endIndent: 20,
               ),
               //voor het moment dit.
+              //uitvinden hoe ik de uren kan zetten.
               Text('Latitude: ${latLng.latitude}',
                   style: const TextStyle(fontSize: 24)),
               Text('longitude: ${latLng.longitude}',

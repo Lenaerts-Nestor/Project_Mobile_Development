@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parkflow/model/vehicle.dart';
 
-import '../../../../model/user.dart';
+import '../../../../model/user_account.dart';
 import 'addVehiclesPage.dart';
 
 class VehiclesPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<User_account>(
+            child: StreamBuilder<UserAcount>(
               stream: readUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -85,15 +85,15 @@ class _VehiclesPageState extends State<VehiclesPage> {
     );
   }
 
-  Stream<User_account> readUser() {
+  Stream<UserAcount> readUser() {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userId.uid);
     return docUser.snapshots().map((snapshot) {
       if (snapshot.exists) {
-        return User_account.fromJson(snapshot.data()!);
+        return UserAcount.fromJson(snapshot.data()!);
       } else {
-        return User_account(
+        return UserAcount(
           id: userId.uid,
           familiename: '',
           name: '',

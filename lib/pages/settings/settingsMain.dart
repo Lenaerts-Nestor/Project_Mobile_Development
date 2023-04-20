@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:parkflow/components/signOutComp.dart';
+import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
 

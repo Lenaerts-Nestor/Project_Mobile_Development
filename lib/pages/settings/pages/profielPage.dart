@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:parkflow/model/user.dart';
+import 'package:parkflow/model/user_account.dart';
 
 class ProfielPage extends StatefulWidget {
   const ProfielPage({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _ProfielPageState extends State<ProfielPage> {
         body: Center(
           child: Column(
             children: [
-              FutureBuilder<User_account?>(
+              FutureBuilder<UserAcount?>(
                 future: readUser(),
                 builder: (context, snapshot) {
                   //controls met if =>
@@ -107,13 +107,13 @@ class _ProfielPageState extends State<ProfielPage> {
   }
 
   //lees de user =>
-  Future<User_account?> readUser() async {
+  Future<UserAcount?> readUser() async {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userId.uid);
     final snapshot = await docUser.get();
     if (snapshot.exists) {
-      return User_account.fromJson(snapshot.data()!);
+      return UserAcount.fromJson(snapshot.data()!);
     }
     return null;
   }

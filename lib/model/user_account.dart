@@ -2,7 +2,7 @@
 
 import 'package:parkflow/model/vehicle.dart';
 
-class User_account {
+class UserAcount {
   final String id;
   final String name;
   final String email;
@@ -10,7 +10,7 @@ class User_account {
   final String familiename;
   final List<Vehicle> vehicles;
 
-  User_account({
+  UserAcount({
     required this.id,
     required this.familiename,
     required this.name,
@@ -28,7 +28,7 @@ class User_account {
         'id': id,
       };
 
-  static User_account fromJson(Map<String, dynamic> json) => User_account(
+  static UserAcount fromJson(Map<String, dynamic> json) => UserAcount(
         familiename: json['FamilieNaam'] as String,
         name: json['Naam'] as String,
         email: json['Email'] as String,

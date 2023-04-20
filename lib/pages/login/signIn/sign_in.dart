@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:parkflow/pages/login/forgotPasswordPage.dart';
+import 'package:parkflow/pages/login/signIn/forgot_password_page.dart';
 
-import '../../main.dart';
+import '../../../main.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onClickSignUp;
