@@ -22,7 +22,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<UserAcount>(
+            child: StreamBuilder<UserAccount>(
               stream: readUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -85,21 +85,22 @@ class _VehiclesPageState extends State<VehiclesPage> {
     );
   }
 
-  Stream<UserAcount> readUser() {
+  Stream<UserAccount> readUser() {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userId.uid);
     return docUser.snapshots().map((snapshot) {
       if (snapshot.exists) {
-        return UserAcount.fromJson(snapshot.data()!);
+        return UserAccount.fromJson(snapshot.data()!);
       } else {
-        return UserAcount(
+        return UserAccount(
           id: userId.uid,
           familyname: '',
           name: '',
           email: '',
           password: '',
           vehicles: [],
+          username: '',
         );
       }
     });

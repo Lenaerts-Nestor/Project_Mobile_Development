@@ -30,7 +30,7 @@ class _ProfielPageState extends State<ProfielPage> {
         body: Center(
           child: Column(
             children: [
-              FutureBuilder<UserAcount?>(
+              FutureBuilder<UserAccount?>(
                 future: readUser(),
                 builder: (context, snapshot) {
                   //controls met if =>
@@ -107,13 +107,13 @@ class _ProfielPageState extends State<ProfielPage> {
   }
 
   //lees de user =>
-  Future<UserAcount?> readUser() async {
+  Future<UserAccount?> readUser() async {
     final userId = FirebaseAuth.instance.currentUser!;
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userId.uid);
     final snapshot = await docUser.get();
     if (snapshot.exists) {
-      return UserAcount.fromJson(snapshot.data()!);
+      return UserAccount.fromJson(snapshot.data()!);
     }
     return null;
   }
