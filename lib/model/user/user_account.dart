@@ -3,7 +3,7 @@
 import 'package:parkflow/model/vehicle.dart';
 
 class UserAccount {
-  final String id; //moet unique zijn
+  final String id;
   final String name;
   final String username;
   final String email;
@@ -24,7 +24,7 @@ class UserAccount {
   Map<String, dynamic> toJson() => {
         'naam': name,
         'userNaam': username,
-        'Email': email,
+        'email': email,
         'password': password,
         'familieNaam': familyname,
         'vervoeren': vehicles.map((v) => v.toJson()).toList(),
@@ -32,14 +32,16 @@ class UserAccount {
       };
 
   static UserAccount fromJson(Map<String, dynamic> json) => UserAccount(
-        familyname: json['familieNaam'] as String,
-        name: json['naam'] as String,
-        username: json['userNaam'] as String,
-        email: json['email'] as String,
-        password: json['password'] as String,
-        id: json['id'],
-        vehicles: (json['vervoeren'] as List<dynamic>)
-            .map((v) => Vehicle.fromJson(v))
-            .toList(),
+        familyname: json['familieNaam'] as String? ?? '',
+        name: json['naam'] as String? ?? '',
+        username: json['userNaam'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        password: json['password'] as String? ?? '',
+        id: json['id'] as String? ?? '',
+        vehicles: json['vervoeren'] != null
+            ? (json['vervoeren'] as List<dynamic>)
+                .map((v) => Vehicle.fromJson(v))
+                .toList()
+            : [],
       );
 }

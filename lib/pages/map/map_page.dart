@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields, avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -68,7 +70,7 @@ class _MapPageState extends State<MapPage> {
               //classe mischien maken van markers of collection op firebase
             },
             child: Container(
-              child: Icon(Icons.location_on, color: Colors.red, size: 40),
+              child: const Icon(Icons.location_on, color: Colors.red, size: 40),
             ),
           ),
         ),

@@ -1,17 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:parkflow/pages/home/home_page.dart';
-import 'package:parkflow/pages/login/signIn/forgot_password_page.dart';
-import 'package:parkflow/pages/login/signup/register_page.dart';
-import '../../../main.dart';
+import 'package:parkflow/pages/login-register/login/sign_in_services.dart';
+
+import '../../../pages/login-register/login/forgot_password_page.dart';
+import '../../../pages/login-register/register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({
-    Key? key,
-  }) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -57,7 +56,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 10,
               ),
               ElevatedButton.icon(
-                onPressed: signin,
+                onPressed: () =>
+                    //sign_in_service =>
+                    signin(context, emailController, passwordController),
                 icon: const Icon(Icons.login),
                 label: const Text(
                   'Log in',
@@ -86,15 +87,15 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('geen account ? '),
+                  const Text('geen account ? '),
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => RegisterPage()),
+                              builder: (context) => const RegisterPage()),
                         );
                       },
-                      child: Text('creer account'))
+                      child: const Text('Creeër Account'))
                 ],
               )
             ],
@@ -102,38 +103,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future<void> signin() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      //lading screen, niet aanraken
-    );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('E-mailadres of wachtwoord is onjuist'),
-          ),
-        );
-      } else {
-        print(e);
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    //dit zorgt dat de lading screen niet blijft hangen, NIET AANRAKEN
   }
 }

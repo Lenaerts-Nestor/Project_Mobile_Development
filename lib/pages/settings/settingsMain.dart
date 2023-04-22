@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
+// ignore_for_file: file_names, library_private_types_in_public_api, unused_element
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/sign_out_button.dart';
@@ -44,12 +44,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        leading: (_showProfielPage || _showVehiclesPage) // check both flags
-            ? IconButton(
-                onPressed: _onBackButtonPressed,
-                icon: const Icon(Icons.arrow_back),
-              )
-            : null,
       ),
       body: Stack(
         children: [

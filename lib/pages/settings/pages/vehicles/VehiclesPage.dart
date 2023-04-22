@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parkflow/model/vehicle.dart';
 
-import '../../../../model/user_account.dart';
+import '../../../../model/user/user_account.dart';
 import 'addVehiclesPage.dart';
 
 class VehiclesPage extends StatefulWidget {

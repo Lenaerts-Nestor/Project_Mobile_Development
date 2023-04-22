@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/navigationbar.dart';
+import 'package:parkflow/pages/home/user_info_testen.dart';
 import 'package:parkflow/pages/map/map_page.dart';
 import 'package:parkflow/pages/settings/settingsMain.dart';
 
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     //setting page?
     SettingsPage(),
     //nog extra pages ?
+    UserInfoPage(),
   ];
 
   @override
