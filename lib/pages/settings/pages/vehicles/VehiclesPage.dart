@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, file_names, camel_case_types, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:parkflow/model/user/user_logged_controller.dart';
+import 'package:parkflow/model/user/user_service.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:parkflow/model/vehicle.dart';
 
@@ -16,45 +19,59 @@ class VehiclesPage extends StatefulWidget {
 }
 
 class _VehiclesPageState extends State<VehiclesPage> {
+  List<Vehicle> _vehicles = [];
+
   @override
   Widget build(BuildContext context) {
+    final userLogged = Provider.of<UserLogged>(context);
+    final userEmail = userLogged.email.trim();
     return Scaffold(
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<UserAccount>(
-              stream: readUser(),
+              stream: readUserByLive(userEmail),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final user = snapshot.data!;
+                  _vehicles = user.vehicles;
 
                   return ListView.builder(
-                    itemCount: user.vehicles.length,
+                    itemCount: _vehicles.length,
                     itemBuilder: (context, index) {
-                      final vehicle = user.vehicles[index];
+                      final vehicle = _vehicles[index];
 
-                      return Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          height: 62.5,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.black12,
-                          ),
-                          child: ListTile(
-                            leading: const Icon(Icons.directions_car_filled,
-                                color: Colors.black),
-                            title: Text(vehicle.licensePlate,
-                                style: const TextStyle(color: Colors.black)),
-                            subtitle: Text(vehicle.brand,
-                                style: const TextStyle(color: Colors.black)),
-                            onTap: () {},
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                deleteVehicle(user.id, vehicle);
-                              },
+                      return Dismissible(
+                        key: Key(vehicle.model),
+                        background: Container(
+                          color: Colors.red,
+                          child: const Icon(Icons.delete, color: Colors.white),
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 16),
+                        ),
+                        onDismissed: (direction) {
+                          setState(() {
+                            _vehicles.removeAt(index);
+                          });
+                          deleteVehicle(user.id, vehicle);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            height: 62.5,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.black12,
+                            ),
+                            child: ListTile(
+                              leading: const Icon(Icons.directions_car_filled,
+                                  color: Colors.black),
+                              title: Text(vehicle.model,
+                                  style: const TextStyle(color: Colors.black)),
+                              subtitle: Text(vehicle.brand,
+                                  style: const TextStyle(color: Colors.black)),
+                              onTap: () {},
                             ),
                           ),
                         ),
@@ -85,31 +102,10 @@ class _VehiclesPageState extends State<VehiclesPage> {
     );
   }
 
-  Stream<UserAccount> readUser() {
-    final userId = FirebaseAuth.instance.currentUser!;
-    final docUser =
-        FirebaseFirestore.instance.collection('users').doc(userId.uid);
-    return docUser.snapshots().map((snapshot) {
-      if (snapshot.exists) {
-        return UserAccount.fromJson(snapshot.data()!);
-      } else {
-        return UserAccount(
-          id: userId.uid,
-          familyname: '',
-          name: '',
-          email: '',
-          password: '',
-          vehicles: [],
-          username: '',
-        );
-      }
-    });
-  }
-
   Future<void> deleteVehicle(String userId, Vehicle vehicle) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     await docUser.update({
-      'Vervoeren': FieldValue.arrayRemove([vehicle.toJson()])
+      'vervoeren': FieldValue.arrayRemove([vehicle.toJson()])
     });
   }
 }
