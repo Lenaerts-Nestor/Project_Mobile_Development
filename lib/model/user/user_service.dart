@@ -1,10 +1,35 @@
 //hier gaan we widgets zetten die ongeveer overal moeten staan.
 
-// In a new file called user_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parkflow/model/user/user_account.dart';
 
-Future<UserAccount?> readUser(String userEmail) async {
+//verschil tussen stream en future in kort =>
+//De ene readUser() geeft een UserAccount of null terug, afhankelijk van de situatie.
+//De andere versie geeft altijd een UserAccount terug en kan geen null teruggeven
+
+//deze data word upgedate op real live, dus al we een vervoer/vehicle toevoegen, zal de pagina automatisch bijwereken wanner er nieuwe gegevens worden toegevoegd aan de database.
+Stream<UserAccount> readUserByLive(String email) {
+  final docUser = FirebaseFirestore.instance.collection('users').doc(email);
+  return docUser.snapshots().map((snapshot) {
+    if (snapshot.exists) {
+      return UserAccount.fromJson(snapshot.data()!);
+    } else {
+      return UserAccount(
+        id: '',
+        familyname: '',
+        name: '',
+        email: '',
+        password: '',
+        vehicles: [],
+        username: '',
+      );
+    }
+  });
+}
+
+//met een future zullen de data niet in real life upgedate worden.
+//voorbeeld profielPage.
+Future<UserAccount?> readUserOnce(String userEmail) async {
   final docUser = FirebaseFirestore.instance.collection('users').doc(userEmail);
   final snapshot = await docUser.get();
   if (snapshot.exists) {
@@ -13,7 +38,7 @@ Future<UserAccount?> readUser(String userEmail) async {
   return null;
 }
 
-//de update => 
+//de update =>
 //logica uitvinden en zien als alle andere pagina's de zelfde manier updaten, veronderstel van niet.
-//de delete => 
+//de delete =>
 // zelfde situatie zoals bij updaten ??
