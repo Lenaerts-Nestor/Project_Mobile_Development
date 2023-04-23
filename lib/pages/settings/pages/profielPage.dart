@@ -34,7 +34,7 @@ class _ProfielPageState extends State<ProfielPage> {
             children: [
               FutureBuilder<UserAccount?>(
                 //methode readUser van user_service.
-                future: readUser(userEmail),
+                future: readUserOnce(userEmail),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
@@ -94,7 +94,7 @@ class _ProfielPageState extends State<ProfielPage> {
           });
         },
         decoration: InputDecoration(
-          hintText: userEmail, // Change labelText to hintText
+          hintText: userEmail,
           labelStyle: const TextStyle(fontSize: 18.0),
           border: const OutlineInputBorder(),
         ),
