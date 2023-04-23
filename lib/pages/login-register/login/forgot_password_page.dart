@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../main.dart';
 
+//TODO: nog aanpassen zonder firebase auth.
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 

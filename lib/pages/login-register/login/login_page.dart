@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:parkflow/pages/login-register/login/sign_in_services.dart';
+import 'package:parkflow/pages/login-register/auth_services.dart';
 
 import '../../../pages/login-register/login/forgot_password_page.dart';
 import '../../../pages/login-register/register/register_page.dart';

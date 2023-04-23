@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/pages/home/home_page.dart';
+import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
-import 'package:parkflow/pages/login-register/register/register_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -102,7 +102,7 @@ class _SignUpPageState extends State<RegisterPage> {
                     : () async {
                         final name = nameController.text;
                         final familyName = familyNameController.text;
-                        final result = await Register_Service.registerAccount(
+                        final result = await registerAccount(
                           name: name,
                           familyName: familyName,
                           email: emailController.text.trim(),
