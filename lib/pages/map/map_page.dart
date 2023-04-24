@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+String username = 'krupuks';
+String tilesize = '256';
+String scale = '2';
+String mapboxAccessToken =
+    'pk.eyJ1Ijoia3J1cHVrcyIsImEiOiJjbGd1a2Y4aDMyM2RpM2NtdDF0OWl5aXJyIn0.T-90bn65p10SjFwgfBiWyg';
+String mapboxUrl =
+    'https://api.mapbox.com/styles/v1/${username}/clgukhlsf005g01o58vp31upm/tiles/$tilesize/{z}/{x}/{y}@${scale}x?access_token=${mapboxAccessToken}';
+
 //error => naar hier [https://docs.fleaflet.dev/usage/basics ]
 //toekomst => https://pub.dev/packages/material_floating_search_bar,
 class MapPage extends StatefulWidget {
@@ -18,7 +26,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   bool _isAddingMarkers = false;
   List<Marker> _markers = [];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +42,7 @@ class _MapPageState extends State<MapPage> {
         ),
         children: [
           TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            urlTemplate: mapboxUrl,
             subdomains: const ['a', 'b', 'c'],
           ),
           MarkerLayer(
