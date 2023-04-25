@@ -1,8 +1,11 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields, avoid_unnecessary_containers
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields, avoid_unnecessary_containers, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkflow/model/user/user_logged_controller.dart';
+import 'package:provider/provider.dart';
 
 String username = 'krupuks';
 String tilesize = '256';
@@ -10,34 +13,37 @@ String scale = '2';
 String mapboxAccessToken =
     'pk.eyJ1Ijoia3J1cHVrcyIsImEiOiJjbGd1a2Y4aDMyM2RpM2NtdDF0OWl5aXJyIn0.T-90bn65p10SjFwgfBiWyg';
 String mapboxUrl =
-    'https://api.mapbox.com/styles/v1/${username}/clgukhlsf005g01o58vp31upm/tiles/$tilesize/{z}/{x}/{y}@${scale}x?access_token=${mapboxAccessToken}';
+    'https://api.mapbox.com/styles/v1/$username/clgukhlsf005g01o58vp31upm/tiles/$tilesize/{z}/{x}/{y}@${scale}x?access_token=$mapboxAccessToken';
 
-//error => naar hier [https://docs.fleaflet.dev/usage/basics ]
-//toekomst => https://pub.dev/packages/material_floating_search_bar,
+final _firestore = FirebaseFirestore.instance;
+
 class MapPage extends StatefulWidget {
   @override
   _MapPageState createState() => _MapPageState();
 }
 
-//nog te doen:
-//1- markers verwijderen.
-//2- markers toevoegen [knop links beneden doen ?] \figma updaten?
-//3- markers informatie bewaren.
 class _MapPageState extends State<MapPage> {
   bool _isAddingMarkers = false;
   List<Marker> _markers = [];
 
   @override
+  void initState() {
+    super.initState();
+    _getMarkersFromDatabase();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final userLogged = Provider.of<UserLogged>(context);
+    final userEmail = userLogged.email.trim();
+
     return Scaffold(
       body: FlutterMap(
-        //begin locatie - vragen aan meneer als het het vaste plaats gaat zijn of user location
-        //als optie 2 => uitvinden hoe je dat met andriod device doet. te veel errors.
         options: MapOptions(
           center: LatLng(51.2172, 4.4212),
           zoom: 16,
           onTap: _isAddingMarkers
-              ? (tapPosition, latlng) => _createMarker(latlng)
+              ? (tapPosition, latlng) => _createMarker(latlng, userEmail)
               : null,
         ),
         children: [
@@ -50,7 +56,6 @@ class _MapPageState extends State<MapPage> {
           ),
         ],
       ),
-      //die knopje rechts beneden. niet aanraken!
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -62,37 +67,57 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  //methode om markers te maken.
-  void _createMarker(LatLng latlng) {
+  Future<void> _getMarkersFromDatabase() async {
+    final markersSnapshot = await _firestore.collection('markers').get();
+
     setState(() {
-      _markers.add(
-        Marker(
-          width: 60.0,
-          height: 60.0,
-          point: latlng,
-          builder: (ctx) => GestureDetector(
-            onTap: () {
-              // toon de methode.
-              _showPopup(context, latlng);
-              //onderzoeken hoe ik informatie bewaar van de marker.
-              //classe mischien maken van markers of collection op firebase
-            },
-            child: Container(
-              child: const Icon(Icons.location_on, color: Colors.red, size: 40),
-            ),
-          ),
-        ),
-      );
+      _markers = markersSnapshot.docs.map((doc) {
+        LatLng latLng = LatLng(doc['latitude'], doc['longitude']);
+        return _createMarkersInMap(latLng, doc['userId']);
+      }).toList();
+    });
+  }
+
+  void _createMarker(LatLng latlng, String userId) {
+    _saveMarkerToDatabase(latlng, userId);
+    setState(() {
+      _markers.add(_createMarkersInMap(latlng, userId));
       _isAddingMarkers = false;
+    });
+  }
+
+  Marker _createMarkersInMap(LatLng latlng, String userId) {
+    final userLogged = Provider.of<UserLogged>(context, listen: false);
+    final userEmail = userLogged.email.trim();
+    final markerColor = userEmail == userId ? Colors.blue : Colors.black;
+    return Marker(
+      width: 60.0,
+      height: 60.0,
+      point: latlng,
+      builder: (ctx) => GestureDetector(
+        onTap: () {
+          // Show the popup
+          _showPopup(context, latlng);
+        },
+        child: Container(
+          child: Icon(Icons.location_on, color: markerColor, size: 40),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveMarkerToDatabase(LatLng latlng, String userId) async {
+    await _firestore.collection('markers').add({
+      'latitude': latlng.latitude,
+      'longitude': latlng.longitude,
+      'userId': userId,
     });
   }
 }
 
-//info van databse hier zetten.
 void _showPopup(BuildContext context, LatLng latLng) {
   showModalBottomSheet(
     context: context,
-    //voor een of andere reden laat het true [isScrollcontrolled], anders komt die pop up maar tot 40%. onderzoek waarom of zo laten.
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
@@ -113,9 +138,7 @@ void _showPopup(BuildContext context, LatLng latLng) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //momenteel dit text, later naam van iets ? locatie straat of ????
                   const Text('title mischien heir'),
-                  //meer centreren? center widget werk niet. onderzoeken!.
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),
@@ -123,15 +146,12 @@ void _showPopup(BuildContext context, LatLng latLng) {
                   ),
                 ],
               ),
-              //vind de lijn mooi.
               const Divider(
                 color: Colors.black,
                 thickness: 1,
                 indent: 20,
                 endIndent: 20,
               ),
-              //voor het moment dit.
-              //uitvinden hoe ik de uren kan zetten.
               Text('Latitude: ${latLng.latitude}',
                   style: const TextStyle(fontSize: 24)),
               Text('longitude: ${latLng.longitude}',

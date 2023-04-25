@@ -45,9 +45,9 @@ class _VehiclesPageState extends State<VehiclesPage> {
                         key: Key(vehicle.model),
                         background: Container(
                           color: Colors.red,
-                          child: const Icon(Icons.delete, color: Colors.white),
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.only(right: 16),
+                          child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         onDismissed: (direction) {
                           setState(() {
