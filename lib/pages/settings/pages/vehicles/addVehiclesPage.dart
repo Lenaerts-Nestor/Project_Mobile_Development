@@ -19,7 +19,7 @@ class _AddVehicleState extends State<AddVehicle> {
   final _modelController = TextEditingController();
   final _brandController = TextEditingController();
   final _colorController = TextEditingController();
-  final _uuid = Uuid(); //unique ID.
+  final _uuid = const Uuid(); //unique ID.
 
   @override
   void dispose() {
