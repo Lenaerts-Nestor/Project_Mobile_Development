@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart'; // Add this import
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class _AddVehicleState extends State<AddVehicle> {
   final _modelController = TextEditingController();
   final _brandController = TextEditingController();
   final _colorController = TextEditingController();
+  final _uuid = Uuid(); //unique ID.
 
   @override
   void dispose() {
@@ -96,6 +98,8 @@ class _AddVehicleState extends State<AddVehicle> {
                       final model = _modelController.text;
                       final brand = _brandController.text;
                       final color = _colorController.text;
+                      final vehicleId =
+                          _uuid.v4(); // Genereer een unique ID => vehicleID.
 
                       final email =
                           Provider.of<UserLogged>(context, listen: false).email;
@@ -109,11 +113,11 @@ class _AddVehicleState extends State<AddVehicle> {
                           userSnap.get('vervoeren') as List<dynamic>;
 
                       final newVehicle = Vehicle(
+                        id: vehicleId, // Add the vehicle ID
                         model: model,
                         brand: brand,
                         color: color,
                       );
-
                       existingVehicles.add(newVehicle.toJson());
                       await userDoc.update({'vervoeren': existingVehicles});
 
