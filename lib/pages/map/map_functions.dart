@@ -72,8 +72,7 @@ Future<void> saveMarkerToDatabase(
 void showPopup(
     BuildContext context, LatLng latLng, DateTime startTime, DateTime endTime) {
   DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now()
-      .add(const Duration(hours: 1)); // Set initial end time to 1 hour from now
+  DateTime endTime = DateTime.now().add(const Duration(hours: 1));
 
   showModalBottomSheet(
     context: context,
@@ -81,7 +80,6 @@ void showPopup(
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StatefulBuilder(builder: (context, setState) {
-        // Wrap in StatefulBuilder to access setState method
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
@@ -146,7 +144,8 @@ void showPopup(
                             );
                             if (endTime.difference(startTime) >
                                 const Duration(hours: 24)) {
-                              endTime = startTime.add(const Duration(hours: 24));
+                              endTime =
+                                  startTime.add(const Duration(hours: 24));
                             }
                           });
                         }
