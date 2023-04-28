@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkflow/components/custom_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/user/user_logged_controller.dart';
@@ -29,8 +31,7 @@ void getMarkersFromDatabase(BuildContext context,
 void createMarker(LatLng latlng, String userId, BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now()
-      .add(const Duration(hours: 1)); // Set initial end time to 1 hour from now
+  DateTime endTime = DateTime.now().add(const Duration(hours: 1));
 
   saveMarkerToDatabase(latlng, userId, startTime, endTime);
   Marker newMarker =
@@ -71,9 +72,6 @@ Future<void> saveMarkerToDatabase(
 
 void showPopup(
     BuildContext context, LatLng latLng, DateTime startTime, DateTime endTime) {
-  DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now().add(const Duration(hours: 1));
-
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -111,53 +109,34 @@ void showPopup(
                   indent: 20,
                   endIndent: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Start Time: ${startTime.hour}:${startTime.minute}'),
-                    IconButton(
-                      onPressed: () => setState(() {
-                        startTime = DateTime.now();
-                      }),
-                      icon: const Icon(Icons.refresh),
-                    ),
-                  ],
+                const Text('Hoe lang wilt u reserveren ?'),
+                //clock =>
+                SizedBox(
+                  height: 180,
+                  child: CupertinoDatePicker(
+                    initialDateTime: startTime,
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    use24hFormat: true,
+                    minimumDate: startTime.subtract(Duration(minutes: 10)),
+                    maximumDate: startTime.add(const Duration(hours: 24)),
+                    onDateTimeChanged: (DateTime value) {
+                      setState(() => startTime = value);
+                    },
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('End Time: ${endTime.hour}:${endTime.minute}'),
-                    IconButton(
-                      onPressed: () async {
-                        final newEndTime = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(endTime),
-                        );
-                        if (newEndTime != null) {
-                          setState(() {
-                            endTime = DateTime(
-                              endTime.year,
-                              endTime.month,
-                              endTime.day,
-                              newEndTime.hour,
-                              newEndTime.minute,
-                            );
-                            if (endTime.difference(startTime) >
-                                const Duration(hours: 24)) {
-                              endTime =
-                                  startTime.add(const Duration(hours: 24));
-                            }
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.edit),
+
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: CustomButton(
+                      label: "Reserveren",
+                      backgroundColor: Colors.blueGrey,
+                      onPressed: () {},
+                      height: 70,
+                      width: double.infinity,
                     ),
-                  ],
+                  ),
                 ),
-                Text('Latitude: ${latLng.latitude}',
-                    style: const TextStyle(fontSize: 24)),
-                Text('Longitude: ${latLng.longitude}',
-                    style: const TextStyle(fontSize: 24)),
               ],
             ),
           ),
