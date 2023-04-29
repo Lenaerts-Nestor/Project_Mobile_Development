@@ -6,6 +6,7 @@ import 'package:parkflow/firebase_options.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
 import 'model/user/user_logged_controller.dart';
 import 'package:provider/provider.dart';
+import 'components/style/designStyle.dart' as style;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class MainApp extends StatelessWidget {
         title: 'parkflow',
         debugShowCheckedModeBanner: false,
         home: LoginPage(),
+        theme: style.theme,
       ),
     );
   }
