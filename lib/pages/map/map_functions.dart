@@ -95,7 +95,7 @@ void showPopup(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Title maybe here'),
+                    const Text('Straat naam hier'),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close),
@@ -110,15 +110,13 @@ void showPopup(
                   endIndent: 20,
                 ),
                 const Text('Hoe lang wilt u reserveren ?'),
-                //clock =>
+                //clock => //functie nog te doen
                 SizedBox(
                   height: 180,
                   child: CupertinoDatePicker(
                     initialDateTime: startTime,
-                    mode: CupertinoDatePickerMode.dateAndTime,
+                    mode: CupertinoDatePickerMode.time,
                     use24hFormat: true,
-                    minimumDate: startTime.subtract(Duration(minutes: 10)),
-                    maximumDate: startTime.add(const Duration(hours: 24)),
                     onDateTimeChanged: (DateTime value) {
                       setState(() => startTime = value);
                     },
@@ -131,7 +129,7 @@ void showPopup(
                     child: CustomButton(
                       label: "Reserveren",
                       backgroundColor: Colors.blueGrey,
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       height: 70,
                       width: double.infinity,
                     ),

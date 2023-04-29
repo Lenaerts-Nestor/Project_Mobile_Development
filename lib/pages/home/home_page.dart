@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     SettingsPage(),
     //nog extra pages ?
     UserInfoPage(),
+    SettingsPage(),
   ];
 
   @override
