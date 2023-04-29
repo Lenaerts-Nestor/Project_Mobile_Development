@@ -1,20 +1,16 @@
-// ignore_for_file: use_build_context_synchronously, library_prefixes
-
 import 'package:flutter/material.dart';
-
-import 'style/designStyle.dart' as myFontstyle;
+import 'style/designStyle.dart' as style;
 
 class SignOutButton extends StatelessWidget {
   const SignOutButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
+    return ElevatedButton(
       onPressed: () => signOut(context),
-      icon: const Icon(Icons.arrow_back),
-      label: Text(
-        'Log uit',
-        style: TextStyle(fontSize: myFontstyle.fontSize1),
+      child: Text(
+        'Uitloggen',
+        style: TextStyle(fontSize: style.fontSize1),
       ),
     );
   }
