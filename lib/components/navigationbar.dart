@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'style/designStyle.dart' as style;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -9,31 +10,36 @@ class MyNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: GNav(
-        onTabChange: (value) => onTabChange!(value),
-        activeColor: Colors.cyan[300],
-        tabActiveBorder: Border.all(color: Colors.black),
-        gap: 8,
-        tabs: const [
-          GButton(
-            icon: Icons.map,
-            text: 'Map',
-          ),
-          GButton(
-            icon: Icons.favorite,
-            text: 'Favoriet',
-          ),
-          GButton(
-            icon: Icons.directions_car_outlined,
-            text: 'Parking',
-          ),
-          GButton(
-            icon: Icons.settings,
-            text: 'Settings',
-          ),
-        ],
+    return SizedBox(
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 0.0),
+        child: GNav(
+          
+          onTabChange: (value) => onTabChange!(value),
+          activeColor: style.color6,
+          backgroundColor: style.color2,
+          color: style.color4,
+          gap: 8,
+          tabs: const [
+            GButton(
+              icon: Icons.map,
+              iconSize: style.iconSizeNav,
+            ),
+            GButton(
+              icon: Icons.favorite,
+              iconSize: style.iconSizeNav,
+            ),
+            GButton(
+              icon: Icons.directions_car_outlined,
+              iconSize: style.iconSizeNav,
+            ),
+            GButton(
+              icon: Icons.settings,
+              iconSize: style.iconSizeNav,
+            ),
+          ],
+        ),
       ),
     );
   }
