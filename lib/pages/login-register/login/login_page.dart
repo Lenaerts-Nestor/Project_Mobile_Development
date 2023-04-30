@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('geen account ? '),
+                  const Text('geen account?'),
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                               builder: (context) => const RegisterPage()),
                         );
                       },
-                      child: const Text('Creeër Account'))
+                      child: const Text('Maak een account'))
                 ],
               )
             ],

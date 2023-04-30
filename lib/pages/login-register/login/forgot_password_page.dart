@@ -27,7 +27,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot password area'),
+        title: const Text('Reset wachtwoord'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
