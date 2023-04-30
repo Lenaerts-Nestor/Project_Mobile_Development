@@ -116,7 +116,7 @@ class _SignUpPageState extends State<RegisterPage> {
                           );
                         }
                       },
-                text: 'Creeër account',
+                text: 'registreren',
               ),
               const SizedBox(height: 10),
               Row(
