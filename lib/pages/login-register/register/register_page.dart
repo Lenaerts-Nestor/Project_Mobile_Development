@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/pages/home/home_page.dart';
 import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
+import 'package:parkflow/components/blackButton.dart'; //test
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -91,12 +92,7 @@ class _SignUpPageState extends State<RegisterPage> {
               const SizedBox(height: 10),
               Text('Wachtwoord sterkte: $_passwordStrength'),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: const Text(
-                  'Creeër account',
-                  style: TextStyle(fontSize: 24),
-                ),
+              BlackButton(
                 onPressed: _passwordStrength == 'zwak'
                     ? null
                     : () async {
@@ -120,6 +116,7 @@ class _SignUpPageState extends State<RegisterPage> {
                           );
                         }
                       },
+                text: 'Creeër account',
               ),
               const SizedBox(height: 10),
               Row(

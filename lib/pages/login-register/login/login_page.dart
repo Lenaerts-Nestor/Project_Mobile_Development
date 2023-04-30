@@ -5,6 +5,7 @@ import 'package:parkflow/pages/login-register/auth_services.dart';
 
 import '../../../pages/login-register/login/forgot_password_page.dart';
 import '../../../pages/login-register/register/register_page.dart';
+import 'package:parkflow/components/blackButton.dart'; //test
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -55,15 +56,10 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton.icon(
+              BlackButton(
                 onPressed: () =>
-                    //sign_in_service =>
                     signin(context, emailController, passwordController),
-                icon: const Icon(Icons.login),
-                label: const Text(
-                  'Log in',
-                  style: TextStyle(fontSize: 24),
-                ),
+                text: 'inloggen',
               ),
               const SizedBox(
                 height: 24,
