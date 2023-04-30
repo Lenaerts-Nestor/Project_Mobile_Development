@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/pages/home/home_page.dart';
 import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
-import 'package:parkflow/components/blackButton.dart'; //test
+import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:parkflow/components/custom_text_button.dart'; //test
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -123,15 +124,16 @@ class _SignUpPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('al een account?'),
-                  TextButton(
+                  CustomTextButton(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
+                          builder: (context) => const LoginPage(),
+                        ),
                       );
                     },
-                    child: const Text('log hier in'),
-                  ),
+                    text: 'log hier in',
+                  )
                 ],
               )
             ],

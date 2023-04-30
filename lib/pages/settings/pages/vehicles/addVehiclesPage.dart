@@ -6,7 +6,7 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart'; // Add this import
-import 'package:parkflow/components/blackButton.dart'; //test
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);

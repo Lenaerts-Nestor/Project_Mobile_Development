@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
-import 'package:parkflow/components/blackButton.dart'; //test
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

@@ -6,7 +6,7 @@
 import 'package:flutter/material.dart';
 
 //font sizes
-double fontSize1 = 10;
+double fontSize1 = 15;
 double fontSize2 = 20;
 double fontSize3 = 30;
 

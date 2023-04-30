@@ -10,7 +10,7 @@ import 'package:parkflow/model/vehicle.dart';
 
 import '../../../../model/user/user_account.dart';
 import 'addVehiclesPage.dart';
-import 'package:parkflow/components/blackButton.dart'; //test
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class VehiclesPage extends StatefulWidget {
   const VehiclesPage({Key? key}) : super(key: key);

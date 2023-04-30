@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
-import 'package:parkflow/components/blackButton.dart'; //test
+import 'package:parkflow/components/custom_button.dart'; //test
 
 //TODO: nog aanpassen zonder firebase auth.
 class ForgotPasswordPage extends StatefulWidget {
