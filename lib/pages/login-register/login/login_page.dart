@@ -5,6 +5,8 @@ import 'package:parkflow/pages/login-register/auth_services.dart';
 
 import '../../../pages/login-register/login/forgot_password_page.dart';
 import '../../../pages/login-register/register/register_page.dart';
+import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:parkflow/components/custom_text_button.dart'; //test
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -55,31 +57,20 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton.icon(
+              BlackButton(
                 onPressed: () =>
-                    //sign_in_service =>
                     signin(context, emailController, passwordController),
-                icon: const Icon(Icons.login),
-                label: const Text(
-                  'Log in',
-                  style: TextStyle(fontSize: 24),
-                ),
+                text: 'inloggen',
               ),
-              const SizedBox(
-                height: 24,
-              ),
-              GestureDetector(
-                child: const Text(
-                  'Wachtwoord resetten',
-                  style: TextStyle(color: Colors.blue, fontSize: 20),
-                ),
-                onTap: () {
+              CustomTextButton(
+                onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const ForgotPasswordPage(),
                     ),
                   );
                 },
+                text: 'Wachtwoord resetten',
               ),
               const SizedBox(
                 height: 10,
@@ -87,15 +78,16 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('geen account ? '),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterPage()),
-                        );
-                      },
-                      child: const Text('Creeër Account'))
+                  const Text('geen account?'),
+                  CustomTextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterPage()),
+                      );
+                    },
+                    text: 'Maak een account',
+                  ),
                 ],
               )
             ],

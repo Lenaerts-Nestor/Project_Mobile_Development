@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_map_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/user/user_logged_controller.dart';
@@ -126,7 +126,7 @@ void showPopup(
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: CustomButton(
+                    child: CustomMapButton(
                       label: "Reserveren",
                       backgroundColor: Colors.blueGrey,
                       onPressed: () => Navigator.pop(context),

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
+import 'package:parkflow/components/custom_button.dart'; //test
 
 //TODO: nog aanpassen zonder firebase auth.
 class ForgotPasswordPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot password area'),
+        title: const Text('Reset wachtwoord'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -43,13 +44,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton.icon(
+              BlackButton(
                 onPressed: resetPassword,
-                icon: const Icon(Icons.mail_rounded),
-                label: const Text(
-                  'wachtwoord resetten',
-                  style: TextStyle(fontSize: 24),
-                ),
+                text: 'resetten',
               ),
             ],
           ),

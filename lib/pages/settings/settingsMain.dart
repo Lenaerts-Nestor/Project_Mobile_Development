@@ -1,9 +1,10 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, unused_element
 
 import 'package:flutter/material.dart';
-import 'package:parkflow/components/sign_out_button.dart';
+//import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -39,12 +40,13 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Future<void> signOut(BuildContext context) async {
+    // update de locale data zodat het weet dat het uigelogd is, anders zieke buggs......
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
       body: Stack(
         children: [
           _showDefaultPage
@@ -52,22 +54,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      ElevatedButton(
+                      BlackButton(
                         onPressed: _onButton1Pressed,
-                        child: const Text('Profiel'),
+                        text: 'Profiel',
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
+                      BlackButton(
                         onPressed: _onButton2Pressed,
-                        child: const Text('Button 2'),
+                        text: 'Voertuigen',
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Button 3'),
+                      BlackButton(
+                        onPressed: () => signOut(context),
+                        text: 'Uitloggen',
                       ),
-                      const SizedBox(height: 50),
-                      const SignOutButton()
                     ],
                   ),
                 )
