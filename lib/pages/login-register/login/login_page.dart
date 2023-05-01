@@ -5,8 +5,10 @@ import 'package:parkflow/pages/login-register/auth_services.dart';
 
 import '../../../pages/login-register/login/forgot_password_page.dart';
 import '../../../pages/login-register/register/register_page.dart';
-import 'package:parkflow/components/custom_button.dart'; //test
-import 'package:parkflow/components/custom_text_button.dart'; //test
+import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_text_button.dart';
+import 'package:parkflow/components/custom_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,28 +37,43 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+              const SizedBox(height: 30),
+              Center(
+                child: SvgPicture.asset(
+                  'assets/logo.svg',
+                  width: MediaQuery.of(context).size.width - 60,
+                ),
+              ),
+              const SizedBox(height: 40),
+              const CustomText(
+                text: 'Parkeren was nog nooit zo eenvoudig',
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 60,
+                child: TextField(
+                  controller: emailController,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              TextField(
-                controller: passwordController,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  labelText: 'Wachtwoord',
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 60,
+                child: TextField(
+                  controller: passwordController,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(
+                    labelText: 'Wachtwoord',
+                  ),
+                  obscureText: true,
                 ),
-                obscureText: true,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 30),
               BlackButton(
                 onPressed: () =>
                     signin(context, emailController, passwordController),
@@ -72,9 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 text: 'Wachtwoord resetten',
               ),
-              const SizedBox(
-                height: 10,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -89,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: 'Maak een account',
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

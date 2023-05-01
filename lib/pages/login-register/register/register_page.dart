@@ -65,14 +65,14 @@ class _SignUpPageState extends State<RegisterPage> {
                 children: [
                   Expanded(
                     child: _buildTextField(
-                        nameController, 'Naam', TextInputAction.next,
+                        nameController, 'Voornaam', TextInputAction.next,
                         obscureText: false),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
                     child: _buildTextField(
                       familyNameController,
-                      'Familie Naam',
+                      'Familienaam',
                       TextInputAction.next,
                       obscureText: false,
                     ),

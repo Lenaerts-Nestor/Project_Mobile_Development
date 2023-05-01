@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 //import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
-import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:parkflow/components/custom_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -54,6 +55,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Center(
+                        child: SvgPicture.asset(
+                          'assets/logo.svg',
+                          width: MediaQuery.of(context).size.width - 60,
+                        ),
+                      ),
+                      const SizedBox(height: 100),
                       BlackButton(
                         onPressed: _onButton1Pressed,
                         text: 'Profiel',
