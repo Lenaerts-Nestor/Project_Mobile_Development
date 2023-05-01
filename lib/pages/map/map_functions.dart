@@ -21,8 +21,10 @@ void getMarkersFromDatabase(BuildContext context,
     String userId = doc['userId'];
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
+    bool isGreenMarker = doc['isGreenMarker'];
+
     return createMarkersFromDatabase(
-        context, latLng, userId, startTime, endTime);
+        context, latLng, userId, startTime, endTime, isGreenMarker);
   }).toList();
 
   onMarkersFetched(markers);
@@ -31,26 +33,36 @@ void getMarkersFromDatabase(BuildContext context,
 void createMarker(LatLng latlng, String userId, BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now().add(const Duration(hours: 1));
+  DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
+  bool isGreenMarker = true;
 
-  saveMarkerToDatabase(latlng, userId, startTime, endTime);
-  Marker newMarker =
-      createMarkersFromDatabase(context, latlng, userId, startTime, endTime);
+  saveMarkerToDatabase(latlng, userId, startTime, endTime, isGreenMarker);
+
+  Marker newMarker = createMarkersFromDatabase(
+      context, latlng, userId, startTime, endTime, isGreenMarker);
   onMarkerCreated(newMarker);
 }
 
 Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
-    String userId, DateTime startTime, DateTime endTime) {
+    String userId, DateTime startTime, DateTime endTime, bool isGreenMarker) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
   final userEmail = userLogged.email.trim();
-  final markerColor = userEmail == userId ? Colors.blue : Colors.black;
+  Color markerColor;
+  if (isGreenMarker) {
+    markerColor = Colors.green;
+  } else if (userEmail == userId) {
+    markerColor = Colors.blue;
+  } else {
+    markerColor = Colors.orange;
+  }
+
   return Marker(
     width: 60.0,
     height: 60.0,
     point: latlng,
     builder: (ctx) => GestureDetector(
       onTap: () {
-        showPopup(context, latlng, startTime, endTime);
+        showPopup(context, latlng, startTime, endTime, userId, isGreenMarker);
       },
       child: Container(
         child: Icon(Icons.location_on, color: markerColor, size: 40),
@@ -59,25 +71,31 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
   );
 }
 
-Future<void> saveMarkerToDatabase(
-    LatLng latlng, String userId, DateTime startTime, DateTime endTime) async {
+Future<void> saveMarkerToDatabase(LatLng latlng, String userId,
+    DateTime startTime, DateTime endTime, bool isGreenMarker) async {
   await _firestore.collection('markers').add({
     'latitude': latlng.latitude,
     'longitude': latlng.longitude,
     'userId': userId,
     'startTime': startTime,
     'endTime': endTime,
+    'isGreenMarker': isGreenMarker,
   });
 }
 
-void showPopup(
-    BuildContext context, LatLng latLng, DateTime startTime, DateTime endTime) {
+
+
+
+void showPopup(BuildContext context, LatLng latLng, DateTime startTime,
+    DateTime endTime, String userId, bool isGreenMarker) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StatefulBuilder(builder: (context, setState) {
+        DateTime calculatedEndTime = endTime;
+
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
@@ -110,26 +128,38 @@ void showPopup(
                   endIndent: 20,
                 ),
                 const Text('Hoe lang wilt u reserveren ?'),
-                //clock => //functie nog te doen
                 SizedBox(
                   height: 180,
                   child: CupertinoDatePicker(
-                    initialDateTime: startTime,
+                    initialDateTime: DateTime(0),
                     mode: CupertinoDatePickerMode.time,
                     use24hFormat: true,
                     onDateTimeChanged: (DateTime value) {
-                      setState(() => startTime = value);
+                      setState(() {
+                        calculatedEndTime =
+                            startTime.add(value.difference(DateTime(0)));
+                      });
                     },
                   ),
                 ),
-
+                Text(
+                  'Eindtijd: ${calculatedEndTime.hour}',
+                  style: const TextStyle(fontSize: 16),
+                ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: CustomButton(
                       label: "Reserveren",
                       backgroundColor: Colors.blueGrey,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        bool newIsGreenMarker = DateTime.now().isBefore(
+                            calculatedEndTime
+                                .subtract(const Duration(minutes: 10)));
+                        saveMarkerToDatabase(latLng, userId, startTime,
+                            calculatedEndTime, newIsGreenMarker);
+                        Navigator.pop(context);
+                      },
                       height: 70,
                       width: double.infinity,
                     ),

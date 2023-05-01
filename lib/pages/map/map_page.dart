@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -27,6 +27,15 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
+    // Refresh the map every 30 seconds
+    Timer.periodic(const Duration(seconds: 15), (Timer t) {
+      getMarkersFromDatabase(context, (List<Marker> markers) {
+        setState(() {
+          _markers = markers;
+        });
+      });
+    });
+    // Get the markers initially
     getMarkersFromDatabase(context, (List<Marker> markers) {
       setState(() {
         _markers = markers;
