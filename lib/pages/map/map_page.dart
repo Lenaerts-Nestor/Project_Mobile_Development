@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -23,19 +22,21 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   bool _isAddingMarkers = false;
   List<Marker> _markers = [];
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    // Refresh the map every 30 seconds
-    Timer.periodic(const Duration(seconds: 15), (Timer t) {
-      getMarkersFromDatabase(context, (List<Marker> markers) {
-        setState(() {
-          _markers = markers;
-        });
-      });
+    //refresh de map elke seconde
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+      await removeExpiredMarkers();
+      _updateMarkers();
     });
-    // Get the markers initially
+    _updateMarkers();
+  }
+
+  //zet de markers op de map van de database
+  void _updateMarkers() {
     getMarkersFromDatabase(context, (List<Marker> markers) {
       setState(() {
         _markers = markers;
@@ -44,18 +45,29 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
+  void dispose() {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
-    final userEmail = userLogged.email.trim();
-
     return Scaffold(
+      //voor het moment
+      appBar: AppBar(
+        title: const Text('Map'),
+      ),
       body: FlutterMap(
         options: MapOptions(
           center: LatLng(51.2172, 4.4212),
           zoom: 16,
           onTap: _isAddingMarkers
-              ? (tapPosition, latlng) {
-                  createMarker(latlng, userEmail, context, (Marker newMarker) {
+              ? (position, latlng) {
+                  createMarker(latlng, userLogged.email, context,
+                      (Marker newMarker) {
                     setState(() {
                       _markers.add(newMarker);
                       _isAddingMarkers = false;
@@ -67,11 +79,10 @@ class _MapPageState extends State<MapPage> {
         children: [
           TileLayer(
             urlTemplate: mapboxUrl,
-            subdomains: const ['a', 'b', 'c'],
+            //om errors te voorkomen =>
+            additionalOptions: {'accessToken': mapboxAccessToken},
           ),
-          MarkerLayer(
-            markers: _markers,
-          ),
+          MarkerLayer(markers: _markers),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -80,6 +91,7 @@ class _MapPageState extends State<MapPage> {
             _isAddingMarkers = !_isAddingMarkers;
           });
         },
+        backgroundColor: Colors.blue,
         child: Icon(_isAddingMarkers ? Icons.cancel : Icons.add_location),
       ),
     );

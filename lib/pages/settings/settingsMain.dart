@@ -7,6 +7,8 @@ import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../login-register/login/login_page.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -42,7 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> signOut(BuildContext context) async {
-    // update de locale data zodat het weet dat het uigelogd is, anders zieke buggs......
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ),
+    );
   }
 
   @override
