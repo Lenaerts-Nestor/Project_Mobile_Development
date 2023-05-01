@@ -9,8 +9,28 @@ import 'package:parkflow/components/custom_map_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/user/user_logged_controller.dart';
+import 'package:intl/intl.dart';
 
 final _firestore = FirebaseFirestore.instance;
+
+// Dit is allemaal voor de tijd
+Duration selectedTime = const Duration(hours: 0, minutes: 0);
+DateTime endTime = DateTime(0);
+String endTimeString = formatDateTime(endTime);
+
+//tijd formateer methodes
+String formatDateTime(DateTime dateTime) {
+  return DateFormat('dd/MM HHumm').format(dateTime);
+}
+
+//bereken endTime door currentTime + selectedTime te doen
+void calcEndTime(Duration selectedTime) {
+  endTime = DateTime.now().add(selectedTime);
+  //testing
+  print(DateTime.now());
+  print(selectedTime);
+  print(endTime); // <-- dit moet nog naar firebase gestuurd worden
+}
 
 void getMarkersFromDatabase(BuildContext context,
     void Function(List<Marker> markers) onMarkersFetched) async {
@@ -31,7 +51,7 @@ void getMarkersFromDatabase(BuildContext context,
 void createMarker(LatLng latlng, String userId, BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now().add(const Duration(hours: 1));
+  //DateTime endTime = DateTime.now().add(const Duration(hours: 1));
 
   saveMarkerToDatabase(latlng, userId, startTime, endTime);
   Marker newMarker =
@@ -78,6 +98,8 @@ void showPopup(
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StatefulBuilder(builder: (context, setState) {
+        //onderste lijn code is belangrijk!
+        DateTime endTime = DateTime.now().add(selectedTime);
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
@@ -109,30 +131,42 @@ void showPopup(
                   indent: 20,
                   endIndent: 20,
                 ),
-                const Text('Hoe lang wilt u reserveren ?'),
-                //clock => //functie nog te doen
+                const Text('Hoe lang gaat u parkeren?'),
                 SizedBox(
                   height: 180,
                   child: CupertinoDatePicker(
-                    initialDateTime: startTime,
+                    initialDateTime: DateTime(0).add(selectedTime),
                     mode: CupertinoDatePickerMode.time,
                     use24hFormat: true,
                     onDateTimeChanged: (DateTime value) {
-                      setState(() => startTime = value);
+                      setState(() {
+                        selectedTime =
+                            Duration(hours: value.hour, minutes: value.minute);
+                      });
                     },
                   ),
                 ),
-
+                const SizedBox(height: 20),
+                Text('van ${formatDateTime(DateTime.now())}'),
+                Text('tot  ${formatDateTime(endTime)}'),
+                const SizedBox(height: 20),
                 Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: CustomMapButton(
-                      label: "Reserveren",
-                      backgroundColor: Colors.blueGrey,
-                      onPressed: () => Navigator.pop(context),
-                      height: 70,
-                      width: double.infinity,
-                    ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: CustomMapButton(
+                          label: "Parkeren",
+                          backgroundColor: Colors.blueGrey,
+                          onPressed: () {
+                            calcEndTime(selectedTime);
+                            Navigator.pop(context);
+                          },
+                          height: 70,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
