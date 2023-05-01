@@ -41,10 +41,8 @@ void getMarkersFromDatabase(BuildContext context,
     String userId = doc['userId'];
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
-    bool isGreenMarker = doc['isGreenMarker'];
-
     return createMarkersFromDatabase(
-        context, latLng, userId, startTime, endTime, isGreenMarker);
+        context, latLng, userId, startTime, endTime);
   }).toList();
 
   onMarkersFetched(markers);
@@ -55,31 +53,24 @@ void createMarker(LatLng latlng, String userId, BuildContext context,
   DateTime startTime = DateTime.now();
   //DateTime endTime = DateTime.now().add(const Duration(hours: 1));
 
-  Marker newMarker = createMarkersFromDatabase(
-      context, latlng, userId, startTime, endTime, isGreenMarker);
+  saveMarkerToDatabase(latlng, userId, startTime, endTime);
+  Marker newMarker =
+      createMarkersFromDatabase(context, latlng, userId, startTime, endTime);
   onMarkerCreated(newMarker);
 }
 
 Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
-    String userId, DateTime startTime, DateTime endTime, bool isGreenMarker) {
+    String userId, DateTime startTime, DateTime endTime) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
   final userEmail = userLogged.email.trim();
-  Color markerColor;
-  if (isGreenMarker) {
-    markerColor = Colors.green;
-  } else if (userEmail == userId) {
-    markerColor = Colors.blue;
-  } else {
-    markerColor = Colors.orange;
-  }
-
+  final markerColor = userEmail == userId ? Colors.blue : Colors.black;
   return Marker(
     width: 60.0,
     height: 60.0,
     point: latlng,
     builder: (ctx) => GestureDetector(
       onTap: () {
-        showPopup(context, latlng, startTime, endTime, userId, isGreenMarker);
+        showPopup(context, latlng, startTime, endTime);
       },
       child: Container(
         child: Icon(Icons.location_on, color: markerColor, size: 40),
@@ -88,23 +79,19 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
   );
 }
 
-Future<void> saveMarkerToDatabase(LatLng latlng, String userId,
-    DateTime startTime, DateTime endTime, bool isGreenMarker) async {
+Future<void> saveMarkerToDatabase(
+    LatLng latlng, String userId, DateTime startTime, DateTime endTime) async {
   await _firestore.collection('markers').add({
     'latitude': latlng.latitude,
     'longitude': latlng.longitude,
     'userId': userId,
     'startTime': startTime,
     'endTime': endTime,
-    'isGreenMarker': isGreenMarker,
   });
 }
 
-
-
-
-void showPopup(BuildContext context, LatLng latLng, DateTime startTime,
-    DateTime endTime, String userId, bool isGreenMarker) {
+void showPopup(
+    BuildContext context, LatLng latLng, DateTime startTime, DateTime endTime) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
