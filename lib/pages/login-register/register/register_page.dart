@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/pages/home/home_page.dart';
 import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
+import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:parkflow/components/custom_text_button.dart'; //test
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -63,14 +65,14 @@ class _SignUpPageState extends State<RegisterPage> {
                 children: [
                   Expanded(
                     child: _buildTextField(
-                        nameController, 'Naam', TextInputAction.next,
+                        nameController, 'Voornaam', TextInputAction.next,
                         obscureText: false),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
                     child: _buildTextField(
                       familyNameController,
-                      'Familie Naam',
+                      'Familienaam',
                       TextInputAction.next,
                       obscureText: false,
                     ),
@@ -91,12 +93,7 @@ class _SignUpPageState extends State<RegisterPage> {
               const SizedBox(height: 10),
               Text('Wachtwoord sterkte: $_passwordStrength'),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: const Text(
-                  'Creeër account',
-                  style: TextStyle(fontSize: 24),
-                ),
+              BlackButton(
                 onPressed: _passwordStrength == 'zwak'
                     ? null
                     : () async {
@@ -120,21 +117,23 @@ class _SignUpPageState extends State<RegisterPage> {
                           );
                         }
                       },
+                text: 'registreren',
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('geen account ? '),
-                  TextButton(
+                  const Text('al een account?'),
+                  CustomTextButton(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
+                          builder: (context) => const LoginPage(),
+                        ),
                       );
                     },
-                    child: const Text('creer account'),
-                  ),
+                    text: 'log hier in',
+                  )
                 ],
               )
             ],

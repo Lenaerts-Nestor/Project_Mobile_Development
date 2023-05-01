@@ -6,6 +6,7 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart'; // Add this import
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _AddVehicleState extends State<AddVehicle> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voeg een voertuig toe'),
+        title: const Text('Voer een voertuig toe'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,14 +93,14 @@ class _AddVehicleState extends State<AddVehicle> {
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 height: 60,
                 width: double.infinity,
-                child: ElevatedButton(
+                child: BlackButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final model = _modelController.text;
                       final brand = _brandController.text;
                       final color = _colorController.text;
                       final vehicleId =
-                          _uuid.v4(); // Genereer een unique ID => vehicleID.
+                          _uuid.v4(); // Generate a unique ID => vehicleID.
 
                       final email =
                           Provider.of<UserLogged>(context, listen: false).email;
@@ -128,7 +129,7 @@ class _AddVehicleState extends State<AddVehicle> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Voeg uw voertuig toe'),
+                  text: 'voertuig toevoegen',
                 ),
               ),
             ],

@@ -10,6 +10,7 @@ import 'package:parkflow/model/vehicle.dart';
 
 import '../../../../model/user/user_account.dart';
 import 'addVehiclesPage.dart';
+import 'package:parkflow/components/custom_button.dart'; //test
 
 class VehiclesPage extends StatefulWidget {
   const VehiclesPage({Key? key}) : super(key: key);
@@ -90,13 +91,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
         height: 55,
         margin: EdgeInsets.only(bottom: 5),
         width: double.infinity,
-        child: ElevatedButton(
+        child: BlackButton(
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AddVehicle()),
             );
           },
-          child: const Text('Voertuig toevoegen'),
+          text: 'Voertuig toevoegen',
         ),
       ),
     );

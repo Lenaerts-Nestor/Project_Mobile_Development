@@ -5,12 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_map_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/user/user_logged_controller.dart';
+import 'package:intl/intl.dart';
 
 final _firestore = FirebaseFirestore.instance;
+
+// Dit is allemaal voor de tijd
+Duration selectedTime = const Duration(hours: 0, minutes: 0);
+DateTime endTime = DateTime(0);
+String endTimeString = formatDateTime(endTime);
+
+//tijd formateer methodes
+String formatDateTime(DateTime dateTime) {
+  return DateFormat('dd/MM HHumm').format(dateTime);
+}
+
+//bereken endTime door currentTime + selectedTime te doen
+void calcEndTime(Duration selectedTime) {
+  endTime = DateTime.now().add(selectedTime);
+  //testing
+  print(DateTime.now());
+  print(selectedTime);
+  print(endTime); // <-- dit moet nog naar firebase gestuurd worden
+}
 
 void getMarkersFromDatabase(BuildContext context,
     void Function(List<Marker> markers) onMarkersFetched) async {
@@ -33,10 +53,7 @@ void getMarkersFromDatabase(BuildContext context,
 void createMarker(LatLng latlng, String userId, BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
-  bool isGreenMarker = true;
-
-  saveMarkerToDatabase(latlng, userId, startTime, endTime, isGreenMarker);
+  //DateTime endTime = DateTime.now().add(const Duration(hours: 1));
 
   Marker newMarker = createMarkersFromDatabase(
       context, latlng, userId, startTime, endTime, isGreenMarker);
@@ -94,8 +111,8 @@ void showPopup(BuildContext context, LatLng latLng, DateTime startTime,
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StatefulBuilder(builder: (context, setState) {
-        DateTime calculatedEndTime = endTime;
-
+        //onderste lijn code is belangrijk!
+        DateTime endTime = DateTime.now().add(selectedTime);
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
@@ -127,42 +144,42 @@ void showPopup(BuildContext context, LatLng latLng, DateTime startTime,
                   indent: 20,
                   endIndent: 20,
                 ),
-                const Text('Hoe lang wilt u reserveren ?'),
+                const Text('Hoe lang gaat u parkeren?'),
                 SizedBox(
                   height: 180,
                   child: CupertinoDatePicker(
-                    initialDateTime: DateTime(0),
+                    initialDateTime: DateTime(0).add(selectedTime),
                     mode: CupertinoDatePickerMode.time,
                     use24hFormat: true,
                     onDateTimeChanged: (DateTime value) {
                       setState(() {
-                        calculatedEndTime =
-                            startTime.add(value.difference(DateTime(0)));
+                        selectedTime =
+                            Duration(hours: value.hour, minutes: value.minute);
                       });
                     },
                   ),
                 ),
-                Text(
-                  'Eindtijd: ${calculatedEndTime.hour}',
-                  style: const TextStyle(fontSize: 16),
-                ),
+                const SizedBox(height: 20),
+                Text('van ${formatDateTime(DateTime.now())}'),
+                Text('tot  ${formatDateTime(endTime)}'),
+                const SizedBox(height: 20),
                 Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: CustomButton(
-                      label: "Reserveren",
-                      backgroundColor: Colors.blueGrey,
-                      onPressed: () {
-                        bool newIsGreenMarker = DateTime.now().isBefore(
-                            calculatedEndTime
-                                .subtract(const Duration(minutes: 10)));
-                        saveMarkerToDatabase(latLng, userId, startTime,
-                            calculatedEndTime, newIsGreenMarker);
-                        Navigator.pop(context);
-                      },
-                      height: 70,
-                      width: double.infinity,
-                    ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: CustomMapButton(
+                          label: "Parkeren",
+                          backgroundColor: Colors.blueGrey,
+                          onPressed: () {
+                            calcEndTime(selectedTime);
+                            Navigator.pop(context);
+                          },
+                          height: 70,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

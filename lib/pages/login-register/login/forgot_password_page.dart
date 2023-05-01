@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
+import 'package:parkflow/pages/login-register/login/login_page.dart';
+import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_text_button.dart';
 
 //TODO: nog aanpassen zonder firebase auth.
 class ForgotPasswordPage extends StatefulWidget {
@@ -26,9 +29,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Forgot password area'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -36,21 +36,30 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 330,
+              ),
               TextField(
                 controller: emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
               ),
               const SizedBox(
-                height: 20,
+                height: 30,
               ),
-              ElevatedButton.icon(
+              BlackButton(
                 onPressed: resetPassword,
-                icon: const Icon(Icons.mail_rounded),
-                label: const Text(
-                  'wachtwoord resetten',
-                  style: TextStyle(fontSize: 24),
-                ),
+                text: 'resetten',
               ),
+                  CustomTextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    },
+                    text: '< terug naar log in',
+                  )
             ],
           ),
         ),
