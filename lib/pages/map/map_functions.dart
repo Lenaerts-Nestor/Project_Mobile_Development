@@ -118,14 +118,23 @@ Future<void> removeExpiredMarkers() async {
 }
 
 Future<void> updateMarkerState() async {
-  final markersSnapshot = await _firestore.collection('markers').get();
-  for (var doc in markersSnapshot.docs) {
-    DateTime prevTime = doc['prevTime'].toDate();
-    if (prevTime.isBefore(DateTime.now())) {
-      await doc.reference.update({'isGreenMarker': true});
+  try {
+    final markersSnapshot = await _firestore.collection('markers').get();
+    for (var doc in markersSnapshot.docs) {
+      DateTime prevTime = doc['prevTime'].toDate();
+      if (prevTime.isBefore(DateTime.now())) {
+        await doc.reference.update({'isGreenMarker': true});
+      }
+    }
+  } catch (e) {
+    if (e is FirebaseException && e.code == 'not-found') {
+      print('Document not found');
+    } else {
+      print('Error: $e');
     }
   }
 }
+
 
 void showPopupPark(BuildContext context, LatLng latLng, String userId) {
   showModalBottomSheet(
