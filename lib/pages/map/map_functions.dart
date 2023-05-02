@@ -26,6 +26,8 @@ void getMarkersFromDatabase(BuildContext context,
     String userId = doc['userId'];
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
+    DateTime prevTime = doc['prevTime'].toDate();
+
     bool isGreenMarker = doc['isGreenMarker'];
     return createMarkersFromDatabase(
         context, latLng, userId, startTime, endTime, isGreenMarker);
@@ -37,8 +39,10 @@ void createMarker(LatLng latlng, String userId, BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
+  DateTime prevTime = startTime;
   bool isGreenMarker = true;
-  saveMarkerToDatabase(latlng, userId, startTime, endTime, isGreenMarker);
+  saveMarkerToDatabase(
+      latlng, userId, startTime, endTime, isGreenMarker, prevTime);
   Marker newMarker = createMarkersFromDatabase(
       context, latlng, userId, startTime, endTime, isGreenMarker);
   onMarkerCreated(newMarker);
@@ -75,8 +79,13 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
   );
 }
 
-Future<void> saveMarkerToDatabase(LatLng latlng, String userId,
-    DateTime startTime, DateTime endTime, bool isGreenMarker) async {
+Future<void> saveMarkerToDatabase(
+    LatLng latlng,
+    String userId,
+    DateTime startTime,
+    DateTime endTime,
+    bool isGreenMarker,
+    DateTime prevTime) async {
   QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
       .collection('markers')
       .where('latitude', isEqualTo: latlng.latitude)
@@ -93,6 +102,7 @@ Future<void> saveMarkerToDatabase(LatLng latlng, String userId,
     'userId': userId,
     'startTime': startTime,
     'endTime': endTime,
+    'prevTime': prevTime,
     'isGreenMarker': isGreenMarker,
   });
 }
@@ -103,6 +113,16 @@ Future<void> removeExpiredMarkers() async {
     DateTime endTime = doc['endTime'].toDate();
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
+    }
+  }
+}
+
+Future<void> updateMarkerState() async {
+  final markersSnapshot = await _firestore.collection('markers').get();
+  for (var doc in markersSnapshot.docs) {
+    DateTime prevTime = doc['prevTime'].toDate();
+    if (prevTime.isBefore(DateTime.now())) {
+      await doc.reference.update({'isGreenMarker': true});
     }
   }
 }
@@ -167,8 +187,8 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
                 const SizedBox(height: 20),
                 BlackButton(
                   onPressed: () async {
-                    await saveMarkerToDatabase(
-                        latLng, userId, DateTime.now(), endTime, true);
+                    await saveMarkerToDatabase(latLng, userId, DateTime.now(),
+                        endTime, true, DateTime.now());
                     Navigator.pop(context);
                   },
                   text: 'parkeren',
@@ -182,10 +202,9 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
   );
 }
 
-
 void showPopupReserve(BuildContext context, LatLng latLng, DateTime startTime,
     DateTime endTime, String userId, bool isGreenMarker) {
-      DateTime previousEndTime = endTime;
+  DateTime previousEndTime = endTime;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -249,11 +268,8 @@ void showPopupReserve(BuildContext context, LatLng latLng, DateTime startTime,
                     if (isGreenMarker) {
                       final userLogged =
                           Provider.of<UserLogged>(context, listen: false);
-                      await saveMarkerToDatabase(
-                          latLng, userLogged.email, startTime, endTime, false);
-                    } else {
-                      await saveMarkerToDatabase(
-                          latLng, userId, startTime, endTime, true);
+                      await saveMarkerToDatabase(latLng, userLogged.email,
+                          startTime, endTime, false, previousEndTime);
                     }
                     Navigator.pop(context);
                   },
