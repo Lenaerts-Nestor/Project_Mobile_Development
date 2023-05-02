@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:provider/provider.dart';
 import 'map_functions.dart';
@@ -15,7 +16,10 @@ String mapboxUrl =
     'https://api.mapbox.com/styles/v1/$username/clgukhlsf005g01o58vp31upm/tiles/$tilesize/{z}/{x}/{y}@${scale}x?access_token=$mapboxAccessToken';
 
 class MapPage extends StatefulWidget {
+  const MapPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MapPageState createState() => _MapPageState();
 }
 
@@ -67,7 +71,6 @@ class _MapPageState extends State<MapPage> {
           zoom: 16,
           onTap: _isAddingMarkers
               ? (position, latlng) {
-                  //showPopupPark
                   showPopupPark(context, latlng, userLogged.email);
                   createMarker(latlng, userLogged.email, context,
                       (Marker newMarker) {
@@ -94,7 +97,8 @@ class _MapPageState extends State<MapPage> {
             _isAddingMarkers = !_isAddingMarkers;
           });
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: color4,
+        foregroundColor: color1,
         child: Icon(_isAddingMarkers ? Icons.cancel : Icons.add_location),
       ),
     );

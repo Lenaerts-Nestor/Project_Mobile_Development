@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'style/designStyle.dart' as style;
+import 'style/designStyle.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -18,8 +18,8 @@ class CustomText extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: style.color2,
-          fontSize: style.fontSize2,
+          color: color2,
+          fontSize: fontSize2,
         ),
       ),
     );

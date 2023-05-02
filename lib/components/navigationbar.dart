@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'style/designStyle.dart' as style;
+import 'style/designStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -17,26 +17,26 @@ class MyNavigationBar extends StatelessWidget {
         child: GNav(
           
           onTabChange: (value) => onTabChange!(value),
-          activeColor: style.color6,
-          backgroundColor: style.color2,
-          color: style.color4,
+          activeColor: color6,
+          backgroundColor: color2,
+          color: color4,
           gap: 8,
           tabs: const [
             GButton(
               icon: Icons.map,
-              iconSize: style.iconSizeNav,
+              iconSize: iconSizeNav,
             ),
             GButton(
               icon: Icons.favorite,
-              iconSize: style.iconSizeNav,
+              iconSize: iconSizeNav,
             ),
             GButton(
               icon: Icons.directions_car_outlined,
-              iconSize: style.iconSizeNav,
+              iconSize: iconSizeNav,
             ),
             GButton(
               icon: Icons.settings,
-              iconSize: style.iconSizeNav,
+              iconSize: iconSizeNav,
             ),
           ],
         ),

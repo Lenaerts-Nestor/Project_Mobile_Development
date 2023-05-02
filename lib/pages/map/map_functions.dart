@@ -7,6 +7,7 @@ import 'package:parkflow/components/custom_button.dart';
 import 'package:provider/provider.dart';
 import '../../model/user/user_logged_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -73,7 +74,7 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
         }
       },
       child: Container(
-        child: Icon(Icons.location_on, color: markerColor, size: 40),
+        child: Icon(Icons.location_on, color: markerColor, size: iconSizeNav),
       ),
     ),
   );
@@ -118,12 +119,17 @@ Future<void> removeExpiredMarkers() async {
 }
 
 Future<void> updateMarkerState() async {
-  final markersSnapshot = await _firestore.collection('markers').get();
-  for (var doc in markersSnapshot.docs) {
-    DateTime prevTime = doc['prevTime'].toDate();
-    if (prevTime.isBefore(DateTime.now())) {
-      await doc.reference.update({'isGreenMarker': true});
+  try {
+    final markersSnapshot = await _firestore.collection('markers').get();
+    for (var doc in markersSnapshot.docs) {
+      DateTime prevTime = doc['prevTime'].toDate();
+      if (prevTime.isBefore(DateTime.now())) {
+        await doc.reference.update({'isGreenMarker': true});
+      }
     }
+  } catch (e) {
+    // Ignore the error and continue
+    print('Error occurred, but ignoring it: $e');
   }
 }
 
@@ -138,10 +144,10 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: color3,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
             ),
           ),
           child: Padding(
@@ -152,11 +158,14 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Straat naam hier'),
+                    const Text(
+                      'Testerstraat',
+                      style: TextStyle(fontSize: 30),
+                    ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close),
-                      iconSize: 30,
+                      iconSize: iconSizeNav,
                     ),
                   ],
                 ),
@@ -215,10 +224,10 @@ void showPopupReserve(BuildContext context, LatLng latLng, DateTime startTime,
         return Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: color3,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
             ),
           ),
           child: Padding(
@@ -229,11 +238,14 @@ void showPopupReserve(BuildContext context, LatLng latLng, DateTime startTime,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Straat naam hier'),
+                    const Text(
+                      'Testerstraat',
+                      style: TextStyle(fontSize: 30),
+                    ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close),
-                      iconSize: 30,
+                      iconSize: iconSizeNav,
                     ),
                   ],
                 ),
