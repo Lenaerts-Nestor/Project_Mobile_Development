@@ -66,6 +66,8 @@ class _MapPageState extends State<MapPage> {
           zoom: 16,
           onTap: _isAddingMarkers
               ? (position, latlng) {
+                  //showPopupPark
+                  showPopupPark(context, latlng, userLogged.email);
                   createMarker(latlng, userLogged.email, context,
                       (Marker newMarker) {
                     setState(() {
