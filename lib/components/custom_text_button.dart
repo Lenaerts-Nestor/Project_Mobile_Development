@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'style/designStyle.dart' as style;
+import 'style/designStyle.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String text;
@@ -18,8 +18,8 @@ class CustomTextButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: style.color5,
-          fontSize: style.fontSize1,
+          color: color5,
+          fontSize: fontSize1,
         ),
       ),
     );

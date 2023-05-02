@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, unused_element
 
 import 'package:flutter/material.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 //import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
@@ -61,6 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      const SizedBox(height: 50),
                       Center(
                         child: SvgPicture.asset(
                           'assets/logo.svg',
@@ -81,6 +83,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       BlackButton(
                         onPressed: () => signOut(context),
                         text: 'Uitloggen',
+                      ),
+                      const SizedBox(height: 40),
+                      const Center(
+                        child: Text(
+                          "Parkflow\nv1.0.0",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: color5
+                          )
+                        ),
                       ),
                     ],
                   ),

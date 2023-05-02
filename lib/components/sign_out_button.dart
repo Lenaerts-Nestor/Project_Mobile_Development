@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'style/designStyle.dart' as myFontstyle;
+import 'style/designStyle.dart';
 
 class SignOutButton extends StatelessWidget {
   const SignOutButton({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class SignOutButton extends StatelessWidget {
       icon: const Icon(Icons.arrow_back),
       label: Text(
         'Log uit',
-        style: TextStyle(fontSize: myFontstyle.fontSize1),
+        style: TextStyle(fontSize: fontSize1),
       ),
     );
   }

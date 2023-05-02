@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'style/designStyle.dart' as style;
+import 'style/designStyle.dart';
 
 class BlackButton extends StatelessWidget {
   final String text;
@@ -18,15 +18,15 @@ class BlackButton extends StatelessWidget {
       height: 60,
       child: Material(
         borderRadius: BorderRadius.circular(20),
-        color: style.color6,
+        color: color6,
         child: InkWell(
           onTap: onPressed,
           child: Center(
             child: Text(
               text,
               style: TextStyle(
-                color: style.color1,
-                fontSize: style.fontSize3,
+                color: color1,
+                fontSize: fontSize3,
               ),
             ),
           ),
