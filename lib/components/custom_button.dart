@@ -4,21 +4,25 @@ import 'style/designStyle.dart';
 class BlackButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+  final bool isRed;
 
   const BlackButton({
     Key? key,
     required this.text,
     required this.onPressed,
+    this.isRed = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = isRed ? color6 : color7;
+
     return SizedBox(
       width: 200,
       height: 60,
       child: Material(
         borderRadius: BorderRadius.circular(20),
-        color: color6,
+        color: backgroundColor,
         child: InkWell(
           onTap: onPressed,
           child: Center(

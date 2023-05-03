@@ -23,6 +23,7 @@ const Color color3 = Color(0xFF8FE2DF);
 const Color color4 = Color(0xFF67D1D6);
 const Color color5 = Color(0xFF2D8E89);
 const Color color6 = Color(0xFF0F2D2B);
+const Color color7 = Color(0xFF933737);
 
 // iconsizes
 const double iconSizeNav = 35;
