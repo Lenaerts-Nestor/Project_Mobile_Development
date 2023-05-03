@@ -69,6 +69,11 @@ class _MapPageState extends State<MapPage> {
         options: MapOptions(
           center: LatLng(51.2172, 4.4212),
           zoom: 16,
+          maxZoom: 30,
+          maxBounds: LatLngBounds(
+            LatLng(51.18, 4.33), // southwest corner
+            LatLng(51.25, 4.46), // northeast corner
+          ),
           onTap: _isAddingMarkers
               ? (position, latlng) {
                   showPopupPark(context, latlng, userLogged.email);
