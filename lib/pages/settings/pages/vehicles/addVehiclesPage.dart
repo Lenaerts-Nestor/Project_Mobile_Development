@@ -1,12 +1,11 @@
-// ignore_for_file: use_build_context_synchronously, file_names, library_private_types_in_public_api
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart'; // Add this import
-import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:uuid/uuid.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -20,7 +19,19 @@ class _AddVehicleState extends State<AddVehicle> {
   final _modelController = TextEditingController();
   final _brandController = TextEditingController();
   final _colorController = TextEditingController();
-  final _uuid = const Uuid(); //unique ID.
+  final _uuid = const Uuid();
+
+  late String valueOfModel;
+  late String valueOfBrand;
+  late String valueOfColor;
+
+  @override
+  void initState() {
+    super.initState();
+    valueOfBrand = brandList.first;
+    valueOfModel = modelList[valueOfBrand]![0];
+    valueOfColor = colorList.first;
+  }
 
   @override
   void dispose() {
@@ -46,47 +57,57 @@ class _AddVehicleState extends State<AddVehicle> {
               const SizedBox(
                 height: 100,
               ),
-              TextFormField(
-                controller: _modelController,
-                decoration: const InputDecoration(
-                  labelText: 'Model',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: VehicleDropdown(
+                  items: brandList,
+                  value: valueOfBrand,
+                  onChanged: (newValue) {
+                    if (newValue == null) {
+                      return;
+                    }
+                    setState(() {
+                      valueOfBrand = newValue;
+                      valueOfModel = modelList[valueOfBrand]![0];
+                    });
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Gelieve een model in te voeren';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(
                 height: 30,
               ),
-              TextFormField(
-                controller: _brandController,
-                decoration: const InputDecoration(
-                  labelText: 'Merk',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: VehicleDropdown(
+                  items: modelList[valueOfBrand]!,
+                  value: valueOfModel,
+                  onChanged: (newValue) {
+                    if (newValue == null) {
+                      return;
+                    }
+                    setState(() {
+                      valueOfModel = newValue;
+                    });
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Gelieve een merk in te voeren';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(
                 height: 30,
               ),
-              TextFormField(
-                controller: _colorController,
-                decoration: const InputDecoration(
-                  labelText: 'Kleur',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: VehicleDropdown(
+                  items: colorList,
+                  value: valueOfColor,
+                  onChanged: (newValue) {
+                    if (newValue == null) {
+                      return;
+                    }
+                    setState(() {
+                      valueOfColor = newValue;
+                    });
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Gelieve een kleur in te voeren';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 50.0),
               Container(
@@ -96,25 +117,22 @@ class _AddVehicleState extends State<AddVehicle> {
                 child: BlackButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final model = _modelController.text;
-                      final brand = _brandController.text;
-                      final color = _colorController.text;
-                      final vehicleId =
-                          _uuid.v4(); // Generate a unique ID => vehicleID.
-
+                      final model = valueOfModel;
+                      final brand = valueOfBrand;
+                      final color = valueOfColor;
+                      final vehicleId = _uuid.v4();
                       final email =
                           Provider.of<UserLogged>(context, listen: false).email;
 
                       final userDoc = FirebaseFirestore.instance
                           .collection('users')
                           .doc(email);
-
                       final userSnap = await userDoc.get();
                       final existingVehicles =
                           userSnap.get('vervoeren') as List<dynamic>;
 
                       final newVehicle = Vehicle(
-                        id: vehicleId, // Add the vehicle ID
+                        id: vehicleId,
                         model: model,
                         brand: brand,
                         color: color,
