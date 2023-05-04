@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 
 import '../../../main.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
@@ -44,7 +45,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 decoration: const InputDecoration(labelText: 'Email'),
               ),
               const SizedBox(
-                height: 30,
+                height: verticalSpacing2,
               ),
               BlackButton(
                 onPressed: resetPassword,

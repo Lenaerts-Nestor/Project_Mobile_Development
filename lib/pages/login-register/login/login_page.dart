@@ -1,13 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/forgot_password_page.dart';
 import 'package:parkflow/pages/login-register/register/register_page.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:parkflow/components/custom_text_button.dart';
 import 'package:parkflow/components/custom_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -33,24 +34,24 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(padding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: verticalSpacing2*2),
                 Center(
                   child: SvgPicture.asset(
                     'assets/logo.svg',
-                    width: MediaQuery.of(context).size.width - 60,
+                    width: MediaQuery.of(context).size.width - padding*3,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: verticalSpacing2*3),
                 const CustomText(
                   text: 'Parkeren was nog nooit zo eenvoudig',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: verticalSpacing2),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width - 60,
+                  width: MediaQuery.of(context).size.width,
                   child: TextField(
                     controller: emailController,
                     textInputAction: TextInputAction.next,
@@ -60,10 +61,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: verticalSpacing1,
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width - 60,
+                  width: MediaQuery.of(context).size.width,
                   child: TextField(
                     controller: passwordController,
                     textInputAction: TextInputAction.done,
@@ -73,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: verticalSpacing2),
                 BlackButton(
                   onPressed: () =>
                       signin(context, emailController, passwordController),

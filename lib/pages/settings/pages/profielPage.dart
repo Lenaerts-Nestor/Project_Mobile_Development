@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_account.dart';
 import 'package:parkflow/model/user/user_service.dart';
 //kijken als de user ingelogged is =>
@@ -30,62 +32,70 @@ class _ProfielPageState extends State<ProfielPage> {
     return Center(
       child: Scaffold(
         body: Center(
-          child: Column(
-            children: [
-              FutureBuilder<UserAccount?>(
-                //methode readUser van user_service.
-                future: readUserOnce(userEmail),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final user = snapshot.data;
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: padding),
+            child: Column(
+              children: [
+                const SizedBox(height: 80),
+                //Dit zou verbeterd moeten worden
+                SvgPicture.asset('assets/usericon.svg',
+                    width: MediaQuery.of(context).size.width, color: color6),
+                const SizedBox(height: 30),
+                FutureBuilder<UserAccount?>(
+                  //methode readUser van user_service.
+                  future: readUserOnce(userEmail),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final user = snapshot.data;
 
-                    if (user != null && !_isChanged) {
-                      emailController.text = user.email;
-                      nameController.text = user.name;
-                      familyNameController.text = user.familyname;
-                    }
+                      if (user != null && !_isChanged) {
+                        emailController.text = user.email;
+                        nameController.text = user.name;
+                        familyNameController.text = user.familyname;
+                      }
 
-                    return user == null
-                        ? const Center(child: Text('user is leeg'))
-                        : Container(
-                            margin: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  _buildTextField(
-                                      'Email', emailController, userEmail),
-                                  _buildTextField(
-                                      'Naam', nameController, userEmail),
-                                  _buildTextField('FamilieNaam',
-                                      familyNameController, userEmail),
-                                ],
+                      return user == null
+                          ? const Center(child: Text('user is leeg'))
+                          : Container(
+                              margin: const EdgeInsets.all(1),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    _buildTextField(
+                                        'Email', emailController, userEmail),
+                                    _buildTextField(
+                                        'Voornaam', nameController, userEmail),
+                                    _buildTextField('Familienaam',
+                                        familyNameController, userEmail),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
-              if (_isChanged)
-                ElevatedButton(
-                  onPressed: () {
-                    updateUser(userEmail);
+                            );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
                   },
-                  child: const Text('Update Profile'),
-                )
-            ],
+                ),
+                if (_isChanged)
+                  ElevatedButton(
+                    onPressed: () {
+                      updateUser(userEmail);
+                    },
+                    child: const Text('Wijzigen'),
+                  )
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-//creert de Textfield =>
   Widget _buildTextField(
-      String label, TextEditingController controller, String userEmail) {
+      String label, TextEditingController controller, String hintText) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: verticalSpacing1),
       child: TextField(
         controller: controller,
         onChanged: (value) {
@@ -94,9 +104,10 @@ class _ProfielPageState extends State<ProfielPage> {
           });
         },
         decoration: InputDecoration(
-          hintText: userEmail,
-          labelStyle: const TextStyle(fontSize: 18.0),
-          border: const OutlineInputBorder(),
+          labelText: label,
+          hintText: hintText,
+          labelStyle: const TextStyle(fontSize: fontSize2),
+          border: const UnderlineInputBorder(),
         ),
       ),
     );
