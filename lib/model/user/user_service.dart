@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parkflow/model/user/user_account.dart';
 
+import '../vehicle.dart';
+
 //verschil tussen stream en future in kort =>
 //De ene readUser() geeft een UserAccount of null terug, afhankelijk van de situatie.
 //De andere versie geeft altijd een UserAccount terug en kan geen null teruggeven
@@ -40,5 +42,20 @@ Future<UserAccount?> readUserOnce(String userEmail) async {
 
 //de update =>
 //logica uitvinden en zien als alle andere pagina's de zelfde manier updaten, veronderstel van niet.
+
+
+Future<void> toggleVehicleAvailability(String userId, Vehicle vehicle) async {
+  final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
+  final updatedAvailability = List<Map<String, dynamic>>.from((await docUser.get())
+      .get('vervoeren')
+      .map((v) => Map<String, dynamic>.from(v)));
+  final index = updatedAvailability.indexWhere((v) => v['id'] == vehicle.id);
+  if (index >= 0) {
+    updatedAvailability[index]['beschikbaar'] = !updatedAvailability[index]['beschikbaar'];
+    await docUser.update({'vervoeren': updatedAvailability});
+  }
+}
+
+
 //de delete =>
 // zelfde situatie zoals bij updaten ??

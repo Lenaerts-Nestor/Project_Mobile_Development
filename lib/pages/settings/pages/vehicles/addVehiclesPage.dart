@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parkflow/components/custom_button.dart';
@@ -136,6 +138,7 @@ class _AddVehicleState extends State<AddVehicle> {
                         model: model,
                         brand: brand,
                         color: color,
+                        availability: true,
                       );
                       existingVehicles.add(newVehicle.toJson());
                       await userDoc.update({'vervoeren': existingVehicles});
