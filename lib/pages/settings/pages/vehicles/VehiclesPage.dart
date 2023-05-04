@@ -22,6 +22,25 @@ class VehiclesPage extends StatefulWidget {
 class _VehiclesPageState extends State<VehiclesPage> {
   List<Vehicle> _vehicles = [];
 
+  Color getColor(String colorName) {
+    switch (colorName) {
+      case 'Red':
+        return Colors.red;
+      case 'Green':
+        return Colors.green;
+      case 'Blue':
+        return Colors.blue;
+      case 'Yellow':
+        return Colors.yellow;
+      case 'White':
+        return Colors.white;
+      case 'Black':
+        return Colors.black;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
@@ -66,8 +85,8 @@ class _VehiclesPageState extends State<VehiclesPage> {
                               color: Colors.black12,
                             ),
                             child: ListTile(
-                              leading: const Icon(Icons.directions_car_filled,
-                                  color: Colors.black),
+                              leading: Icon(Icons.directions_car_filled,
+                                  color: getColor(vehicle.color)),
                               title: Text(vehicle.model,
                                   style: const TextStyle(color: Colors.black)),
                               subtitle: Text(vehicle.brand,

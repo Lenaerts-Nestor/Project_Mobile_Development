@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,9 +84,7 @@ Marker createMarkersFromDatabase(
               context, latlng, userId, startTime, endTime, prevEndTime, false);
         }
       },
-      child: Container(
-        child: Icon(Icons.location_on, color: markerColor, size: iconSizeNav),
-      ),
+      child: Icon(Icons.location_on, color: markerColor, size: iconSizeNav),
     ),
   );
 }
