@@ -17,7 +17,7 @@ class CustomText extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: maxWidth),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: color2,
           fontSize: fontSize2,
         ),

@@ -12,7 +12,7 @@ class SignOutButton extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: () => signOut(context),
       icon: const Icon(Icons.arrow_back),
-      label: Text(
+      label: const Text(
         'Log uit',
         style: TextStyle(fontSize: fontSize1),
       ),

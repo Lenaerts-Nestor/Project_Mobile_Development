@@ -1,3 +1,5 @@
+// ignore_for_file: await_only_futures, unnecessary_null_comparison
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
