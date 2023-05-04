@@ -6,9 +6,9 @@
 import 'package:flutter/material.dart';
 
 //font sizes
-double fontSize1 = 15;
-double fontSize2 = 20;
-double fontSize3 = 30;
+const double fontSize1 = 15;
+const double fontSize2 = 20;
+const double fontSize3 = 30;
 
 // font families
 String fontFamilyTitle = "Intro";
@@ -24,6 +24,14 @@ const Color color4 = Color(0xFF67D1D6);
 const Color color5 = Color(0xFF2D8E89);
 const Color color6 = Color(0xFF0F2D2B);
 const Color color7 = Color(0xFF933737);
+
+// offsets
+const double padding = 30;
+const double verticalSpacing1 = 10;
+const double verticalSpacing2 = 30;
+
+//corners
+const double radius = 30;
 
 // iconsizes
 const double iconSizeNav = 35;

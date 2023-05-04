@@ -21,14 +21,14 @@ class BlackButton extends StatelessWidget {
       width: 200,
       height: 60,
       child: Material(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(radius),
         color: backgroundColor,
         child: InkWell(
           onTap: onPressed,
           child: Center(
             child: Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 color: color1,
                 fontSize: fontSize3,
               ),

@@ -29,8 +29,8 @@ void getMarkersFromDatabase(BuildContext context,
     DateTime endTime = doc['endTime'].toDate();
     DateTime prevEndTime = doc['prevEndTime'].toDate();
     bool isGreenMarker = doc['isGreenMarker'];
-    return createMarkersFromDatabase(
-        context, latLng, userId, startTime, endTime, prevEndTime, isGreenMarker);
+    return createMarkersFromDatabase(context, latLng, userId, startTime,
+        endTime, prevEndTime, isGreenMarker);
   }).toList();
   onMarkersFetched(markers);
 }
@@ -48,8 +48,14 @@ void createMarker(LatLng latlng, String userId, BuildContext context,
   onMarkerCreated(newMarker);
 }
 
-Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
-    String userId, DateTime startTime, DateTime endTime, DateTime prevEndTime, bool isGreenMarker) {
+Marker createMarkersFromDatabase(
+    BuildContext context,
+    LatLng latlng,
+    String userId,
+    DateTime startTime,
+    DateTime endTime,
+    DateTime prevEndTime,
+    bool isGreenMarker) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
   final userEmail = userLogged.email.trim();
   Color markerColor;
@@ -72,7 +78,8 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
           showPopupReserve(context, latlng, userId, startTime, endTime, true);
         }
         if (userEmail == userId) {
-          showPopupEdit(context, latlng, userId, startTime, endTime, prevEndTime, false);
+          showPopupEdit(
+              context, latlng, userId, startTime, endTime, prevEndTime, false);
         }
       },
       child: Container(
@@ -83,12 +90,13 @@ Marker createMarkersFromDatabase(BuildContext context, LatLng latlng,
 }
 
 Future<void> saveMarkerToDatabase(
-    LatLng latlng,
-    String userId,
-    DateTime startTime,
-    DateTime endTime,
-    DateTime prevEndTime,
-    bool isGreenMarker,) async {
+  LatLng latlng,
+  String userId,
+  DateTime startTime,
+  DateTime endTime,
+  DateTime prevEndTime,
+  bool isGreenMarker,
+) async {
   QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
       .collection('markers')
       .where('latitude', isEqualTo: latlng.latitude)
@@ -148,8 +156,8 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
           decoration: const BoxDecoration(
             color: color3,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+              topLeft: Radius.circular(radius),
+              topRight: Radius.circular(radius),
             ),
           ),
           child: Padding(
@@ -162,7 +170,7 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
                   children: [
                     const Text(
                       'Testerstraat',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: fontSize3),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
@@ -192,14 +200,14 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 Text('van ${formatDateTime(DateTime.now())}'),
                 Text('tot  ${formatDateTime(endTime)}'),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 BlackButton(
                   onPressed: () async {
                     await saveMarkerToDatabase(latLng, userId, DateTime.now(),
-                        endTime, DateTime.now(),true);
+                        endTime, DateTime.now(), true);
                     Navigator.pop(context);
                   },
                   text: 'parkeren',
@@ -213,8 +221,8 @@ void showPopupPark(BuildContext context, LatLng latLng, String userId) {
   );
 }
 
-void showPopupReserve(BuildContext context, LatLng latLng,String userId, DateTime startTime,
-    DateTime endTime, bool isGreenMarker) {
+void showPopupReserve(BuildContext context, LatLng latLng, String userId,
+    DateTime startTime, DateTime endTime, bool isGreenMarker) {
   DateTime previousEndTime = endTime;
   showModalBottomSheet(
     context: context,
@@ -228,8 +236,8 @@ void showPopupReserve(BuildContext context, LatLng latLng,String userId, DateTim
           decoration: const BoxDecoration(
             color: color3,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+              topLeft: Radius.circular(radius),
+              topRight: Radius.circular(radius),
             ),
           ),
           child: Padding(
@@ -242,7 +250,7 @@ void showPopupReserve(BuildContext context, LatLng latLng,String userId, DateTim
                   children: [
                     const Text(
                       'Testerstraat',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: fontSize3),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
@@ -272,11 +280,11 @@ void showPopupReserve(BuildContext context, LatLng latLng,String userId, DateTim
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 //moet previousEndTime zijn
                 Text('van ${formatDateTime(previousEndTime)}'),
                 Text('tot  ${formatDateTime(endTime)}'),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 BlackButton(
                   onPressed: () async {
                     if (isGreenMarker) {
@@ -318,8 +326,8 @@ void showPopupEdit(
           decoration: const BoxDecoration(
             color: color3,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+              topLeft: Radius.circular(radius),
+              topRight: Radius.circular(radius),
             ),
           ),
           child: Padding(
@@ -332,7 +340,7 @@ void showPopupEdit(
                   children: [
                     const Text(
                       'Testerstraat',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: fontSize3),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
@@ -362,11 +370,15 @@ void showPopupEdit(
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 Text('van ${formatDateTime(startTime)}'),
-                Text('tot ${formatDateTime(endTime)}', style: const TextStyle(decoration: TextDecoration.lineThrough),),
+                Text(
+                  'tot ${formatDateTime(endTime)}',
+                  style:
+                      const TextStyle(decoration: TextDecoration.lineThrough),
+                ),
                 Text('tot ${formatDateTime(replacingEndTime)}'),
-                const SizedBox(height: 20),
+                const SizedBox(height: verticalSpacing2),
                 BlackButton(
                   onPressed: () async {
                     final userLogged =
@@ -375,8 +387,11 @@ void showPopupEdit(
                         startTime, replacingEndTime, previousEndTime, true);
                     Navigator.pop(context);
                   },
-                  text: selectedTime != const Duration(seconds: 0) ? 'aanpassen' : 'annuleren',
-                  isRed: selectedTime != const Duration(seconds: 0) ? true : false,
+                  text: selectedTime != const Duration(seconds: 0)
+                      ? 'aanpassen'
+                      : 'annuleren',
+                  isRed:
+                      selectedTime != const Duration(seconds: 0) ? true : false,
                 ),
               ],
             ),

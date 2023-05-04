@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/pages/home/home_page.dart';
 import 'package:parkflow/pages/login-register/auth_services.dart';
 import 'package:parkflow/pages/login-register/login/login_page.dart';
@@ -57,7 +58,7 @@ class _SignUpPageState extends State<RegisterPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(padding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -68,7 +69,7 @@ class _SignUpPageState extends State<RegisterPage> {
                         nameController, 'Voornaam', TextInputAction.next,
                         obscureText: false),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: padding),
                   Expanded(
                     child: _buildTextField(
                       familyNameController,
@@ -79,20 +80,20 @@ class _SignUpPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: verticalSpacing1),
               _buildTextField(emailController, 'Email', TextInputAction.next,
                   obscureText: false),
-              const SizedBox(height: 10),
+              const SizedBox(height: verticalSpacing1),
               _buildTextField(
                   passwordController, 'Wachtwoord', TextInputAction.next,
                   obscureText: true),
-              const SizedBox(height: 10),
+              const SizedBox(height: verticalSpacing1),
               _buildTextField(confirmPasswordController, 'Bevestig Wachtwoord',
                   TextInputAction.done,
                   obscureText: true),
-              const SizedBox(height: 10),
+              const SizedBox(height: verticalSpacing2),
               Text('Wachtwoord sterkte: $_passwordStrength'),
-              const SizedBox(height: 20),
+              const SizedBox(height: verticalSpacing2),
               BlackButton(
                 onPressed: _passwordStrength == 'zwak'
                     ? null
@@ -119,7 +120,7 @@ class _SignUpPageState extends State<RegisterPage> {
                       },
                 text: 'registreren',
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: verticalSpacing1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
