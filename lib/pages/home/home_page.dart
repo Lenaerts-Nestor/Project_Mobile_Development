@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/navigationbar.dart';
-import 'package:parkflow/pages/home/user_info_testen.dart';
 import 'package:parkflow/pages/map/map_page.dart';
 import 'package:parkflow/pages/settings/settingsMain.dart';
+
+import '../info/infoPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,9 +26,9 @@ class _HomePageState extends State<HomePage> {
     //map page?
     MapPage(),
     //setting page?
-    SettingsPage(),
+
     //nog extra pages ?
-    UserInfoPage(),
+    InfoPage(),
     SettingsPage(),
   ];
 

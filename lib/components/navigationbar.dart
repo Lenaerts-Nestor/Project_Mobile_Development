@@ -15,7 +15,6 @@ class MyNavigationBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 0.0),
         child: GNav(
-          
           onTabChange: (value) => onTabChange!(value),
           activeColor: color6,
           backgroundColor: color2,
@@ -24,10 +23,6 @@ class MyNavigationBar extends StatelessWidget {
           tabs: const [
             GButton(
               icon: Icons.map,
-              iconSize: iconSizeNav,
-            ),
-            GButton(
-              icon: Icons.favorite,
               iconSize: iconSizeNav,
             ),
             GButton(

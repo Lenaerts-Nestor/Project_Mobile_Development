@@ -23,6 +23,7 @@ dependencies:
   geolocator: ^9.0.2
   osm_nominatim: ^2.0.1
   geocoding: ^2.1.0
+  rxdart: ^0.27.7
  
 
 dev_dependencies:
