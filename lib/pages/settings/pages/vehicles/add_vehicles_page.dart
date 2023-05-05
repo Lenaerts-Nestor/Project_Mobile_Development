@@ -13,10 +13,10 @@ class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
 
   @override
-  _AddVehicleState createState() => _AddVehicleState();
+  AddVehicleState createState() => AddVehicleState();
 }
 
-class _AddVehicleState extends State<AddVehicle> {
+class AddVehicleState extends State<AddVehicle> {
   final _formKey = GlobalKey<FormState>();
   final _modelController = TextEditingController();
   final _brandController = TextEditingController();

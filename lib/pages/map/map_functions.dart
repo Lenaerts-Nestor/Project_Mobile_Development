@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 
 import '../../model/user/user_service.dart';
-import '../settings/pages/vehicles/addVehiclesPage.dart';
+import '../settings/pages/vehicles/add_vehicles_page.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -32,52 +32,75 @@ void getMarkersFromDatabase(BuildContext context,
   final markersSnapshot = await _firestore.collection('markers').get();
   List<Marker> markers = markersSnapshot.docs.map((doc) {
     LatLng latLng = LatLng(doc['latitude'], doc['longitude']);
-    String reservedId = doc['reservedId'];
+    String parkedUserId = doc['parkedUserId'];
+    String reservedUserId = doc['reservedUserId'];
+    String parkedVehicleId = doc['parkedVehicleId'];
+    String reservedVehicleId = doc['reservedVehicleId'];
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
     DateTime prevEndTime = doc['prevEndTime'].toDate();
     bool isGreenMarker = doc['isGreenMarker'];
-    return createMarkersFromDatabase(context, latLng, reservedId, startTime,
-        endTime, prevEndTime, isGreenMarker);
+    return createMarkersFromDatabase(
+        context,
+        latLng,
+        parkedUserId,
+        reservedUserId,
+        parkedVehicleId,
+        reservedVehicleId,
+        startTime,
+        endTime,
+        prevEndTime,
+        isGreenMarker);
   }).toList();
   onMarkersFetched(markers);
 }
 
-void createMarker(LatLng latlng, String reservedId, BuildContext context,
+void createMarker(
+    LatLng latlng,
+    String parkedUserId,
+    String reservedUserId,
+    String parkedVehicleId,
+    String reservedVehicleId,
+    BuildContext context,
     void Function(Marker newMarker) onMarkerCreated) {
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
   DateTime prevEndTime = startTime;
   bool isGreenMarker = true;
-  saveMarkerToDatabase(
-      //TODO: parked ID toevoegen
+  saveMarkerToDatabase(latlng, parkedUserId, reservedUserId, parkedVehicleId,
+      reservedVehicleId, startTime, endTime, prevEndTime, isGreenMarker);
+  Marker newMarker = createMarkersFromDatabase(
+      context,
       latlng,
-      reservedId,
-      '',
+      parkedUserId,
+      reservedUserId,
+      parkedVehicleId,
+      reservedVehicleId,
       startTime,
       endTime,
       prevEndTime,
       isGreenMarker);
-  Marker newMarker = createMarkersFromDatabase(context, latlng, reservedId,
-      startTime, endTime, prevEndTime, isGreenMarker);
   onMarkerCreated(newMarker);
 }
 
 Marker createMarkersFromDatabase(
     BuildContext context,
     LatLng latlng,
-    String reservedId,
+    String parkedUserId,
+    String reservedUserId,
+    String parkedVehicleId,
+    String reservedVehicleId,
     DateTime startTime,
     DateTime endTime,
     DateTime prevEndTime,
     bool isGreenMarker) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
-  final userEmail = userLogged.email.trim();
+  final currentUserId = userLogged.email.trim();
   Color markerColor;
 
   if (isGreenMarker) {
     markerColor = Colors.green;
-  } else if (userEmail == reservedId) {
+  } else if (currentUserId == reservedUserId) {
     markerColor = Colors.blue;
   } else {
     markerColor = Colors.black;
@@ -89,12 +112,13 @@ Marker createMarkersFromDatabase(
     point: latlng,
     builder: (ctx) => GestureDetector(
       onTap: () {
-        if (isGreenMarker && userEmail != reservedId) {
-          showPopupReserve(
-              context, latlng, reservedId, startTime, endTime, true);
+        if (isGreenMarker && currentUserId != parkedUserId) {
+          showPopupReserve(context, latlng, parkedUserId, reservedUserId,
+              startTime, endTime, true);
         }
-        if (userEmail == reservedId) {
-          showPopupEdit(context, latlng, reservedId, startTime, endTime,
+        if ((isGreenMarker && currentUserId == parkedUserId) ||
+            (!isGreenMarker && currentUserId == reservedUserId)) {
+          showPopupEdit(context, latlng, reservedUserId, startTime, endTime,
               prevEndTime, false);
         }
       },
@@ -103,14 +127,12 @@ Marker createMarkersFromDatabase(
   );
 }
 
-//TODO:
-// parked_user
-// reserved user
-
 Future<void> saveMarkerToDatabase(
   LatLng latlng,
-  String reservedId,
-  String parkedId,
+  String parkedUserId,
+  String reservedUserId,
+  String parkedVehicleId,
+  String reservedVehicleId,
   DateTime startTime,
   DateTime endTime,
   DateTime prevEndTime,
@@ -129,8 +151,10 @@ Future<void> saveMarkerToDatabase(
   await _firestore.collection('markers').add({
     'latitude': latlng.latitude,
     'longitude': latlng.longitude,
-    'reservedId': reservedId,
-    'parkedId': parkedId,
+    'reservedUserId': reservedUserId,
+    'parkedUserId': parkedUserId,
+    'reservedVehicleId': reservedVehicleId,
+    'parkedVehicleId': parkedVehicleId,
     'startTime': startTime,
     'endTime': endTime,
     'prevEndTime': prevEndTime,
@@ -139,70 +163,83 @@ Future<void> saveMarkerToDatabase(
 }
 
 Future<void> removeExpiredMarkers() async {
+  //alle date in een list zetten -> als id hier niet in zit availability op true zetten
+  String parkedVehicleId = '';
   final markersSnapshot = await _firestore.collection('markers').get();
   for (var doc in markersSnapshot.docs) {
+    String parkedUserId = doc['parkedUserId'];
+    parkedVehicleId = doc['parkedVehicleId'];
     DateTime endTime = doc['endTime'].toDate();
+    final userDoc =
+        await _firestore.collection('users').doc(parkedUserId).get();
+    List<dynamic> vervoeren = userDoc.get('vervoeren');
+    List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
+    final selectedVehicleIndex =
+        vervoeren.indexWhere((vehicle) => vehicle['model'] == parkedVehicleId);
+    //model zou eigenlijk id moeten zijn??
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
+      if (selectedVehicleIndex > -1) {
+        Vehicle parkedVehicle = vehicles[selectedVehicleIndex];
+        await toggleVehicleAvailability(parkedUserId, parkedVehicle);
+      }
     }
   }
 }
 
-Future<void> updateMarkerState() async {
+Future<void> updateMarkerState(BuildContext context) async {
   try {
+    final userLogged = Provider.of<UserLogged>(context, listen: false);
+    final currentUserId = userLogged.email.trim();
+    final userDoc =
+        await _firestore.collection('users').doc(currentUserId).get();
+
+    List<Vehicle> vervoeren = userDoc.get('vervoeren');
+
     final markersSnapshot = await _firestore.collection('markers').get();
     for (var doc in markersSnapshot.docs) {
       DateTime prevEndTime = doc['prevEndTime'].toDate();
+      String parkedUserId = doc['parkedUserId'].toString();
+      String parkedVehicleId = doc['parkedVehicleId'].toString();
+      String reservedUserId = doc['reservedUserId'].toString();
+      String reservedVehicleId = doc['reservedVehicleId'].toString();
+
+      final selectedVehicleIndex =
+          vervoeren.indexWhere((vehicle) => vehicle.model == parkedVehicleId);
+      Vehicle parkedVehicle = vervoeren[selectedVehicleIndex];
+
       if (prevEndTime.isBefore(DateTime.now())) {
-        await doc.reference.update({'isGreenMarker': true});
+        doc.reference.update({'isGreenMarker': true});
+        doc.reference.update({'parkedUserId': reservedUserId});
+        doc.reference.update({'parkedVehicleId': reservedVehicleId});
+
+        toggleVehicleAvailability(parkedUserId, parkedVehicle);
       }
     }
   } catch (e) {
-    // Ignore the error and continue
-    print('Error occurred, but ignoring it: $e');
+    print('');
   }
 }
 
-Future<void> updateCarState() async {
-  try {
-    final docUser = FirebaseFirestore.instance.collection('users');
-    final markersSnapshot = await _firestore.collection('users').get();
-    for (var doc in markersSnapshot.docs) {
-      DateTime prevEndTime = doc['prevEndTime'].toDate();
-      if (prevEndTime.isBefore(DateTime.now())) {
-        await doc.reference.update({'isGreenMarker': true});
-      }
-    }
-  } catch (e) {
-    // Ignore the error and continue
-    print('Error occurred, but ignoring it: $e');
-  }
-}
-
-void showPopupPark(BuildContext context, LatLng latLng, String reservedId) {
-  late String selectedVehicle = '';
-
-  List<Vehicle> _vehicles = [];
-
+void showPopupPark(BuildContext context, LatLng latLng, String parkedUserId) {
+  late String parkedVehicleId = '';
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StreamBuilder<UserAccount>(
-        stream: readUserByLive(reservedId),
+        stream: readUserByLive(parkedUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final user = snapshot.data;
-            _vehicles = user!.vehicles;
             if (user != null) {
               final vehicles = user.vehicles
                   .where((v) => v.availability)
                   .toList(); // Filter vehicles with availability = true
-
               bool buttonDisabled = vehicles.isEmpty;
-              if (selectedVehicle == '' && vehicles.isNotEmpty) {
-                selectedVehicle = vehicles.first.model;
+              if (parkedVehicleId == '' && vehicles.isNotEmpty) {
+                parkedVehicleId = vehicles.first.model;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime endTime = DateTime.now().add(selectedTime);
@@ -262,18 +299,16 @@ void showPopupPark(BuildContext context, LatLng latLng, String reservedId) {
                         vehicles.isNotEmpty
                             ? VehicleDropdown(
                                 items: vehicles
-                                    .map((vehicle) => vehicle.model)
+                                    .map((vehicle) =>
+                                        vehicle.model) //this should be id
                                     .toList(),
-                                value: selectedVehicle,
+                                value: parkedVehicleId,
                                 onChanged: (value) {
                                   if (value == null) {
                                     return;
                                   }
                                   setState(() {
-                                    selectedVehicle = value;
-                                    final selectedVehicleIndex =
-                                        _vehicles.indexWhere((vehicle) =>
-                                            vehicle.model == selectedVehicle);
+                                    parkedVehicleId = value;
                                   });
                                 },
                               )
@@ -281,7 +316,7 @@ void showPopupPark(BuildContext context, LatLng latLng, String reservedId) {
                         const SizedBox(height: 80), //dit aangepast om te testen
                         //knop mischien groter doen ???
                         BlackButton(
-                          text: buttonDisabled ? 'ongeldige' : 'parkeren',
+                          text: buttonDisabled ? 'auto tekort' : 'parkeren',
                           isRed: buttonDisabled ? false : true,
                           onPressed: buttonDisabled
                               ? () {
@@ -294,20 +329,22 @@ void showPopupPark(BuildContext context, LatLng latLng, String reservedId) {
                               : () async {
                                   final selectedVehicleIndex =
                                       vehicles.indexWhere((vehicle) =>
-                                          vehicle.model == selectedVehicle);
+                                          vehicle.model == parkedVehicleId);
                                   if (selectedVehicleIndex >= 0) {
                                     final selectedVehicle2 =
                                         vehicles[selectedVehicleIndex];
                                     await saveMarkerToDatabase(
                                         latLng,
-                                        reservedId,
-                                        '', //TODO: parkedID doen
+                                        parkedUserId,
+                                        '',
+                                        parkedVehicleId,
+                                        '',
                                         DateTime.now(),
                                         endTime,
                                         DateTime.now(),
                                         true);
                                     await toggleVehicleAvailability(
-                                        reservedId, selectedVehicle2);
+                                        parkedUserId, selectedVehicle2);
                                     Navigator.pop(context);
                                   }
                                 },
@@ -326,9 +363,17 @@ void showPopupPark(BuildContext context, LatLng latLng, String reservedId) {
   );
 }
 
-void showPopupReserve(BuildContext context, LatLng latLng, String reservedId,
-    DateTime startTime, DateTime endTime, bool isGreenMarker) {
+void showPopupReserve(
+    BuildContext context,
+    LatLng latLng,
+    String parkedUserId,
+    String parkedVehicleId,
+    DateTime startTime,
+    DateTime endTime,
+    bool isGreenMarker) {
   DateTime previousEndTime = endTime;
+  //nog te implementeren !!!
+  String reservedVehicleId = "";
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -396,8 +441,16 @@ void showPopupReserve(BuildContext context, LatLng latLng, String reservedId,
                       final userLogged =
                           Provider.of<UserLogged>(context, listen: false);
                       //Parked ID toevoegen
-                      await saveMarkerToDatabase(latLng, userLogged.email, '',
-                          startTime, endTime, previousEndTime, false);
+                      await saveMarkerToDatabase(
+                          latLng,
+                          parkedUserId,
+                          userLogged.email,
+                          parkedVehicleId,
+                          reservedVehicleId,
+                          startTime,
+                          endTime,
+                          previousEndTime,
+                          false);
                     }
                     Navigator.pop(context);
                   },
@@ -412,6 +465,7 @@ void showPopupReserve(BuildContext context, LatLng latLng, String reservedId,
   );
 }
 
+// bij annuleren auto vrijgeven!
 void showPopupEdit(
     BuildContext context,
     LatLng latLng,
@@ -489,8 +543,8 @@ void showPopupEdit(
                   onPressed: () async {
                     final userLogged =
                         Provider.of<UserLogged>(context, listen: false);
-                    await saveMarkerToDatabase(latLng, userLogged.email, '',
-                        startTime, replacingEndTime, previousEndTime, true);
+                    await saveMarkerToDatabase(latLng, userLogged.email, '', '',
+                        '', startTime, replacingEndTime, previousEndTime, true);
                     Navigator.pop(context);
                   },
                   text: selectedTime != const Duration(seconds: 0)

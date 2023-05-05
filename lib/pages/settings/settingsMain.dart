@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/style/designStyle.dart';
-//import 'package:parkflow/components/sign_out_button.dart';
 import 'package:parkflow/pages/settings/pages/profielPage.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/VehiclesPage.dart';
 import 'package:parkflow/components/custom_button.dart';
