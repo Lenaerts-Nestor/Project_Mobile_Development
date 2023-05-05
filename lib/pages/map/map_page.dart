@@ -35,7 +35,8 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     //refresh de map elke seconde
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      await {removeExpiredMarkers(), updateMarkerState()};
+      updateMarkerState(context);
+      removeExpiredMarkers();
 
       _updateMarkers();
     });
@@ -79,13 +80,13 @@ class _MapPageState extends State<MapPage> {
           onTap: _isAddingMarkers
               ? (position, latlng) {
                   showPopupPark(context, latlng, userLogged.email);
-                  createMarker(latlng, userLogged.email, context,
+                  /*createMarker(latlng, userLogged.email, "", "", "", context,
                       (Marker newMarker) {
                     setState(() {
                       _markers.add(newMarker);
                       _isAddingMarkers = false;
                     });
-                  });
+                  });*/
                 }
               : null,
         ),

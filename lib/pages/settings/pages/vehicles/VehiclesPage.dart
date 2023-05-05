@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/model/vehicle.dart';
 
 import '../../../../model/user/user_account.dart';
-import 'addVehiclesPage.dart';
+import 'add_vehicles_page.dart';
 import 'package:parkflow/components/custom_button.dart'; //test
 
 class VehiclesPage extends StatefulWidget {
