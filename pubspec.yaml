@@ -20,6 +20,10 @@ dependencies:
   provider: ^6.0.5
   uuid: ^3.0.7
   intl: ^0.17.0
+  geolocator: ^9.0.2
+  osm_nominatim: ^2.0.1
+  geocoding: ^2.1.0
+ 
 
 dev_dependencies:
   flutter_test:

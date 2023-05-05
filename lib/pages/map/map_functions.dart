@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:osm_nominatim/osm_nominatim.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_account.dart';
@@ -16,6 +17,8 @@ import 'package:parkflow/components/style/designStyle.dart';
 
 import '../../model/user/user_service.dart';
 import '../settings/pages/vehicles/add_vehicles_page.dart';
+
+import 'package:geolocator/geolocator.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -221,8 +224,24 @@ Future<void> updateMarkerState(BuildContext context) async {
   }
 }
 
-void showPopupPark(BuildContext context, LatLng latLng, String parkedUserId) {
+//naam van de straat krijgen =>
+Future<String> getStreetName(double latitude, double longitude) async {
+  // Create a Nominatim instance
+  final searchResult = await Nominatim.reverseSearch(
+      lat: latitude,
+      lon: longitude,
+      addressDetails: true,
+      extraTags: true,
+      nameDetails: true);
+
+  return searchResult.address!['road'].toString();
+}
+
+void showPopupPark(
+    BuildContext context, LatLng latLng, String parkedUserId) async {
   late String parkedVehicleId = '';
+  //straat naam bewaren in een var, NIET VERANDEREN
+  var streetname = getStreetName(latLng.latitude, latLng.longitude);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -260,12 +279,28 @@ void showPopupPark(BuildContext context, LatLng latLng, String parkedUserId) {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Testerstraat',
-                              style: TextStyle(fontSize: fontSize3),
+                            //moet futurbuilder zijn. laat het zo. anders kunnen we de naam van de straat niet krijgen.
+                            FutureBuilder<String>(
+                              future: streetname,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return const Text(
+                                      'Error getting street name');
+                                } else {
+                                  return Text(
+                                    snapshot.data ?? 'Unknown',
+                                    style: TextStyle(fontSize: fontSize3),
+                                  );
+                                }
+                              },
                             ),
                             IconButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               icon: const Icon(Icons.close),
                               iconSize: iconSizeNav,
                             ),
@@ -374,6 +409,7 @@ void showPopupReserve(
   DateTime previousEndTime = endTime;
   //nog te implementeren !!!
   String reservedVehicleId = "";
+  var streetname = getStreetName(latLng.latitude, latLng.longitude);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -398,12 +434,27 @@ void showPopupReserve(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Testerstraat',
-                      style: TextStyle(fontSize: fontSize3),
+                    //moet futurbuilder zijn. laat het zo. anders kunnen we de naam van de straat niet krijgen.
+                    FutureBuilder<String>(
+                      future: streetname,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Error getting street name');
+                        } else {
+                          return Text(
+                            snapshot.data ?? 'Unknown',
+                            style: TextStyle(fontSize: fontSize3),
+                          );
+                        }
+                      },
                     ),
                     IconButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       icon: const Icon(Icons.close),
                       iconSize: iconSizeNav,
                     ),
@@ -474,6 +525,7 @@ void showPopupEdit(
     DateTime endTime,
     DateTime previousEndTime,
     bool isGreenMarker) {
+  var streetname = getStreetName(latLng.latitude, latLng.longitude);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -498,12 +550,27 @@ void showPopupEdit(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Testerstraat',
-                      style: TextStyle(fontSize: fontSize3),
+                    //moet futurbuilder zijn. laat het zo. anders kunnen we de naam van de straat niet krijgen.
+                    FutureBuilder<String>(
+                      future: streetname,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Error getting street name');
+                        } else {
+                          return Text(
+                            snapshot.data ?? 'Unknown',
+                            style: TextStyle(fontSize: fontSize3),
+                          );
+                        }
+                      },
                     ),
                     IconButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       icon: const Icon(Icons.close),
                       iconSize: iconSizeNav,
                     ),
