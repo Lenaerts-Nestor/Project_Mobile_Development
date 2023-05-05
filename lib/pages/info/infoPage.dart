@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../map/marker.dart';
 
@@ -18,16 +19,26 @@ class _InfoPageState extends State<InfoPage> {
     final userLogged = Provider.of<UserLogged>(context);
     final currentUserId = userLogged.email.trim();
 
+    final parkedUserQuery = FirebaseFirestore.instance
+        .collection('markers')
+        .where('parkedUserId', isEqualTo: currentUserId);
+
+    final reservedUserQuery = FirebaseFirestore.instance
+        .collection('markers')
+        .where('reservedUserId', isEqualTo: currentUserId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Parked Vehicles'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('markers')
-            .where('parkedUserId', isEqualTo: currentUserId)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<QuerySnapshot>>(
+        stream: Rx.combineLatest2(
+          parkedUserQuery.snapshots(),
+          reservedUserQuery.snapshots(),
+          (QuerySnapshot a, QuerySnapshot b) => [a, b],
+        ),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<QuerySnapshot>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -36,7 +47,12 @@ class _InfoPageState extends State<InfoPage> {
             return const CircularProgressIndicator();
           }
 
-          final markers = snapshot.data!.docs.map((doc) {
+          final allDocs = [
+            ...snapshot.data![0].docs,
+            ...snapshot.data![1].docs,
+          ];
+
+          final markers = allDocs.map((doc) {
             final markerData = doc.data() as Map<String, dynamic>;
             markerData['id'] = doc.id;
             return MarkerInfo.fromJson(markerData);
@@ -60,7 +76,7 @@ class _InfoPageState extends State<InfoPage> {
                     child: ListTile(
                       title: Text('Parked Vehicle: ${marker.parkedVehicleId}'),
                       subtitle: Text(
-                          'From: ${marker.startTime} - To: ${marker.endTime}'),
+                          'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
                       onTap: () {},
                     ),
                   ),
