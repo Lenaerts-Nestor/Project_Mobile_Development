@@ -10,7 +10,7 @@ class BlackButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    this.isRed = true,
+    this.isRed = true, MaterialColor? color,
   }) : super(key: key);
 
   @override
