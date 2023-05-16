@@ -2,14 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:parkflow/pages/map/functions/popUps/editing_funciton.dart';
 import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../components/custom_button.dart';
 import '../../components/style/designStyle.dart';
-import '../map/map_functions.dart';
-import '../map/marker.dart';
+import '../map/functions/markers/marker_functions.dart';
+import '../map/functions/markers/marker.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -84,17 +85,16 @@ class _InfoPageState extends State<InfoPage> {
                     ),
                     child: ListTile(
                       title: Text('Parked Vehicle: ${marker.parkedVehicleId}'),
-                      subtitle: Text(
-                          'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
+                      subtitle: marker.reservedUserId == ''
+                          ? Text(
+                              'From: ${marker.startTime} - To: ${marker.endTime}')
+                          : Text(
+                              'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
                       onTap: () {
                         showPopupEdit(
-                            context,
-                            LatLng(getlatidude, getlotitude),
-                            userLogged.email,
-                            marker.startTime,
-                            marker.endTime,
-                            marker.prevEndTime,
-                            true);
+                          context,
+                          marker,
+                        );
                       },
                     ),
                   ),
