@@ -6,8 +6,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
+import 'package:parkflow/pages/map/functions/popUps/parking_function.dart';
 import 'package:provider/provider.dart';
-import 'map_functions.dart';
+import 'functions/markers/marker_functions.dart';
 
 String username = 'krupuks';
 String tilesize = '256';
@@ -80,13 +81,6 @@ class _MapPageState extends State<MapPage> {
           onTap: _isAddingMarkers
               ? (position, latlng) {
                   showPopupPark(context, latlng, userLogged.email);
-                  /*createMarker(latlng, userLogged.email, "", "", "", context,
-                      (Marker newMarker) {
-                    setState(() {
-                      _markers.add(newMarker);
-                      _isAddingMarkers = false;
-                    });
-                  });*/
                 }
               : null,
         ),
