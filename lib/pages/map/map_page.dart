@@ -65,10 +65,6 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
     return Scaffold(
-      //voor het moment
-      appBar: AppBar(
-        title: const Text('Map'),
-      ),
       body: FlutterMap(
         options: MapOptions(
           center: LatLng(51.2172, 4.4212),

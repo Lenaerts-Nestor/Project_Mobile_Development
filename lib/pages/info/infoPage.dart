@@ -36,9 +36,6 @@ class _InfoPageState extends State<InfoPage> {
         .where('reservedUserId', isEqualTo: currentUserId);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Parked Vehicles'),
-      ),
       body: StreamBuilder<List<QuerySnapshot>>(
         stream: Rx.combineLatest2(
           parkedUserQuery.snapshots(),

@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, file_names, camel_case_types, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkflow/components/custom_appbar.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/user/user_service.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +15,8 @@ import 'add_vehicles_page.dart';
 import 'package:parkflow/components/custom_button.dart'; //test
 
 class VehiclesPage extends StatefulWidget {
-  const VehiclesPage({Key? key}) : super(key: key);
+  final Function? onBackButtonPressed;
+  const VehiclesPage({Key? key, this.onBackButtonPressed}) : super(key: key);
 
   @override
   State<VehiclesPage> createState() => _VehiclesPageState();
@@ -46,6 +49,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
     final userLogged = Provider.of<UserLogged>(context);
     final userEmail = userLogged.email.trim();
     return Scaffold(
+      appBar: MyAppBar(
+        backgroundcolor: color4,
+        icon: Icons.arrow_back,
+        titleText: "Vervoeren",
+        marginleft: 60,
+        onPressed: () => widget.onBackButtonPressed?.call(),
+      ),
       body: Column(
         children: [
           Expanded(
