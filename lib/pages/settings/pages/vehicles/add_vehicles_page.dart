@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkflow/components/custom_appbar.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:parkflow/components/custom_dropdown.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +48,11 @@ class AddVehicleState extends State<AddVehicle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Voer een voertuig toe'),
+      appBar: const MyAppBar(
+        backgroundcolor: color4,
+        icon: Icons.arrow_back,
+        titleText: "Voeg een vervoer toe",
+        marginleft: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
