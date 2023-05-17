@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:parkflow/model/vehicle.dart';
-import 'package:parkflow/pages/map/functions/popUps/editing_funciton.dart';
+import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
 import 'package:parkflow/pages/map/functions/popUps/reserving_function.dart';
 import 'package:parkflow/pages/map/functions/markers/marker.dart';
 import 'package:provider/provider.dart';
@@ -109,13 +109,13 @@ Marker createMarkersFromDatabase(BuildContext context, MarkerInfo newMarker) {
       onTap: () {
         if (newMarker.isGreenMarker &&
             currentUserId != newMarker.parkedUserId) {
-          showPopupReserve(context, newMarker);
+          showPopupReserve(context, newMarker, userLogged.email);
         }
         if ((newMarker.isGreenMarker &&
                 currentUserId == newMarker.parkedUserId) ||
             (!newMarker.isGreenMarker &&
                 currentUserId == newMarker.reservedUserId)) {
-          showPopupEdit(context, newMarker);
+          showPopupEdit(context, newMarker, userLogged.email);
         }
       },
       child: Icon(Icons.location_on, color: markerColor, size: iconSizeNav),
@@ -174,7 +174,6 @@ Future<void> updateMarker(MarkerInfo updatedMarker, bool isGreenMarker) async {
 }
 
 Future<void> removeExpiredMarkers() async {
-  //alle date in een list zetten -> als id hier niet in zit availability op true zetten
   String parkedVehicleId = '';
   final markersSnapshot = await _firestore.collection('markers').get();
   for (var doc in markersSnapshot.docs) {
@@ -187,7 +186,7 @@ Future<void> removeExpiredMarkers() async {
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
     final selectedVehicleIndex =
         vervoeren.indexWhere((vehicle) => vehicle['model'] == parkedVehicleId);
-    //model zou eigenlijk id moeten zijn??
+    //model zou eigenlijk id moeten zijn
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
       if (selectedVehicleIndex > -1) {
@@ -223,7 +222,6 @@ Future<void> updateMarkerState(BuildContext context) async {
         doc.reference.update({'isGreenMarker': true});
         doc.reference.update({'parkedUserId': reservedUserId});
         doc.reference.update({'parkedVehicleId': reservedVehicleId});
-
         toggleVehicleAvailability(parkedUserId, parkedVehicle);
       }
     }

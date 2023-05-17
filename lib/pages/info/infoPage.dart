@@ -1,15 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:parkflow/pages/map/functions/popUps/editing_funciton.dart';
+import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
 import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../components/custom_button.dart';
-import '../../components/style/designStyle.dart';
-import '../map/functions/markers/marker_functions.dart';
 import '../map/functions/markers/marker.dart';
 
 class InfoPage extends StatefulWidget {
@@ -88,10 +83,7 @@ class _InfoPageState extends State<InfoPage> {
                           : Text(
                               'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
                       onTap: () {
-                        showPopupEdit(
-                          context,
-                          marker,
-                        );
+                        showPopupEdit(context, marker, userLogged.email);
                       },
                     ),
                   ),
