@@ -3,9 +3,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/custom_button.dart';
+import 'package:parkflow/components/custom_dropdown.dart';
+import 'package:parkflow/model/user/user_account.dart';
 import 'package:intl/intl.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
+import 'package:parkflow/model/user/user_service.dart';
 import 'package:parkflow/pages/map/functions/streetname_function.dart';
 import 'package:parkflow/pages/map/functions/markers/marker.dart';
 import 'package:provider/provider.dart';
@@ -17,116 +20,152 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
-void showPopupReserve(BuildContext context, MarkerInfo deMarker) {
+void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentUserId) {
   DateTime previousEndTime = deMarker.endTime;
-  //nog te implementeren !!!
-  String reservedVehicleId = "";
+  String reservedVehicleId = '';
   var streetname = getStreetName(deMarker.latitude, deMarker.longitude);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
-      return StatefulBuilder(builder: (context, setState) {
-        DateTime endTime = previousEndTime.add(selectedTime);
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: const BoxDecoration(
-            color: color3,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(radius),
-              topRight: Radius.circular(radius),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //moet futurbuilder zijn. laat het zo. anders kunnen we de naam van de straat niet krijgen.
-                    FutureBuilder<String>(
-                      future: streetname,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return const Text('Error getting street name');
-                        } else {
-                          return Text(
-                            snapshot.data ?? 'Unknown',
-                            style: const TextStyle(fontSize: fontSize3),
-                          );
-                        }
-                      },
+      return StreamBuilder<UserAccount>(
+        stream: readUserByLive(currentUserId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            final user = snapshot.data;
+            if (user != null) {
+              final vehicles =
+                  user.vehicles.where((v) => v.availability).toList();
+              bool buttonDisabled = vehicles.isEmpty;
+              if (reservedVehicleId == '' && vehicles.isNotEmpty) {
+                reservedVehicleId = vehicles.first.model;
+              }
+              return StatefulBuilder(builder: (context, setState) {
+                DateTime endTime = previousEndTime.add(selectedTime);
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  decoration: const BoxDecoration(
+                    color: color3,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(radius),
+                      topRight: Radius.circular(radius),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.close),
-                      iconSize: iconSizeNav,
-                    ),
-                  ],
-                ),
-                const Divider(
-                  color: Colors.black,
-                  thickness: 1,
-                  indent: 20,
-                  endIndent: 20,
-                ),
-                const Text('Hoe lang gaat u na de reservatie parkeren?'),
-                SizedBox(
-                  height: 180,
-                  child: CupertinoDatePicker(
-                    initialDateTime: DateTime(0).add(selectedTime),
-                    mode: CupertinoDatePickerMode.time,
-                    use24hFormat: true,
-                    onDateTimeChanged: (DateTime value) {
-                      setState(() {
-                        selectedTime =
-                            Duration(hours: value.hour, minutes: value.minute);
-                      });
-                    },
                   ),
-                ),
-                const SizedBox(height: verticalSpacing2),
-                //moet previousEndTime zijn
-                Text('van ${formatDateTime(previousEndTime)}'),
-                Text('tot  ${formatDateTime(endTime)}'),
-                const SizedBox(height: verticalSpacing2),
-                BlackButton(
-                  onPressed: () async {
-                    if (deMarker.isGreenMarker) {
-                      final userLogged =
-                          Provider.of<UserLogged>(context, listen: false);
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FutureBuilder<String>(
+                              future: streetname,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return const Text(
+                                      'Error getting street name');
+                                } else {
+                                  return Text(
+                                    snapshot.data ?? 'Unknown',
+                                    style: const TextStyle(fontSize: fontSize3),
+                                  );
+                                }
+                              },
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.close),
+                              iconSize: iconSizeNav,
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                          indent: 20,
+                          endIndent: 20,
+                        ),
+                        const Text(
+                            'Hoe lang gaat u na de reservatie parkeren?'),
+                        SizedBox(
+                          height: 180,
+                          child: CupertinoDatePicker(
+                            initialDateTime: DateTime(0).add(selectedTime),
+                            mode: CupertinoDatePickerMode.time,
+                            use24hFormat: true,
+                            onDateTimeChanged: (DateTime value) {
+                              setState(() {
+                                selectedTime = Duration(
+                                    hours: value.hour, minutes: value.minute);
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: verticalSpacing2),
+                        Text('van ${formatDateTime(previousEndTime)}'),
+                        Text('tot  ${formatDateTime(endTime)}'),
+                        const SizedBox(height: verticalSpacing2),
+                        //carpicker
+                        vehicles.isNotEmpty
+                            ? VehicleDropdown(
+                                items: vehicles
+                                    .map((vehicle) => vehicle.model)
+                                    .toList(),
+                                value: reservedVehicleId,
+                                onChanged: (value) {
+                                  if (value == null) {
+                                    return;
+                                  }
+                                  setState(() {
+                                    reservedVehicleId = value;
+                                  });
+                                },
+                              )
+                            : const Text('voeg een vervoer toe aan je account'),
+                        const SizedBox(height: 80),
+                        BlackButton(
+                          text: buttonDisabled ? 'auto tekort' : 'reserveren',
+                          isRed: buttonDisabled ? false : true,
+                          onPressed: () async {
+                            if (deMarker.isGreenMarker) {
+                              final userLogged = Provider.of<UserLogged>(
+                                  context,
+                                  listen: false);
 
-                      MarkerInfo newMarker = MarkerInfo(
-                          latitude: deMarker.latitude,
-                          longitude: deMarker.longitude,
-                          parkedUserId: deMarker.parkedUserId,
-                          reservedUserId: userLogged.email,
-                          parkedVehicleId: deMarker.parkedVehicleId,
-                          reservedVehicleId: reservedVehicleId,
-                          startTime: deMarker.startTime,
-                          endTime: endTime, //dit is veranderd : 
-                          prevEndTime: previousEndTime,
-                          isGreenMarker: false);
+                              MarkerInfo newMarker = MarkerInfo(
+                                  latitude: deMarker.latitude,
+                                  longitude: deMarker.longitude,
+                                  parkedUserId: deMarker.parkedUserId,
+                                  reservedUserId: userLogged.email,
+                                  parkedVehicleId: deMarker.parkedVehicleId,
+                                  reservedVehicleId: reservedVehicleId,
+                                  startTime: deMarker.startTime,
+                                  endTime: endTime, //dit is veranderd :
+                                  prevEndTime: previousEndTime,
+                                  isGreenMarker: false);
 
-                      await updateMarker(newMarker, false);
-                    }
-                    Navigator.pop(context);
-                  },
-                  text: 'reserveren',
-                ),
-              ],
-            ),
-          ),
-        );
-      });
+                              await updateMarker(newMarker, false);
+                            }
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+            }
+          }
+          return const SizedBox.shrink();
+        },
+      );
     },
   );
 }
