@@ -10,7 +10,8 @@ class BlackButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    this.isRed = true, MaterialColor? color,
+    this.isRed = true,
+    MaterialColor? color,
   }) : super(key: key);
 
   @override
@@ -21,7 +22,7 @@ class BlackButton extends StatelessWidget {
       width: 200,
       height: 60,
       child: Material(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(cornerRadius),
         color: backgroundColor,
         child: InkWell(
           onTap: onPressed,

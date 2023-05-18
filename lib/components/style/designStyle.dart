@@ -31,19 +31,19 @@ const double verticalSpacing1 = 10;
 const double verticalSpacing2 = 30;
 
 //corners
-const double radius = 30;
+const double cornerRadius = 30;
 
 // iconsizes
 const double iconSizeNav = 35;
+const double negativeSizePP = 200;
 
 final ThemeData theme = ThemeData(
-  colorScheme: ColorScheme.fromSwatch().copyWith(
-      background: color4,
-      primary: color6,
-      secondary: color4,
-      tertiary: color3),
-  scaffoldBackgroundColor: color4
-);
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+        background: color4,
+        primary: color6,
+        secondary: color4,
+        tertiary: color3),
+    scaffoldBackgroundColor: color4);
 
   /*-----------
   primary: This controls the main color used throughout your app, 
