@@ -9,6 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../login-register/login/login_page.dart';
 
+enum SettingsPageState { DefaultPage, ProfielPage, VehiclesPage }
+
+SettingsPageState _currentPage = SettingsPageState.DefaultPage;
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -17,29 +21,23 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _showDefaultPage = true;
-  bool _showProfielPage = false;
-  bool _showVehiclesPage = false;
 
   void _onButton1Pressed() {
     setState(() {
-      _showDefaultPage = false;
-      _showProfielPage = true;
+      _currentPage = SettingsPageState.ProfielPage;
     });
   }
 
   void _onButton2Pressed() {
     setState(() {
-      _showDefaultPage = false;
-      _showVehiclesPage = true;
+      _currentPage = SettingsPageState.VehiclesPage;
     });
   }
 
-  void _onBackButtonPressed() {
+    void _onBackButtonPressed() {
     setState(() {
-      _showDefaultPage = true;
-      _showProfielPage = false;
-      _showVehiclesPage = false; // reset the vehicles page flag as well
+      // reset the vehicles page flag as well
+      _currentPage = SettingsPageState.DefaultPage;
     });
   }
 
@@ -56,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: Stack(
         children: [
-          _showDefaultPage
+          _currentPage == SettingsPageState.DefaultPage
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -85,20 +83,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       const SizedBox(height: 40),
                       const Center(
-                        child: Text(
-                          "Parkflow\nv1.0.0",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: color5
-                          )
-                        ),
+                        child: Text("Parkflow\nv1.0.0",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: color5)),
                       ),
                     ],
                   ),
                 )
               : const SizedBox.shrink(),
-          _showProfielPage ? const ProfielPage() : const SizedBox.shrink(),
-          _showVehiclesPage ? const VehiclesPage() : const SizedBox.shrink(),
+          _currentPage == SettingsPageState.ProfielPage
+              ?  ProfielPage(onBackButtonPressed: _onBackButtonPressed,)
+              : const SizedBox.shrink(),
+          _currentPage == SettingsPageState.VehiclesPage
+              ?  VehiclesPage(onBackButtonPressed: _onBackButtonPressed)
+              : const SizedBox.shrink(),
         ],
       ),
     );

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:parkflow/components/custom_appbar.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_account.dart';
 import 'package:parkflow/model/user/user_service.dart';
@@ -11,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 
 class ProfielPage extends StatefulWidget {
-  const ProfielPage({Key? key}) : super(key: key);
+  final Function? onBackButtonPressed;
+  const ProfielPage({Key? key, this.onBackButtonPressed}) : super(key: key);
 
   @override
   _ProfielPageState createState() => _ProfielPageState();
@@ -31,10 +33,16 @@ class _ProfielPageState extends State<ProfielPage> {
 
     return Center(
       child: Scaffold(
+        appBar: MyAppBar(
+          backgroundcolor: color4,
+          icon: Icons.arrow_back,
+          titleText: "Profiel",
+          marginleft: 90,
+          onPressed: () => widget.onBackButtonPressed?.call(),
+        ),
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: padding),
+            padding: const EdgeInsets.symmetric(horizontal: padding),
             child: Column(
               children: [
                 const SizedBox(height: negativeSizePP / 4 * 3),
