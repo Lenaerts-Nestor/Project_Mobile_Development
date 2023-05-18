@@ -22,8 +22,8 @@ String formatDateTime(DateTime dateTime) {
 
 //naam van de straat krijgen =>
 void showPopupPark(
-    BuildContext context, LatLng latLng, String parkedUserId) async {
-  late String parkedVehicleId = '';
+    BuildContext context, LatLng latLng, String currentUserId) async {
+  late String currentVehicleId = '';
   //naam van straat =>
   var streetname = getStreetName(latLng.latitude, latLng.longitude);
 
@@ -33,7 +33,7 @@ void showPopupPark(
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
       return StreamBuilder<UserAccount>(
-        stream: readUserByLive(parkedUserId),
+        stream: readUserByLive(currentUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final user = snapshot.data;
@@ -41,8 +41,8 @@ void showPopupPark(
               final vehicles =
                   user.vehicles.where((v) => v.availability).toList();
               bool buttonDisabled = vehicles.isEmpty;
-              if (parkedVehicleId == '' && vehicles.isNotEmpty) {
-                parkedVehicleId = vehicles.first.model;
+              if (currentVehicleId == '' && vehicles.isNotEmpty) {
+                currentVehicleId = vehicles.first.model;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime endTime = DateTime.now().add(selectedTime);
@@ -51,8 +51,8 @@ void showPopupPark(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(radius),
-                      topRight: Radius.circular(radius),
+                      topLeft: Radius.circular(cornerRadius),
+                      topRight: Radius.circular(cornerRadius),
                     ),
                   ),
                   child: Padding(
@@ -60,33 +60,40 @@ void showPopupPark(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Stack(
+                          alignment: Alignment.center,
                           children: [
-                            //naam van de straat krijgen =>
-                            FutureBuilder<String>(
-                              future: streetname,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return const Text(
-                                      'Error getting street name');
-                                } else {
-                                  return Text(
-                                    snapshot.data ?? 'Unknown',
-                                    style: const TextStyle(fontSize: fontSize3),
-                                  );
-                                }
-                              },
+                            SizedBox(
+                              width: double.infinity,
+                              child: FutureBuilder<String>(
+                                future: streetname,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Text(
+                                        'Error getting street name');
+                                  } else {
+                                    return Text(
+                                      snapshot.data ?? 'Unknown',
+                                      style:
+                                          const TextStyle(fontSize: fontSize3),
+                                      textAlign: TextAlign.center,
+                                    );
+                                  }
+                                },
+                              ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close),
-                              iconSize: iconSizeNav,
+                            Positioned(
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close),
+                                iconSize: iconSizeNav,
+                              ),
                             ),
                           ],
                         ),
@@ -120,13 +127,13 @@ void showPopupPark(
                                 items: vehicles
                                     .map((vehicle) => vehicle.model)
                                     .toList(),
-                                value: parkedVehicleId,
+                                value: currentVehicleId,
                                 onChanged: (value) {
                                   if (value == null) {
                                     return;
                                   }
                                   setState(() {
-                                    parkedVehicleId = value;
+                                    currentVehicleId = value;
                                   });
                                 },
                               )
@@ -144,34 +151,34 @@ void showPopupPark(
                                   );
                                 }
                               : () async {
+                                  //we creeren een variabele met dat info:
+                                  MarkerInfo newMarker = MarkerInfo(
+                                      latitude: latLng.latitude,
+                                      longitude: latLng.longitude,
+                                      parkedUserId: currentUserId,
+                                      reservedUserId: '',
+                                      parkedVehicleId: currentVehicleId,
+                                      reservedVehicleId: '',
+                                      startTime: DateTime.now(),
+                                      endTime: endTime,
+                                      prevEndTime: DateTime.now(),
+                                      isGreenMarker: true);
+
+                                  //we bewaren de nieuwe marker:
+                                  await saveMarkerToDatabase(newMarker);
+
                                   final selectedVehicleIndex =
                                       vehicles.indexWhere((vehicle) =>
-                                          vehicle.model == parkedVehicleId);
+                                          vehicle.model == currentVehicleId);
                                   if (selectedVehicleIndex >= 0) {
                                     final selectedVehicle2 =
                                         vehicles[selectedVehicleIndex];
 
-                                    //we creeren een variabele met dat info:
-                                    MarkerInfo newMarker = MarkerInfo(
-                                        latitude: latLng.latitude,
-                                        longitude: latLng.longitude,
-                                        parkedUserId: parkedUserId,
-                                        reservedUserId: '',
-                                        parkedVehicleId: parkedVehicleId,
-                                        reservedVehicleId: '',
-                                        startTime: DateTime.now(),
-                                        endTime: endTime,
-                                        prevEndTime: DateTime.now(),
-                                        isGreenMarker: true);
-
-                                    //we bewaren de nieuwe marker:
-                                    await saveMarkerToDatabase(newMarker);
-
-                                    //we veranderen de markers status van beschikbaarheid:
+                                    //we veranderen de auto status van beschikbaarheid:
                                     await toggleVehicleAvailability(
-                                        parkedUserId, selectedVehicle2);
-                                    Navigator.pop(context);
+                                        currentUserId, selectedVehicle2);
                                   }
+                                  Navigator.pop(context);
                                 },
                         ),
                       ],
