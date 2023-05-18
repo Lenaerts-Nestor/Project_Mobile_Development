@@ -45,12 +45,11 @@ class _ProfielPageState extends State<ProfielPage> {
             padding: const EdgeInsets.symmetric(horizontal: padding),
             child: Column(
               children: [
-                const SizedBox(height: 70),
+                const SizedBox(height: negativeSizePP / 4 * 3),
                 //Dit zou verbeterd moeten worden
                 SvgPicture.asset('assets/usericon.svg',
-                    width: MediaQuery.of(context).size.width - 120,
-                    color: color6),
-                const SizedBox(height: 30),
+                    width: MediaQuery.of(context).size.width - negativeSizePP, color: color6),
+                const SizedBox(height: negativeSizePP / 4 * 1),
                 FutureBuilder<UserAccount?>(
                   //methode readUser van user_service.
                   future: readUserOnce(userEmail),

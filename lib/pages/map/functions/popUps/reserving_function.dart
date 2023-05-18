@@ -7,11 +7,10 @@ import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_account.dart';
 import 'package:intl/intl.dart';
 import 'package:parkflow/components/style/designStyle.dart';
-import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/user/user_service.dart';
 import 'package:parkflow/pages/map/functions/streetname_function.dart';
 import 'package:parkflow/pages/map/functions/markers/marker.dart';
-import 'package:provider/provider.dart';
+import 'package:parkflow/pages/settings/pages/vehicles/add_vehicles_page.dart';
 import '../markers/marker_functions.dart';
 
 Duration selectedTime = const Duration(hours: 0, minutes: 0);
@@ -20,9 +19,10 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
-void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentUserId) {
+void showPopupReserve(
+    BuildContext context, MarkerInfo deMarker, String currentUserId) {
   DateTime previousEndTime = deMarker.endTime;
-  String reservedVehicleId = '';
+  String currentVehicleId = '';
   var streetname = getStreetName(deMarker.latitude, deMarker.longitude);
   showModalBottomSheet(
     context: context,
@@ -38,8 +38,8 @@ void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentU
               final vehicles =
                   user.vehicles.where((v) => v.availability).toList();
               bool buttonDisabled = vehicles.isEmpty;
-              if (reservedVehicleId == '' && vehicles.isNotEmpty) {
-                reservedVehicleId = vehicles.first.model;
+              if (currentVehicleId == '' && vehicles.isNotEmpty) {
+                currentVehicleId = vehicles.first.model;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime endTime = previousEndTime.add(selectedTime);
@@ -48,8 +48,8 @@ void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentU
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(radius),
-                      topRight: Radius.circular(radius),
+                      topLeft: Radius.circular(cornerRadius),
+                      topRight: Radius.circular(cornerRadius),
                     ),
                   ),
                   child: Padding(
@@ -57,34 +57,25 @@ void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentU
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FutureBuilder<String>(
-                              future: streetname,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return const Text(
-                                      'Error getting street name');
-                                } else {
-                                  return Text(
-                                    snapshot.data ?? 'Unknown',
-                                    style: const TextStyle(fontSize: fontSize3),
-                                  );
-                                }
-                              },
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close),
-                              iconSize: iconSizeNav,
-                            ),
-                          ],
+                        SizedBox(
+                          width: double.infinity,
+                          child: FutureBuilder<String>(
+                            future: streetname,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const Text('Error getting street name');
+                              } else {
+                                return Text(
+                                  snapshot.data ?? 'Unknown',
+                                  style: const TextStyle(fontSize: fontSize3),
+                                  textAlign: TextAlign.center,
+                                );
+                              }
+                            },
+                          ),
                         ),
                         const Divider(
                           color: Colors.black,
@@ -118,13 +109,13 @@ void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentU
                                 items: vehicles
                                     .map((vehicle) => vehicle.model)
                                     .toList(),
-                                value: reservedVehicleId,
+                                value: currentVehicleId,
                                 onChanged: (value) {
                                   if (value == null) {
                                     return;
                                   }
                                   setState(() {
-                                    reservedVehicleId = value;
+                                    currentVehicleId = value;
                                   });
                                 },
                               )
@@ -133,28 +124,45 @@ void showPopupReserve(BuildContext context, MarkerInfo deMarker, String currentU
                         BlackButton(
                           text: buttonDisabled ? 'auto tekort' : 'reserveren',
                           isRed: buttonDisabled ? false : true,
-                          onPressed: () async {
-                            if (deMarker.isGreenMarker) {
-                              final userLogged = Provider.of<UserLogged>(
-                                  context,
-                                  listen: false);
+                          onPressed: buttonDisabled
+                              ? () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AddVehicle()),
+                                  );
+                                }
+                              : () async {
+                                  if (deMarker.isGreenMarker) {
+                                    MarkerInfo newMarker = MarkerInfo(
+                                        latitude: deMarker.latitude,
+                                        longitude: deMarker.longitude,
+                                        parkedUserId: deMarker.parkedUserId,
+                                        reservedUserId: currentUserId,
+                                        parkedVehicleId:
+                                            deMarker.parkedVehicleId,
+                                        reservedVehicleId: currentVehicleId,
+                                        startTime: deMarker.startTime,
+                                        endTime: endTime, //dit is veranderd :
+                                        prevEndTime: previousEndTime,
+                                        isGreenMarker: false);
+                                    await updateMarker(
+                                        newMarker, newMarker.isGreenMarker);
 
-                              MarkerInfo newMarker = MarkerInfo(
-                                  latitude: deMarker.latitude,
-                                  longitude: deMarker.longitude,
-                                  parkedUserId: deMarker.parkedUserId,
-                                  reservedUserId: userLogged.email,
-                                  parkedVehicleId: deMarker.parkedVehicleId,
-                                  reservedVehicleId: reservedVehicleId,
-                                  startTime: deMarker.startTime,
-                                  endTime: endTime, //dit is veranderd :
-                                  prevEndTime: previousEndTime,
-                                  isGreenMarker: false);
+                                    final selectedVehicleIndex =
+                                        vehicles.indexWhere((vehicle) =>
+                                            vehicle.model == currentVehicleId);
+                                    if (selectedVehicleIndex >= 0) {
+                                      final currentVehicle =
+                                          vehicles[selectedVehicleIndex];
 
-                              await updateMarker(newMarker, false);
-                            }
-                            Navigator.pop(context);
-                          },
+                                      //we veranderen de auto status van beschikbaarheid:
+                                      await toggleVehicleAvailability(
+                                          currentUserId, currentVehicle);
+                                    }
+                                  }
+                                  Navigator.pop(context);
+                                },
                         ),
                       ],
                     ),
