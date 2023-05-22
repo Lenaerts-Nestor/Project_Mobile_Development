@@ -37,7 +37,7 @@ void showPopupEdit(
             final user = snapshot.data;
             if (user != null) {
               final vehicles =
-                  user.vehicles.where((v) => v.availability).toList();
+                  user.vehicles.where((v) => !v.availability).toList();
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
                 currentVehicleId = vehicles.first.model;
               }
@@ -133,8 +133,18 @@ void showPopupEdit(
                                 prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: true,
                               );
-                            } //aanpassen
-                            else {
+
+                              //dit zet de auto op beschikbaar
+                              final selectedVehicleIndex = vehicles.indexWhere(
+                                (vehicle) => vehicle.model == currentVehicleId,
+                              );
+                              if (selectedVehicleIndex >= 0) {
+                                Vehicle currentVehicle =
+                                    vehicles[selectedVehicleIndex];
+                                await toggleVehicleAvailability(
+                                    currentUserId, currentVehicle);
+                              } //aanpassen
+                            } else {
                               newMarker = MarkerInfo(
                                 latitude: deMarker.latitude,
                                 longitude: deMarker.longitude,
@@ -151,16 +161,6 @@ void showPopupEdit(
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.
                             await updateMarker(
                                 newMarker, newMarker.isGreenMarker);
-                            //dit zet de auto op beschikbaar
-                            final selectedVehicleIndex = vehicles.indexWhere(
-                              (vehicle) => vehicle.model == currentVehicleId,
-                            );
-                            if (selectedVehicleIndex >= 0) {
-                              Vehicle currentVehicle =
-                                  vehicles[selectedVehicleIndex];
-                              await toggleVehicleAvailability(
-                                  currentUserId, currentVehicle);
-                            }
                             Navigator.pop(context);
                           },
                           text: (deMarker.parkedUserId == currentUserId &&
