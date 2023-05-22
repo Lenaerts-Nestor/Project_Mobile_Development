@@ -9,7 +9,7 @@ import 'package:parkflow/pages/login-register/login/login_page.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:parkflow/components/custom_text_button.dart';
 
-//TODO: nog aanpassen zonder firebase auth.
+
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
