@@ -32,19 +32,16 @@ class _MapPageState extends State<MapPage> {
   final bool _isAddingMarkers = false;
   List<Marker> _markers = [];
   late Timer _timer;
-  late double currentLatitude;
-  late double currentLongitude;
+  double? currentLatitude;
+  double? currentLongitude;
 
   @override
   void initState() {
     super.initState();
-    //refresh de map elke seconde
-    _determinePosition();
-    _timer =
-        Timer.periodic(const Duration(microseconds: 1), (Timer timer) async {
-      updateMarkerState();
 
-      _updateMarkers();
+    _determinePosition();
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+      updateMarkerState();
     });
     _updateMarkers();
   }
@@ -72,16 +69,19 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    _timer.cancel();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
-    LatLng userLocation = LatLng(currentLatitude, currentLongitude);
+    LatLng? userLocation;
+
+    if (currentLatitude != null && currentLongitude != null) {
+      userLocation = LatLng(currentLatitude!, currentLongitude!);
+    }
     return Scaffold(
       body: userLocation != null
           ? FlutterMap(
@@ -115,7 +115,9 @@ class _MapPageState extends State<MapPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showPopupPark(context, userLocation, userLogged.email);
+          if (userLocation != null) {
+            showPopupPark(context, userLocation, userLogged.email);
+          }
 
           // setState(() {
           //   _isAddingMarkers = !_isAddingMarkers;
