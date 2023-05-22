@@ -101,6 +101,25 @@ class _VehiclesPageState extends State<VehiclesPage> {
                                   style: const TextStyle(color: Colors.black)),
                               subtitle: Text(vehicle.brand,
                                   style: const TextStyle(color: Colors.black)),
+                              trailing: vehicle.availability
+                                  ? Column(
+                                      children: const [
+                                        Text('vrij'),
+                                        Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      children: const [
+                                        Text('vrij'),
+                                        Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                        )
+                                      ],
+                                    ),
                               onTap: () {},
                             ),
                           ),
