@@ -15,7 +15,6 @@ import 'package:parkflow/components/style/designStyle.dart';
 
 import '../../../../model/user/user_service.dart';
 
-
 final _firestore = FirebaseFirestore.instance;
 
 // Dit is voor de tijd
@@ -173,20 +172,25 @@ Future<void> updateMarker(MarkerInfo updatedMarker, bool isGreenMarker) async {
   }
 }
 
-Future<void> removeExpiredMarkers() async {
-  String parkedVehicleId = '';
+Future<void> updateMarkerState() async {
   final markersSnapshot = await _firestore.collection('markers').get();
   for (var doc in markersSnapshot.docs) {
-    String parkedUserId = doc['parkedUserId'];
-    parkedVehicleId = doc['parkedVehicleId'];
     DateTime endTime = doc['endTime'].toDate();
+    DateTime prevEndTime = doc['prevEndTime'].toDate();
+    String parkedUserId = doc['parkedUserId'].toString();
+    String parkedVehicleId = doc['parkedVehicleId'].toString();
+    String reservedUserId = doc['reservedUserId'].toString();
+    String reservedVehicleId = doc['reservedVehicleId'].toString();
+
     final userDoc =
         await _firestore.collection('users').doc(parkedUserId).get();
     List<dynamic> vervoeren = userDoc.get('vervoeren');
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
-    final selectedVehicleIndex =
-        vervoeren.indexWhere((vehicle) => vehicle['model'] == parkedVehicleId);
-    //model zou eigenlijk id moeten zijn
+
+    final selectedVehicleIndex = vervoeren.indexWhere((vehicle) =>
+        vehicle['model'] ==
+        parkedVehicleId); //model zou eigenlijk id moeten zijn
+
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
       if (selectedVehicleIndex > -1) {
@@ -194,39 +198,17 @@ Future<void> removeExpiredMarkers() async {
         await toggleVehicleAvailability(parkedUserId, parkedVehicle);
       }
     }
-  }
-}
-
-Future<void> updateMarkerState(BuildContext context) async {
-  try {
-    final userLogged = Provider.of<UserLogged>(context, listen: false);
-    final currentUserId = userLogged.email.trim();
-    final userDoc =
-        await _firestore.collection('users').doc(currentUserId).get();
-
-    List<Vehicle> vervoeren = userDoc.get('vervoeren');
-
-    final markersSnapshot = await _firestore.collection('markers').get();
-    for (var doc in markersSnapshot.docs) {
-      DateTime prevEndTime = doc['prevEndTime'].toDate();
-      String parkedUserId = doc['parkedUserId'].toString();
-      String parkedVehicleId = doc['parkedVehicleId'].toString();
-      String reservedUserId = doc['reservedUserId'].toString();
-      String reservedVehicleId = doc['reservedVehicleId'].toString();
-
-      final selectedVehicleIndex =
-          vervoeren.indexWhere((vehicle) => vehicle.model == parkedVehicleId);
-      Vehicle parkedVehicle = vervoeren[selectedVehicleIndex];
-
-      if (prevEndTime.isBefore(DateTime.now())) {
-        doc.reference.update({'isGreenMarker': true});
-        doc.reference.update({'parkedUserId': reservedUserId});
-        doc.reference.update({'parkedVehicleId': reservedVehicleId});
+    if (prevEndTime.isBefore(DateTime.now()) && reservedUserId != "") {
+      doc.reference.update({'isGreenMarker': true});
+      doc.reference.update({'parkedUserId': reservedUserId});
+      doc.reference.update({'parkedVehicleId': reservedVehicleId});
+      doc.reference.update({'reservedUserId': ''});
+      doc.reference.update({'reservedVehicleId': ''});
+      if (selectedVehicleIndex >= 0) {
+        Vehicle parkedVehicle = vehicles[selectedVehicleIndex];
+        //dit hoort te kloppen
         toggleVehicleAvailability(parkedUserId, parkedVehicle);
       }
     }
-  } catch (e) {
-    print('');
   }
 }
-

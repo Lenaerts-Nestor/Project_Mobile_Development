@@ -36,8 +36,7 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     //refresh de map elke seconde
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      updateMarkerState(context);
-      removeExpiredMarkers();
+      updateMarkerState();
 
       _updateMarkers();
     });
