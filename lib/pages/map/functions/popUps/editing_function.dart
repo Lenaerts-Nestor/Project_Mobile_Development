@@ -19,7 +19,10 @@ String formatDateTime(DateTime dateTime) {
 }
 
 void showPopupEdit(
-    BuildContext context, MarkerInfo deMarker, String currentUserId) {
+  BuildContext context,
+  MarkerInfo deMarker,
+  String currentUserId,
+) {
   late String currentVehicleId = '';
   var streetname = getStreetName(deMarker.latitude, deMarker.longitude);
   showModalBottomSheet(
@@ -35,13 +38,16 @@ void showPopupEdit(
             if (user != null) {
               final vehicles =
                   user.vehicles.where((v) => v.availability).toList();
-              bool buttonDisabled = vehicles.isEmpty;
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
                 currentVehicleId = vehicles.first.model;
               }
               return StatefulBuilder(builder: (context, setState) {
-                DateTime replacingEndTime =
-                    deMarker.startTime.add(selectedTime);
+                DateTime replacingEndTime = DateTime(0);
+                if (deMarker.parkedUserId == currentUserId) {
+                  replacingEndTime = deMarker.startTime.add(selectedTime);
+                } else if (deMarker.reservedUserId == currentUserId) {
+                  replacingEndTime = deMarker.prevEndTime.add(selectedTime);
+                }
                 return Container(
                   height: MediaQuery.of(context).size.height * 0.7,
                   decoration: const BoxDecoration(
@@ -69,7 +75,6 @@ void showPopupEdit(
                               } else {
                                 return Text(
                                   snapshot.data ?? 'Unknown',
-                                  style: const TextStyle(fontSize: fontSize3),
                                   textAlign: TextAlign.center,
                                 );
                               }
@@ -98,46 +103,80 @@ void showPopupEdit(
                           ),
                         ),
                         const SizedBox(height: verticalSpacing2),
-                        Text('van ${formatDateTime(deMarker.startTime)}'),
+                        if (deMarker.parkedUserId == currentUserId)
+                          Text('van ${formatDateTime(deMarker.startTime)}'),
+                        if (deMarker.reservedUserId == currentUserId)
+                          Text('van ${formatDateTime(deMarker.prevEndTime)}'),
                         Text(
                           'tot ${formatDateTime(deMarker.endTime)}',
-                          style:
-                              const TextStyle(decoration: TextDecoration.lineThrough),
+                          style: const TextStyle(
+                              decoration: TextDecoration.lineThrough),
                         ),
                         Text('tot ${formatDateTime(replacingEndTime)}'),
                         const SizedBox(height: verticalSpacing2),
                         BlackButton(
                           onPressed: () async {
+                            MarkerInfo newMarker;
+                            //annuleren
+                            if (deMarker.reservedUserId == currentUserId &&
+                                replacingEndTime.isBefore(deMarker.prevEndTime
+                                    .add(const Duration(seconds: 60)))) {
+                              newMarker = MarkerInfo(
+                                latitude: deMarker.latitude,
+                                longitude: deMarker.longitude,
+                                parkedUserId: deMarker.parkedUserId,
+                                reservedUserId: "",
+                                parkedVehicleId: deMarker.parkedVehicleId,
+                                reservedVehicleId: "",
+                                startTime: deMarker.startTime,
+                                endTime: replacingEndTime,
+                                prevEndTime: deMarker.prevEndTime,
+                                isGreenMarker: true,
+                              );
+                            } //aanpassen
+                            else {
+                              newMarker = MarkerInfo(
+                                latitude: deMarker.latitude,
+                                longitude: deMarker.longitude,
+                                parkedUserId: deMarker.parkedUserId,
+                                reservedUserId: deMarker.reservedUserId,
+                                parkedVehicleId: deMarker.parkedVehicleId,
+                                reservedVehicleId: deMarker.reservedVehicleId,
+                                startTime: deMarker.startTime,
+                                endTime: deMarker.prevEndTime,
+                                prevEndTime: deMarker.startTime,
+                                isGreenMarker: deMarker.isGreenMarker,
+                              );
+                            }
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.
-                            MarkerInfo newMarker = MarkerInfo(
-                              latitude: deMarker.latitude,
-                              longitude: deMarker.longitude,
-                              parkedUserId: currentUserId,
-                              reservedUserId: deMarker.reservedUserId,
-                              parkedVehicleId: deMarker.parkedVehicleId,
-                              reservedVehicleId: deMarker.reservedVehicleId,
-                              startTime: deMarker.startTime,
-                              endTime:
-                                  replacingEndTime, //dit is het nieuwe verschil !
-                              prevEndTime: deMarker.prevEndTime,
-                              isGreenMarker: deMarker.isGreenMarker,
-                            );
-                            await updateMarker(newMarker, newMarker.isGreenMarker);
-
+                            await updateMarker(
+                                newMarker, newMarker.isGreenMarker);
                             //dit zet de auto op beschikbaar
                             final selectedVehicleIndex = vehicles.indexWhere(
-                                (vehicle) => vehicle.model == currentVehicleId);
+                              (vehicle) => vehicle.model == currentVehicleId,
+                            );
                             if (selectedVehicleIndex >= 0) {
-                              Vehicle currentVehicle = vehicles[selectedVehicleIndex];
+                              Vehicle currentVehicle =
+                                  vehicles[selectedVehicleIndex];
                               await toggleVehicleAvailability(
                                   currentUserId, currentVehicle);
                             }
                             Navigator.pop(context);
                           },
-                          text: replacingEndTime.isAfter(DateTime.now())
+                          text: (deMarker.parkedUserId == currentUserId &&
+                                      replacingEndTime
+                                          .isAfter(deMarker.startTime)) ||
+                                  (deMarker.reservedUserId == currentUserId &&
+                                      replacingEndTime
+                                          .isAfter(deMarker.prevEndTime))
                               ? 'aanpassen'
                               : 'annuleren',
-                          isRed: replacingEndTime.isAfter(DateTime.now()) ? true : false,
+                          isRed: (deMarker.parkedUserId == currentUserId &&
+                                  replacingEndTime
+                                      .isAfter(deMarker.startTime)) ||
+                              (deMarker.reservedUserId == currentUserId &&
+                                  replacingEndTime
+                                      .isAfter(deMarker.prevEndTime)),
                         ),
                       ],
                     ),
