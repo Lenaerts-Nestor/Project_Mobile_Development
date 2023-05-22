@@ -48,7 +48,8 @@ class _ProfielPageState extends State<ProfielPage> {
                 const SizedBox(height: negativeSizePP / 4 * 3),
                 //Dit zou verbeterd moeten worden
                 SvgPicture.asset('assets/usericon.svg',
-                    width: MediaQuery.of(context).size.width - negativeSizePP, color: color6),
+                    width: MediaQuery.of(context).size.width - negativeSizePP,
+                    color: color6),
                 const SizedBox(height: negativeSizePP / 4 * 1),
                 FutureBuilder<UserAccount?>(
                   //methode readUser van user_service.
@@ -126,9 +127,9 @@ class _ProfielPageState extends State<ProfielPage> {
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(userEmail);
     await docUser.update({
-      'Email': emailController.text,
-      'Naam': nameController.text,
-      'FamilieNaam': familyNameController.text,
+      'email': emailController.text,
+      'naam': nameController.text,
+      'familieNaam': familyNameController.text,
     });
 
     setState(() {
