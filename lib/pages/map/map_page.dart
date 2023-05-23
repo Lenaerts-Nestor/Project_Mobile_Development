@@ -42,8 +42,8 @@ class _MapPageState extends State<MapPage> {
     _determinePosition();
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
       updateMarkerState();
+      _updateMarkers();
     });
-    _updateMarkers();
   }
 
   //zet de markers op de map van de database
@@ -56,6 +56,32 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled on the device.
+      // Handle it according to your app's requirements.
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle it accordingly.
+      return;
+    }
+
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, request them.
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Permissions are denied, handle it accordingly.
+        return;
+      }
+    }
+
     Position? position = await Geolocator.getLastKnownPosition();
     if (position != null) {
       setState(() {
@@ -63,8 +89,6 @@ class _MapPageState extends State<MapPage> {
         currentLongitude = position.longitude;
       });
     }
-
-    _updateMarkers();
   }
 
   @override

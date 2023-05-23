@@ -6,6 +6,10 @@
 	<string>Parkflow needs access to your location when open.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Parkflow needs access to location when in the background.</string>
+	<key>NSBonjourServices</key>
+	<array>
+  		<string>_dartobservatory._tcp</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
