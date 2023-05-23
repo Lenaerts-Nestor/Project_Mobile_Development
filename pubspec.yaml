@@ -38,3 +38,6 @@ flutter:
   assets:
     - assets/logo.svg
     - assets/usericon.svg
+    - assets/vehicle_brands_icons/mercedes.svg
+    - assets/vehicle_brands_icons/honda.svg
+
