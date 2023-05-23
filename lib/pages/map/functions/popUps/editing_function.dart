@@ -39,7 +39,7 @@ void showPopupEdit(
               final vehicles =
                   user.vehicles.where((v) => !v.availability).toList();
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
-                currentVehicleId = vehicles.first.model;
+                currentVehicleId = vehicles.first.id;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime replacingEndTime = DateTime(0);
@@ -136,7 +136,7 @@ void showPopupEdit(
 
                               //dit zet de auto op beschikbaar
                               final selectedVehicleIndex = vehicles.indexWhere(
-                                (vehicle) => vehicle.model == currentVehicleId,
+                                (vehicle) => vehicle.id == currentVehicleId,
                               );
                               if (selectedVehicleIndex >= 0) {
                                 Vehicle currentVehicle =
