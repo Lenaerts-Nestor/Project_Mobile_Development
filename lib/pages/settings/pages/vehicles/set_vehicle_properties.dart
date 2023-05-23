@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-//op basis van de input zal dit de image geven van de gewenste brand.
 SvgPicture getSvg(String brandName, Color color) {
   switch (brandName) {
     case 'Mercedes':
@@ -11,20 +10,58 @@ SvgPicture getSvg(String brandName, Color color) {
       );
     case 'Honda':
       return SvgPicture.asset(
+        'assets/vehicle_brands_icons/honda.svg',
+        color: color,
+      );
+    case 'Audi':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/audi.svg',
+        color: color,
+      );
+    case 'BMW':
+      return SvgPicture.asset(
         'assets/vehicle_brands_icons/bmw.svg',
         color: color,
       );
-    // Add more cases for other vehicle brands and their respective SVG paths
-
+    case 'Citroen':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/citroen.svg',
+        color: color,
+      );
+    case 'Ford':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/ford.svg',
+        color: color,
+      );
+    case 'Porsche':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/porsche.svg',
+        color: color,
+      );
+    case 'Renault':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/renault.svg',
+        color: color,
+      );
+    case 'Toyota':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/toyota.svg',
+        color: color,
+      );
+    case 'Volkswagen':
+      return SvgPicture.asset(
+        'assets/vehicle_brands_icons/volkswagen.svg',
+        color: color,
+      );
+    
     default:
       return SvgPicture.asset(
-        'assets/default_vehicle_icon.svg',
+        'assets/vehicle_brands_icons/default.svg',
         color: color,
       );
   }
 }
 
-//zal de kleur terug geven op basis van de parameter.
 Color getColor(String colorName) {
   switch (colorName) {
     case 'Rood':

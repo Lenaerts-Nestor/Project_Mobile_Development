@@ -79,9 +79,10 @@ class _VehiclesPageState extends State<VehiclesPage> {
                               color: Colors.black12,
                             ),
                             child: ListTile(
-                              leading: SvgPicture(
-                                  getSvg(vehicle.brand, getColor(vehicle.color))
-                                      as PictureProvider),
+                              leading: getSvg(
+                                vehicle.brand,
+                                getColor(vehicle.color),
+                              ),
                               title: Text(vehicle.model,
                                   style: const TextStyle(color: Colors.black)),
                               subtitle: Text(vehicle.brand,
