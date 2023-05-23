@@ -23,7 +23,7 @@ SvgPicture getSvg(String brandName, Color color) {
         'assets/vehicle_brands_icons/bmw.svg',
         color: color,
       );
-    case 'Citroen':
+    case 'Citroën':
       return SvgPicture.asset(
         'assets/vehicle_brands_icons/citroen.svg',
         color: color,
@@ -53,7 +53,7 @@ SvgPicture getSvg(String brandName, Color color) {
         'assets/vehicle_brands_icons/volkswagen.svg',
         color: color,
       );
-    
+
     default:
       return SvgPicture.asset(
         'assets/vehicle_brands_icons/default.svg',

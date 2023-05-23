@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, file_names, camel_case_types, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/src/picture_provider.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:parkflow/components/custom_appbar.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
@@ -32,6 +30,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
     final userEmail = userLogged.email.trim();
+  
     return Scaffold(
       appBar: MyAppBar(
         backgroundcolor: color4,
@@ -79,9 +78,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
                               color: Colors.black12,
                             ),
                             child: ListTile(
-                              leading: getSvg(
-                                vehicle.brand,
-                                getColor(vehicle.color),
+                              leading: Container(
+                                width: 48,
+                                height: 35, // Adjust the width as needed
+                                child: getSvg(
+                                  vehicle.brand,
+                                  getColor(vehicle.color),
+                                ),
                               ),
                               title: Text(vehicle.model,
                                   style: const TextStyle(color: Colors.black)),
@@ -143,4 +146,15 @@ class _VehiclesPageState extends State<VehiclesPage> {
       'vervoeren': FieldValue.arrayRemove([vehicle.toJson()])
     });
   }
+}
+
+Vehicle? getVehicleFromUserAccount(UserAccount user, String vehicleId) {
+  // Find the vehicle in the user's vehicles list
+  for (Vehicle vehicle in user.vehicles) {
+    if (vehicle.id == vehicleId) {
+      return vehicle;
+    }
+  }
+
+  return null;
 }
