@@ -151,28 +151,31 @@ void showPopupPark(
                                   );
                                 }
                               : () async {
-                                  //we creeren een variabele met dat info:
-                                  MarkerInfo newMarker = MarkerInfo(
-                                      latitude: latLng.latitude,
-                                      longitude: latLng.longitude,
-                                      parkedUserId: currentUserId,
-                                      reservedUserId: '',
-                                      parkedVehicleId: currentVehicleId,
-                                      reservedVehicleId: '',
-                                      startTime: DateTime.now(),
-                                      endTime: endTime,
-                                      prevEndTime: DateTime.now(),
-                                      isGreenMarker: true);
-
-                                  //we bewaren de nieuwe marker:
-                                  await saveMarkerToDatabase(newMarker);
-
                                   final selectedVehicleIndex =
                                       vehicles.indexWhere((vehicle) =>
                                           vehicle.id == currentVehicleId);
                                   if (selectedVehicleIndex >= 0) {
                                     final selectedVehicle2 =
                                         vehicles[selectedVehicleIndex];
+
+                                    //we creeren een variabele met dat info:
+                                    MarkerInfo newMarker = MarkerInfo(
+                                        latitude: latLng.latitude,
+                                        longitude: latLng.longitude,
+                                        parkedUserId: currentUserId,
+                                        reservedUserId: '',
+                                        parkedVehicleId: currentVehicleId,
+                                        reservedVehicleId: '',
+                                        startTime: DateTime.now(),
+                                        endTime: endTime,
+                                        prevEndTime: DateTime.now(),
+                                        isGreenMarker: true,
+                                        parkedVehicleBrand:
+                                            selectedVehicle2.brand,
+                                        reservedVehicleBrand: '');
+
+                                    //we bewaren de nieuwe marker:
+                                    await saveMarkerToDatabase(newMarker);
 
                                     //we veranderen de auto status van beschikbaarheid:
                                     await toggleVehicleAvailability(

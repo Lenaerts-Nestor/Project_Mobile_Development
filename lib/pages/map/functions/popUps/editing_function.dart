@@ -132,6 +132,8 @@ void showPopupEdit(
                                 endTime: replacingEndTime,
                                 prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: true,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand: "",
                               );
 
                               //dit zet de auto op beschikbaar
@@ -156,6 +158,9 @@ void showPopupEdit(
                                 endTime: deMarker.prevEndTime,
                                 prevEndTime: deMarker.startTime,
                                 isGreenMarker: deMarker.isGreenMarker,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand:
+                                    deMarker.parkedVehicleBrand,
                               );
                             }
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.

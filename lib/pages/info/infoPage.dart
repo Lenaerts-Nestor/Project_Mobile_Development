@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
+import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:rxdart/rxdart.dart';
@@ -71,7 +73,7 @@ class _InfoPageState extends State<InfoPage> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
-                    height: marker.reservedUserId == '' ? 100 : 200,
+                    height: marker.reservedUserId == '' ? 90 : 180,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: Colors.black),
@@ -81,26 +83,54 @@ class _InfoPageState extends State<InfoPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          isThreeLine: true,
-                          title:
-                              Text('Parked Vehicle: ${marker.parkedVehicleId}'),
-                          subtitle: Text(
-                              'From: ${marker.startTime} - To: ${marker.endTime}'),
-                          onTap: () {
-                            showPopupEdit(context, marker, userLogged.email);
-                          },
-                        ),
-                        if (marker.reservedUserId != '')
-                          ListTile(
                             isThreeLine: true,
                             title: Text(
-                                'Reserved Vehicle: ${marker.reservedVehicleId}'),
-                            subtitle: Text(
-                                'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
-                            onTap: () {
-                              showPopupEdit(context, marker, userLogged.email);
-                            },
+                                'Parked Vehicle: ${marker.parkedVehicleBrand}'),
+                            subtitle: marker.reservedUserId == ''
+                                ? Text(
+                                    'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.endTime)}')
+                                : Text(
+                                    'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.prevEndTime)}'),
+                            trailing: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: getSvg(
+                                  marker.parkedVehicleBrand, Colors.black),
+                            ),
+                            onTap: userLogged.email == marker.parkedUserId &&
+                                    marker.reservedUserId == "" &&
+                                    marker.reservedUserId != userLogged.email
+                                ? () {
+                                    showPopupEdit(
+                                        context, marker, userLogged.email);
+                                  }
+                                : () {
+                                    //een messenger tonen dat je kan niet aanpassen ofzo
+                                  }),
+                        if (marker.reservedUserId != '')
+                          Divider(
+                            height: 2,
+                            thickness: 3,
                           ),
+                        ListTile(
+                          isThreeLine: true,
+                          title: Text(
+                              'Reserved Vehicle: ${marker.reservedVehicleBrand}'),
+                          subtitle: Text(
+                              'From: ${formatDateTime(marker.prevEndTime)} - To: ${formatDateTime(marker.endTime)}'),
+                          trailing: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: getSvg(
+                                marker.reservedVehicleBrand, Colors.black),
+                          ),
+                          onTap: userLogged.email == marker.reservedUserId
+                              ? () {
+                                  showPopupEdit(
+                                      context, marker, userLogged.email);
+                                }
+                              : () {},
+                        ),
                       ],
                     ),
                   ),
@@ -112,4 +142,14 @@ class _InfoPageState extends State<InfoPage> {
       ),
     );
   }
+}
+
+String formatDateTime(DateTime dateTime) {
+  final dayFormatter = DateFormat.EEEE();
+  final timeFormatter = DateFormat('HH:mm');
+
+  final day = dayFormatter.format(dateTime);
+  final time = timeFormatter.format(dateTime);
+
+  return '$day  $time';
 }

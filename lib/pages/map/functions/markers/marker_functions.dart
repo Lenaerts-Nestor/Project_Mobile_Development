@@ -34,6 +34,8 @@ void getMarkersFromDatabase(BuildContext context,
     String parkedUserId = doc['parkedUserId'];
     String reservedUserId = doc['reservedUserId'];
     String parkedVehicleId = doc['parkedVehicleId'];
+    String parkedVehicleBrand = doc['parkedVehicleBrand'];
+    String reservedVehicleBrand = doc['reservedVehicleBrand'];
     String reservedVehicleId = doc['reservedVehicleId'];
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
@@ -50,42 +52,46 @@ void getMarkersFromDatabase(BuildContext context,
         startTime: startTime,
         endTime: endTime,
         prevEndTime: prevEndTime,
-        isGreenMarker: isGreenMarker);
+        isGreenMarker: isGreenMarker,
+        parkedVehicleBrand: parkedVehicleBrand,
+        reservedVehicleBrand: reservedVehicleBrand);
 
     return createMarkersFromDatabase(context, theMarker);
   }).toList();
   onMarkersFetched(markers);
 }
 
-void createMarker(
-    LatLng latlng,
-    String parkedUserId,
-    String reservedUserId,
-    String parkedVehicleId,
-    String reservedVehicleId,
-    BuildContext context,
-    void Function(Marker newMarker) onMarkerCreated) {
-  DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
-  DateTime prevEndTime = startTime;
-  bool isGreenMarker = true;
-  //de marker =>
-  MarkerInfo theMarker = MarkerInfo(
-      latitude: latlng.latitude,
-      longitude: latlng.longitude,
-      parkedUserId: parkedUserId,
-      reservedUserId: reservedUserId,
-      parkedVehicleId: parkedVehicleId,
-      reservedVehicleId: reservedVehicleId,
-      startTime: startTime,
-      endTime: endTime,
-      prevEndTime: prevEndTime,
-      isGreenMarker: isGreenMarker);
+// void createMarker(
+//     LatLng latlng,
+//     String parkedUserId,
+//     String reservedUserId,
+//     String parkedVehicleId,
+//     String reservedVehicleId,
+//     BuildContext context,
+//     void Function(Marker newMarker) onMarkerCreated) {
+//   DateTime startTime = DateTime.now();
+//   DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
+//   DateTime prevEndTime = startTime;
+//   bool isGreenMarker = true;
+//   //de marker =>
+//   MarkerInfo theMarker = MarkerInfo(
+//       latitude: latlng.latitude,
+//       longitude: latlng.longitude,
+//       parkedUserId: parkedUserId,
+//       reservedUserId: reservedUserId,
+//       parkedVehicleId: parkedVehicleId,
+//       reservedVehicleId: reservedVehicleId,
+//       startTime: startTime,
+//       endTime: endTime,
+//       prevEndTime: prevEndTime,
+//       isGreenMarker: isGreenMarker,
+//       parkedVehicleBrand: '',
+//       reservedVehicleBrand: '');
 
-  saveMarkerToDatabase(theMarker);
-  Marker newMarker = createMarkersFromDatabase(context, theMarker);
-  onMarkerCreated(newMarker);
-}
+//   saveMarkerToDatabase(theMarker);
+//   Marker newMarker = createMarkersFromDatabase(context, theMarker);
+//   onMarkerCreated(newMarker);
+// }
 
 Marker createMarkersFromDatabase(BuildContext context, MarkerInfo newMarker) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
@@ -140,6 +146,8 @@ Future<void> saveMarkerToDatabase(MarkerInfo theMarker) async {
     'parkedUserId': theMarker.parkedUserId,
     'reservedVehicleId': theMarker.reservedVehicleId,
     'parkedVehicleId': theMarker.parkedVehicleId,
+    'parkedVehicleBrand': theMarker.parkedVehicleBrand,
+    'reservedVehicleBrand': theMarker.reservedVehicleBrand,
     'startTime': theMarker.startTime,
     'endTime': theMarker.endTime,
     'prevEndTime': theMarker.prevEndTime,
@@ -161,6 +169,7 @@ Future<void> updateMarker(MarkerInfo updatedMarker, bool isGreenMarker) async {
         'reservedUserId': updatedMarker.reservedUserId,
         'parkedVehicleId': updatedMarker.parkedVehicleId,
         'reservedVehicleId': updatedMarker.reservedVehicleId,
+        'reservedVehicleBrand': updatedMarker.reservedVehicleBrand,
         'startTime': updatedMarker.startTime,
         'endTime': updatedMarker.endTime,
         'prevEndTime': updatedMarker.prevEndTime,
@@ -188,8 +197,7 @@ Future<void> updateMarkerState() async {
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
 
     final selectedVehicleIndex = vervoeren.indexWhere((vehicle) =>
-        vehicle['id'] ==
-        parkedVehicleId); //model zou eigenlijk id moeten zijn
+        vehicle['id'] == parkedVehicleId); //model zou eigenlijk id moeten zijn
 
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();

@@ -102,10 +102,10 @@ class _VehiclesPageState extends State<VehiclesPage> {
                                     )
                                   : Column(
                                       children: const [
-                                        Text('vrij'),
+                                        Text('bezet'),
                                         Icon(
                                           Icons.circle,
-                                          color: Colors.green,
+                                          color: Colors.red,
                                         )
                                       ],
                                     ),
