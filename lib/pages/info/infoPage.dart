@@ -71,40 +71,38 @@ class _InfoPageState extends State<InfoPage> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
-                    height: marker.reservedUserId == '' ? 80 : 160,
+                    height: marker.reservedUserId == '' ? 100 : 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: Colors.black),
                       color: Colors.black12,
                     ),
-                    child: marker.reservedUserId == ''
-                        ? ListTile(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          isThreeLine: true,
+                          title:
+                              Text('Parked Vehicle: ${marker.parkedVehicleId}'),
+                          subtitle: Text(
+                              'From: ${marker.startTime} - To: ${marker.endTime}'),
+                          onTap: () {
+                            showPopupEdit(context, marker, userLogged.email);
+                          },
+                        ),
+                        if (marker.reservedUserId != '')
+                          ListTile(
                             isThreeLine: true,
                             title: Text(
-                                'Parked Vehicle: ${marker.parkedVehicleId}'),
-                            subtitle: marker.reservedUserId == ''
-                                ? Text(
-                                    'From: ${marker.startTime} - To: ${marker.endTime}')
-                                : Text(
-                                    'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
-                            onTap: () {
-                              showPopupEdit(context, marker, userLogged.email);
-                            },
-                          )
-                        : ListTile(
-                            isThreeLine: true,
-                            title: Text(
-                                'Parked Vehicle: ${marker.parkedVehicleId}'),
-                            subtitle: marker.reservedUserId == ''
-                                ? Text(
-                                    'From: ${marker.startTime} - To: ${marker.endTime}')
-                                : Text(
-                                    'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
-                                    
+                                'Reserved Vehicle: ${marker.reservedVehicleId}'),
+                            subtitle: Text(
+                                'From: ${marker.startTime} - To: ${marker.prevEndTime}'),
                             onTap: () {
                               showPopupEdit(context, marker, userLogged.email);
                             },
                           ),
+                      ],
+                    ),
                   ),
                 );
               },

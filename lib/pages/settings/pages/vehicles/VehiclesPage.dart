@@ -30,13 +30,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
     final userEmail = userLogged.email.trim();
-  
+
     return Scaffold(
       appBar: MyAppBar(
         backgroundcolor: color4,
         icon: Icons.arrow_back,
-        titleText: "Vervoeren",
-        marginleft: 60,
+        titleText: "Voertuigen",
+        marginleft: 0,
         onPressed: () => widget.onBackButtonPressed?.call(),
       ),
       body: Column(
