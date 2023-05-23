@@ -27,80 +27,40 @@ class VehicleDropdown extends StatelessWidget {
     );
   }
 }
+//mercedes, citroen, audi, renault, volkswagen, porche, honda, toyota, ford, hyundai.
 
-//dropdown merk van auto:
 final List<String> brandList = [
   'Toyota',
-  'Honda',
+  'Mercedes',
+  'Citroën',
+  'Audi',
+  'Renault',
   'Volkswagen',
+  'Porsche',
+  'Honda',
   'Ford',
-  'Hyundai',
-  'Kia',
-  'Mazda',
-  'Nissan',
-  'Subaru',
-  'Chevrolet',
+  'BMW',
 ];
-//dropdown model van auto:
 
 final Map<String, List<String>> modelList = {
-  'Toyota': [
-    'Corolla',
-    'Camry',
-    'RAV4',
-  ],
-  'Honda': [
-    'Civic',
-    'Accord',
-    'CR-V',
-  ],
-  'Volkswagen': [
-    'Golf',
-    'Jetta',
-    'Passat',
-  ],
-  'Ford': [
-    'Fiesta',
-    'Focus',
-    'Mustang',
-  ],
-  'Hyundai': [
-    'Elantra',
-    'Sonata',
-    'Tucson',
-  ],
-  'Kia': [
-    'Rio',
-    'Optima',
-    'Sportage',
-  ],
-  'Mazda': [
-    'CX-3',
-    'CX-5',
-    'Mazda3',
-  ],
-  'Nissan': [
-    'Altima',
-    'Maxima',
-    'Rogue',
-  ],
-  'Subaru': [
-    'Impreza',
-    'Legacy',
-    'Outback',
-  ],
-  'Chevrolet': [
-    'Camaro',
-    'Malibu',
-    'Traverse',
-  ],
+  'Toyota': ['Camry', 'Corolla', 'RAV4'],
+  'Mercedes': ['C-Class', 'E-Class', 'S-Class'],
+  'Citroën': ['C3', 'C4', 'C5'],
+  'Audi': ['A3', 'A4', 'Q5'],
+  'Renault': ['Clio', 'Megane', 'Captur'],
+  'Volkswagen': ['Golf', 'Passat', 'Tiguan'],
+  'Porsche': ['911', 'Panamera', 'Cayenne'],
+  'Honda': ['Civic', 'Accord', 'CR-V'],
+  'Ford': ['Focus', 'Fiesta', 'Mustang'],
+  'BMW': ['3 Series', '5 Series', 'X5'],
 };
 //dropdown kleur van auto:
 const List<String> colorList = [
-  'Red',
-  'Green',
-  'Blue',
-  'Yellow',
-  'White',
-  'Black',
+  'Rood',
+  'Groen',
+  'Blauw',
+  'Geel',
+  'Wit',
+  'Zwart',
+  'Grijs'
 ];

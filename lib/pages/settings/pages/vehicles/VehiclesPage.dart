@@ -5,6 +5,7 @@ import 'package:parkflow/components/custom_appbar.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/user/user_service.dart';
+import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -25,29 +26,11 @@ class VehiclesPage extends StatefulWidget {
 class _VehiclesPageState extends State<VehiclesPage> {
   List<Vehicle> _vehicles = [];
 
-  Color getColor(String colorName) {
-    switch (colorName) {
-      case 'Red':
-        return Colors.red;
-      case 'Green':
-        return Colors.green;
-      case 'Blue':
-        return Colors.blue;
-      case 'Yellow':
-        return Colors.yellow;
-      case 'White':
-        return Colors.white;
-      case 'Black':
-        return Colors.black;
-      default:
-        return Colors.grey;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
     final userEmail = userLogged.email.trim();
+  
     return Scaffold(
       appBar: MyAppBar(
         backgroundcolor: color4,
@@ -95,8 +78,14 @@ class _VehiclesPageState extends State<VehiclesPage> {
                               color: Colors.black12,
                             ),
                             child: ListTile(
-                              leading: Icon(Icons.directions_car_filled,
-                                  color: getColor(vehicle.color)),
+                              leading: Container(
+                                width: 48,
+                                height: 35, // Adjust the width as needed
+                                child: getSvg(
+                                  vehicle.brand,
+                                  getColor(vehicle.color),
+                                ),
+                              ),
                               title: Text(vehicle.model,
                                   style: const TextStyle(color: Colors.black)),
                               subtitle: Text(vehicle.brand,
@@ -157,4 +146,15 @@ class _VehiclesPageState extends State<VehiclesPage> {
       'vervoeren': FieldValue.arrayRemove([vehicle.toJson()])
     });
   }
+}
+
+Vehicle? getVehicleFromUserAccount(UserAccount user, String vehicleId) {
+  // Find the vehicle in the user's vehicles list
+  for (Vehicle vehicle in user.vehicles) {
+    if (vehicle.id == vehicleId) {
+      return vehicle;
+    }
+  }
+
+  return null;
 }

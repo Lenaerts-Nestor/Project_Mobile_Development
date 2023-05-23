@@ -26,7 +26,6 @@ dependencies:
   rxdart: ^0.27.7
   flutter_pw_validator: ^1.5.0
   flutter_map_location_marker: ^5.3.0
- 
 
 dev_dependencies:
   flutter_test:
@@ -38,3 +37,14 @@ flutter:
   assets:
     - assets/logo.svg
     - assets/usericon.svg
+    - assets/vehicle_brands_icons/audi.svg
+    - assets/vehicle_brands_icons/bmw.svg
+    - assets/vehicle_brands_icons/citroen.svg
+    - assets/vehicle_brands_icons/ford.svg
+    - assets/vehicle_brands_icons/honda.svg
+    - assets/vehicle_brands_icons/mercedes.svg
+    - assets/vehicle_brands_icons/porsche.svg
+    - assets/vehicle_brands_icons/renault.svg
+    - assets/vehicle_brands_icons/toyota.svg
+    - assets/vehicle_brands_icons/volkswagen.svg
+    - assets/vehicle_brands_icons/default.svg
