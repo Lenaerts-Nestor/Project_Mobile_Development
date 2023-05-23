@@ -55,7 +55,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
                       final vehicle = _vehicles[index];
 
                       return Dismissible(
-                        key: Key(vehicle.model),
+                        key: Key(vehicle.id),
                         background: Container(
                           color: Colors.red,
                           alignment: Alignment.centerRight,

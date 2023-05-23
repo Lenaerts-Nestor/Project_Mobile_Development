@@ -188,7 +188,7 @@ Future<void> updateMarkerState() async {
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
 
     final selectedVehicleIndex = vervoeren.indexWhere((vehicle) =>
-        vehicle['model'] ==
+        vehicle['id'] ==
         parkedVehicleId); //model zou eigenlijk id moeten zijn
 
     if (endTime.isBefore(DateTime.now())) {

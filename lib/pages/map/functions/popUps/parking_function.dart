@@ -42,7 +42,7 @@ void showPopupPark(
                   user.vehicles.where((v) => v.availability).toList();
               bool buttonDisabled = vehicles.isEmpty;
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
-                currentVehicleId = vehicles.first.model;
+                currentVehicleId = vehicles.first.id;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime endTime = DateTime.now().add(selectedTime);
@@ -125,7 +125,7 @@ void showPopupPark(
                         vehicles.isNotEmpty
                             ? VehicleDropdown(
                                 items: vehicles
-                                    .map((vehicle) => vehicle.model)
+                                    .map((vehicle) => vehicle.id)
                                     .toList(),
                                 value: currentVehicleId,
                                 onChanged: (value) {
@@ -169,7 +169,7 @@ void showPopupPark(
 
                                   final selectedVehicleIndex =
                                       vehicles.indexWhere((vehicle) =>
-                                          vehicle.model == currentVehicleId);
+                                          vehicle.id == currentVehicleId);
                                   if (selectedVehicleIndex >= 0) {
                                     final selectedVehicle2 =
                                         vehicles[selectedVehicleIndex];
