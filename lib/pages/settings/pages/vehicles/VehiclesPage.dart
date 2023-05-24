@@ -7,13 +7,11 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/user/user_service.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 import 'package:provider/provider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:parkflow/model/vehicle.dart';
-
-import '../../../../model/user/user_account.dart';
+import 'package:parkflow/model/user/user_account.dart';
 import 'add_vehicles_page.dart';
-import 'package:parkflow/components/custom_button.dart'; //test
+import 'package:parkflow/components/custom_button.dart';
 
 class VehiclesPage extends StatefulWidget {
   final Function? onBackButtonPressed;
@@ -43,8 +41,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
         children: [
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.all(30.0), // Added padding to the bottom
+              padding: const EdgeInsets.all(padding),
               child: StreamBuilder<UserAccount>(
                 stream: readUserByLive(userEmail),
                 builder: (context, snapshot) {
@@ -59,8 +56,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(
-                            vertical:
-                                verticalSpacing1, // Adjust the vertical padding as needed
+                            vertical: verticalSpacing1,
                             horizontal: 0,
                           ),
                           child: ClipRRect(
@@ -68,18 +64,42 @@ class _VehiclesPageState extends State<VehiclesPage> {
                                 BorderRadius.circular(cornerRadiusTile),
                             child: Dismissible(
                               key: Key(vehicle.id),
-                              background: Container(
-                                color: color7,
-                                alignment: Alignment.centerRight,
-                                child: const Icon(Icons.delete,
-                                    color: Colors.white),
-                              ),
+                              confirmDismiss: (direction) async {
+                                if (!vehicle.availability) {
+                                  // Check if the vehicle is in use (red icon)
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text("Error"),
+                                      content: const Text(
+                                          "Cannot remove a vehicle that is in use."),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text("OK"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return false;
+                                }
+
+                                return true;
+                              },
                               onDismissed: (direction) {
                                 setState(() {
                                   _vehicles.removeAt(index);
                                 });
                                 deleteVehicle(user.id, vehicle);
                               },
+                              background: Container(
+                                color: color7,
+                                alignment: Alignment.centerRight,
+                                child: const Icon(Icons.delete,
+                                    color: Colors.white),
+                              ),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius:
