@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:parkflow/components/custom_brand_dropdown.dart';
 import 'package:parkflow/components/custom_button.dart';
 import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_account.dart';
@@ -123,17 +124,15 @@ void showPopupPark(
                         Text('tot  ${formatDateTime(endTime)}'),
                         const SizedBox(height: verticalSpacing2),
                         vehicles.isNotEmpty
-                            ? VehicleDropdown(
-                                items: vehicles
-                                    .map((vehicle) => vehicle.id)
-                                    .toList(),
-                                value: currentVehicleId,
-                                onChanged: (value) {
-                                  if (value == null) {
-                                    return;
-                                  }
+                            ? VehicleDropdown_brand(
+                                vehicles: vehicles,
+                                selectedVehicle: vehicles.firstWhere(
+                                  (vehicle) => vehicle.id == currentVehicleId,
+                                  orElse: () => vehicles.first,
+                                ),
+                                onChanged: (vehicle) {
                                   setState(() {
-                                    currentVehicleId = value;
+                                    currentVehicleId = vehicle?.id ?? '';
                                   });
                                 },
                               )
