@@ -197,8 +197,8 @@ Future<void> updateMarkerState() async {
     List<dynamic> vervoeren = userDoc.get('vervoeren');
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
 
-    final selectedVehicleIndex = vervoeren.indexWhere((vehicle) =>
-        vehicle['id'] == parkedVehicleId);
+    final selectedVehicleIndex =
+        vervoeren.indexWhere((vehicle) => vehicle['id'] == parkedVehicleId);
 
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
@@ -209,6 +209,8 @@ Future<void> updateMarkerState() async {
     }
     if (prevEndTime.isBefore(DateTime.now()) && reservedUserId != "") {
       doc.reference.update({'isGreenMarker': true});
+      doc.reference.update({'startTime': prevEndTime});
+      doc.reference.update({'prevEndTime': endTime});
       doc.reference.update({'parkedUserId': reservedUserId});
       doc.reference.update({'parkedVehicleId': reservedVehicleId});
       doc.reference.update({'parkedVehicleBrand': reservedVehicleBrand});
