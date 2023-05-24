@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final IconData icon;
+  final IconData? icon;
   final VoidCallback? onPressed;
   final String titleText;
   final Color backgroundcolor;
@@ -10,7 +10,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const MyAppBar({
     Key? key,
-    required this.icon,
+    this.icon,
     this.onPressed,
     required this.titleText,
     required this.backgroundcolor,

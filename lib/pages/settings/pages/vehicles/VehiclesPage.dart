@@ -70,9 +70,9 @@ class _VehiclesPageState extends State<VehiclesPage> {
                                   await showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      title: const Text("Error"),
+                                      title: const Text("Voertuig in gebruik!"),
                                       content: const Text(
-                                          "Cannot remove a vehicle that is in use."),
+                                          "Maak uw auto terug eerst beschikbaar."),
                                       actions: [
                                         TextButton(
                                           child: const Text("OK"),

@@ -51,7 +51,7 @@ class AddVehicleState extends State<AddVehicle> {
       appBar: MyAppBar(
         backgroundcolor: color4,
         icon: Icons.arrow_back,
-        titleText: "Voeg een vervoer toe",
+        titleText: "Nieuw voertuig",
         marginleft: 0,
         onPressed: () {
           Navigator.of(context).pop();
@@ -158,7 +158,7 @@ class AddVehicleState extends State<AddVehicle> {
                       Navigator.of(context).pop();
                     }
                   },
-                  text: 'voertuig toevoegen',
+                  text: 'Toevoegen',
                 ),
               ),
             ],
