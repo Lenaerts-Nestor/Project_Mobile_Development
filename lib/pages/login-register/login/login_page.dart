@@ -65,8 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: verticalSpacing2 * 3),
-                  const CustomText(
-                    text: 'Parkeren was nog nooit zo eenvoudig',
+                  const Center(
+                    child: CustomText(
+                      text: 'Parkeren was nog nooit zo eenvoudig',
+                    ),
                   ),
                   const SizedBox(height: verticalSpacing2),
                   SizedBox(

@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:parkflow/components/custom_appbar.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
@@ -36,6 +37,12 @@ class _InfoPageState extends State<InfoPage> {
         .where('reservedUserId', isEqualTo: currentUserId);
 
     return Scaffold(
+      appBar: MyAppBar(
+        backgroundcolor: color4,
+        titleText: "Spots",
+        marginleft: 0,
+        onPressed: () {},
+      ),
       body: StreamBuilder<List<QuerySnapshot>>(
         stream: Rx.combineLatest2(
           parkedUserQuery.snapshots(),
@@ -65,6 +72,18 @@ class _InfoPageState extends State<InfoPage> {
             return MarkerInfo.fromJson(markerData);
           }).toList();
 
+          if (markers.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(padding),
+              child: Center(
+                child: Text(
+                  'U heeft momenteel geen voertuigen in gebruik. U kunt parkeren en reserveren op de kaart.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+
           return Padding(
             padding: const EdgeInsets.all(padding),
             child: ListView.builder(
@@ -84,30 +103,31 @@ class _InfoPageState extends State<InfoPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                            isThreeLine: true,
-                            title: Text(
-                                'Parked Vehicle: ${marker.parkedVehicleBrand}'),
-                            subtitle: marker.reservedUserId == ''
-                                ? Text(
-                                    'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.endTime)}')
-                                : Text(
-                                    'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.prevEndTime)}'),
-                            trailing: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: getSvg(marker.parkedVehicleBrand,
-                                  getColor(marker.parkedVehicleColor)),
-                            ),
-                            onTap: userLogged.email == marker.parkedUserId &&
-                                    marker.reservedUserId == "" &&
-                                    marker.reservedUserId != userLogged.email
-                                ? () {
-                                    showPopupEdit(
-                                        context, marker, userLogged.email);
-                                  }
-                                : () {
-                                    //een messenger tonen dat je kan niet aanpassen ofzo
-                                  }),
+                          isThreeLine: true,
+                          title: Text(
+                              'Parked Vehicle: ${marker.parkedVehicleBrand}'),
+                          subtitle: marker.reservedUserId == ''
+                              ? Text(
+                                  'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.endTime)}')
+                              : Text(
+                                  'From: ${formatDateTime(marker.startTime)} - To: ${formatDateTime(marker.prevEndTime)}'),
+                          trailing: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: getSvg(marker.parkedVehicleBrand,
+                                getColor(marker.parkedVehicleColor)),
+                          ),
+                          onTap: userLogged.email == marker.parkedUserId &&
+                                  marker.reservedUserId == "" &&
+                                  marker.reservedUserId != userLogged.email
+                              ? () {
+                                  showPopupEdit(
+                                      context, marker, userLogged.email);
+                                }
+                              : () {
+                                  // Show a message indicating that you cannot make changes
+                                },
+                        ),
                         if (marker.reservedUserId != '')
                           ListTile(
                             isThreeLine: true,
