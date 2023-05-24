@@ -73,7 +73,7 @@ class _InfoPageState extends State<InfoPage> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
-                    height: marker.reservedUserId == '' ? 90 : 180,
+                    height: marker.reservedUserId == '' ? 100 : 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: Colors.black),
@@ -108,10 +108,6 @@ class _InfoPageState extends State<InfoPage> {
                                     //een messenger tonen dat je kan niet aanpassen ofzo
                                   }),
                         if (marker.reservedUserId != '')
-                          Divider(
-                            height: 2,
-                            thickness: 3,
-                          ),
                         ListTile(
                           isThreeLine: true,
                           title: Text(

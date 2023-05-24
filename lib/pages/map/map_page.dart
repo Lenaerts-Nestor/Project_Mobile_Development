@@ -40,8 +40,7 @@ class _MapPageState extends State<MapPage> {
     super.initState();
 
     _determinePosition();
-    _timer =
-        Timer.periodic(const Duration(microseconds: 1), (Timer timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async{
       updateMarkerState();
       _updateMarkers();
     });
@@ -95,14 +94,13 @@ class _MapPageState extends State<MapPage> {
   @override
   void dispose() {
     _timer.cancel();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
-    LatLng? userLocation = LatLng(51.2172, 4.4212);
+    LatLng? userLocation;
 
     if (currentLatitude != null && currentLongitude != null) {
       userLocation = LatLng(currentLatitude!, currentLongitude!);
@@ -113,13 +111,13 @@ class _MapPageState extends State<MapPage> {
               options: MapOptions(
                 center: userLocation == null
                     ? LatLng(51.2172, 4.4212)
-                    : LatLng(51.2172!, 4.4212!),
+                    : LatLng(currentLatitude!, currentLongitude!),
                 zoom: 16,
                 maxZoom: 30,
-                // maxBounds: LatLngBounds(
-                //   LatLng(51.18, 4.33), // southwest corner
-                //   LatLng(51.25, 4.46), // northeast corner
-                // ),
+                maxBounds: LatLngBounds(
+                  LatLng(51.18, 4.33), // southwest corner
+                  LatLng(51.25, 4.46), // northeast corner
+                ),
                 onTap: _isAddingMarkers
                     ? (position, latlng) {
                         showPopupPark(context, latlng, userLogged.email);
@@ -140,7 +138,11 @@ class _MapPageState extends State<MapPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
+          if (userLocation != null) {
+            showPopupPark(context, userLocation, userLogged.email);
+          } else {
+            showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
+          }
 
           // setState(() {
           //   _isAddingMarkers = !_isAddingMarkers;

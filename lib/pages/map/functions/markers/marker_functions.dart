@@ -190,6 +190,7 @@ Future<void> updateMarkerState() async {
     String parkedVehicleId = doc['parkedVehicleId'].toString();
     String reservedUserId = doc['reservedUserId'].toString();
     String reservedVehicleId = doc['reservedVehicleId'].toString();
+    String reservedVehicleBrand = doc['reservedVehicleBrand'].toString();
 
     final userDoc =
         await _firestore.collection('users').doc(parkedUserId).get();
@@ -197,7 +198,7 @@ Future<void> updateMarkerState() async {
     List<Vehicle> vehicles = vervoeren.map((v) => Vehicle.fromJson(v)).toList();
 
     final selectedVehicleIndex = vervoeren.indexWhere((vehicle) =>
-        vehicle['id'] == parkedVehicleId); //model zou eigenlijk id moeten zijn
+        vehicle['id'] == parkedVehicleId);
 
     if (endTime.isBefore(DateTime.now())) {
       await _firestore.collection('markers').doc(doc.id).delete();
@@ -210,8 +211,10 @@ Future<void> updateMarkerState() async {
       doc.reference.update({'isGreenMarker': true});
       doc.reference.update({'parkedUserId': reservedUserId});
       doc.reference.update({'parkedVehicleId': reservedVehicleId});
+      doc.reference.update({'parkedVehicleBrand': reservedVehicleBrand});
       doc.reference.update({'reservedUserId': ''});
       doc.reference.update({'reservedVehicleId': ''});
+      doc.reference.update({'reservedVehicleBrand': ''});
       if (selectedVehicleIndex >= 0) {
         Vehicle parkedVehicle = vehicles[selectedVehicleIndex];
         //dit hoort te kloppen
