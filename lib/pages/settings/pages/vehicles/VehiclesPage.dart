@@ -30,112 +30,114 @@ class _VehiclesPageState extends State<VehiclesPage> {
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
     final userEmail = userLogged.email.trim();
-  
+
     return Scaffold(
       appBar: MyAppBar(
         backgroundcolor: color4,
         icon: Icons.arrow_back,
-        titleText: "Vervoeren",
-        marginleft: 60,
+        titleText: "Voertuigen",
+        marginleft: 0,
         onPressed: () => widget.onBackButtonPressed?.call(),
       ),
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<UserAccount>(
-              stream: readUserByLive(userEmail),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final user = snapshot.data!;
-                  _vehicles = user.vehicles;
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(30.0), // Added padding to the bottom
+              child: StreamBuilder<UserAccount>(
+                stream: readUserByLive(userEmail),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final user = snapshot.data!;
+                    _vehicles = user.vehicles;
 
-                  return ListView.builder(
-                    itemCount: _vehicles.length,
-                    itemBuilder: (context, index) {
-                      final vehicle = _vehicles[index];
+                    return ListView.builder(
+                      itemCount: _vehicles.length,
+                      itemBuilder: (context, index) {
+                        final vehicle = _vehicles[index];
 
-                      return Dismissible(
-                        key: Key(vehicle.id),
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 16),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        onDismissed: (direction) {
-                          setState(() {
-                            _vehicles.removeAt(index);
-                          });
-                          deleteVehicle(user.id, vehicle);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Container(
-                            height: 62.5,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(color: Colors.black),
-                              color: Colors.black12,
-                            ),
-                            child: ListTile(
-                              leading: Container(
-                                width: 48,
-                                height: 35, // Adjust the width as needed
-                                child: getSvg(
-                                  vehicle.brand,
-                                  getColor(vehicle.color),
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical:
+                                verticalSpacing1, // Adjust the vertical padding as needed
+                            horizontal: 0,
+                          ),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(cornerRadiusTile),
+                            child: Dismissible(
+                              key: Key(vehicle.id),
+                              background: Container(
+                                color: color7,
+                                alignment: Alignment.centerRight,
+                                child: const Icon(Icons.delete,
+                                    color: Colors.white),
+                              ),
+                              onDismissed: (direction) {
+                                setState(() {
+                                  _vehicles.removeAt(index);
+                                });
+                                deleteVehicle(user.id, vehicle);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.circular(cornerRadiusTile),
+                                  color: color2,
+                                ),
+                                child: ListTile(
+                                  leading: Container(
+                                    width: 48,
+                                    height: 35,
+                                    child: getSvg(
+                                        vehicle.brand, getColor(vehicle.color)),
+                                  ),
+                                  title: Text(
+                                    vehicle.model,
+                                    style: const TextStyle(color: color6),
+                                  ),
+                                  subtitle: Text(
+                                    vehicle.brand,
+                                    style: const TextStyle(color: color6),
+                                  ),
+                                  trailing: vehicle.availability
+                                      ? const Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                        )
+                                      : const Icon(
+                                          Icons.circle,
+                                          color: Colors.red,
+                                        ),
+                                  onTap: () {},
                                 ),
                               ),
-                              title: Text(vehicle.model,
-                                  style: const TextStyle(color: Colors.black)),
-                              subtitle: Text(vehicle.brand,
-                                  style: const TextStyle(color: Colors.black)),
-                              trailing: vehicle.availability
-                                  ? Column(
-                                      children: const [
-                                        Text('vrij'),
-                                        Icon(
-                                          Icons.circle,
-                                          color: Colors.green,
-                                        )
-                                      ],
-                                    )
-                                  : Column(
-                                      children: const [
-                                        Text('vrij'),
-                                        Icon(
-                                          Icons.circle,
-                                          color: Colors.green,
-                                        )
-                                      ],
-                                    ),
-                              onTap: () {},
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(child: const CircularProgressIndicator());
-                }
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(child: const CircularProgressIndicator());
+                  }
+                },
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                bottom: 30.0), // Added padding to the bottom
+            child: BlackButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const AddVehicle()),
+                );
               },
+              text: 'Toevoegen',
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        height: 55,
-        margin: EdgeInsets.only(bottom: 5),
-        width: double.infinity,
-        child: BlackButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddVehicle()),
-            );
-          },
-          text: 'Voertuig toevoegen',
-        ),
       ),
     );
   }

@@ -53,8 +53,8 @@ void showPopupEdit(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cornerRadius),
-                      topRight: Radius.circular(cornerRadius),
+                      topLeft: Radius.circular(cornerRadiusButton),
+                      topRight: Radius.circular(cornerRadiusButton),
                     ),
                   ),
                   child: Padding(
@@ -132,6 +132,8 @@ void showPopupEdit(
                                 endTime: replacingEndTime,
                                 prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: true,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand: "",
                               );
 
                               //dit zet de auto op beschikbaar
@@ -153,9 +155,11 @@ void showPopupEdit(
                                 parkedVehicleId: deMarker.parkedVehicleId,
                                 reservedVehicleId: deMarker.reservedVehicleId,
                                 startTime: deMarker.startTime,
-                                endTime: deMarker.prevEndTime,
-                                prevEndTime: deMarker.startTime,
+                                endTime: replacingEndTime,
+                                prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: deMarker.isGreenMarker,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand: "",
                               );
                             }
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.

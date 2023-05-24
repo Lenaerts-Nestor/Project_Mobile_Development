@@ -5,6 +5,8 @@ class MarkerInfo {
   final String reservedUserId;
   final String parkedVehicleId;
   final String reservedVehicleId;
+  final String parkedVehicleBrand;
+  final String reservedVehicleBrand;
   final double latitude;
   final double longitude;
   final DateTime startTime;
@@ -23,6 +25,8 @@ class MarkerInfo {
     required this.endTime,
     required this.prevEndTime,
     required this.isGreenMarker,
+    required this.parkedVehicleBrand,
+    required this.reservedVehicleBrand,
   });
 
   factory MarkerInfo.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,8 @@ class MarkerInfo {
       endTime: (json['endTime'] as Timestamp).toDate(),
       prevEndTime: (json['prevEndTime'] as Timestamp).toDate(),
       isGreenMarker: json['isGreenMarker'] ?? false,
+      parkedVehicleBrand: json['parkedVehicleBrand'] ?? '',
+      reservedVehicleBrand: json['reservedVehicleBrand'] ?? '',
     );
   }
 }

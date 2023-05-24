@@ -48,8 +48,8 @@ void showPopupReserve(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cornerRadius),
-                      topRight: Radius.circular(cornerRadius),
+                      topLeft: Radius.circular(cornerRadiusButton),
+                      topRight: Radius.circular(cornerRadiusButton),
                     ),
                   ),
                   child: Padding(
@@ -134,27 +134,31 @@ void showPopupReserve(
                                 }
                               : () async {
                                   if (deMarker.isGreenMarker) {
-                                    MarkerInfo newMarker = MarkerInfo(
-                                        latitude: deMarker.latitude,
-                                        longitude: deMarker.longitude,
-                                        parkedUserId: deMarker.parkedUserId,
-                                        reservedUserId: currentUserId,
-                                        parkedVehicleId:
-                                            deMarker.parkedVehicleId,
-                                        reservedVehicleId: currentVehicleId,
-                                        startTime: deMarker.startTime,
-                                        endTime: endTime, //dit is veranderd :
-                                        prevEndTime: previousEndTime,
-                                        isGreenMarker: false);
-                                    await updateMarker(
-                                        newMarker, newMarker.isGreenMarker);
-
                                     final selectedVehicleIndex =
                                         vehicles.indexWhere((vehicle) =>
                                             vehicle.id == currentVehicleId);
                                     if (selectedVehicleIndex >= 0) {
                                       final currentVehicle =
                                           vehicles[selectedVehicleIndex];
+
+                                      MarkerInfo newMarker = MarkerInfo(
+                                          latitude: deMarker.latitude,
+                                          longitude: deMarker.longitude,
+                                          parkedUserId: deMarker.parkedUserId,
+                                          reservedUserId: currentUserId,
+                                          parkedVehicleId:
+                                              deMarker.parkedVehicleId,
+                                          reservedVehicleId: currentVehicleId,
+                                          startTime: deMarker.startTime,
+                                          endTime: endTime, //dit is veranderd :
+                                          prevEndTime: previousEndTime,
+                                          isGreenMarker: false,
+                                          parkedVehicleBrand:
+                                              deMarker.parkedVehicleBrand,
+                                          reservedVehicleBrand:
+                                              currentVehicle.brand);
+                                      await updateMarker(
+                                          newMarker, newMarker.isGreenMarker);
 
                                       //we veranderen de auto status van beschikbaarheid:
                                       await toggleVehicleAvailability(
