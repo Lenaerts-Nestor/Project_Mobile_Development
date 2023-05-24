@@ -11,6 +11,7 @@ import 'package:parkflow/model/user/user_service.dart';
 import 'package:parkflow/pages/map/functions/streetname_function.dart';
 import 'package:parkflow/pages/map/functions/markers/marker.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/add_vehicles_page.dart';
+import '../../../../components/custom_brand_dropdown.dart';
 import '../markers/marker_functions.dart';
 
 Duration selectedTime = const Duration(hours: 0, minutes: 0);
@@ -105,17 +106,15 @@ void showPopupReserve(
                         const SizedBox(height: verticalSpacing2),
                         //carpicker
                         vehicles.isNotEmpty
-                            ? VehicleDropdown(
-                                items: vehicles
-                                    .map((vehicle) => vehicle.id)
-                                    .toList(),
-                                value: currentVehicleId,
-                                onChanged: (value) {
-                                  if (value == null) {
-                                    return;
-                                  }
+                            ? VehicleDropdown_brand(
+                                vehicles: vehicles,
+                                selectedVehicle: vehicles.firstWhere(
+                                  (vehicle) => vehicle.id == currentVehicleId,
+                                  orElse: () => vehicles.first,
+                                ),
+                                onChanged: (vehicle) {
                                   setState(() {
-                                    currentVehicleId = value;
+                                    currentVehicleId = vehicle?.id ?? '';
                                   });
                                 },
                               )
