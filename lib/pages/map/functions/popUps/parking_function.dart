@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:parkflow/components/custom_brand_dropdown.dart';
 import 'package:parkflow/components/custom_button.dart';
-import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_account.dart';
 import 'package:intl/intl.dart';
 import 'package:parkflow/components/style/designStyle.dart';
@@ -171,7 +170,10 @@ void showPopupPark(
                                         isGreenMarker: true,
                                         parkedVehicleBrand:
                                             selectedVehicle2.brand,
-                                        reservedVehicleBrand: '');
+                                        reservedVehicleBrand: '',
+                                        parkedVehicleColor:
+                                            selectedVehicle2.color,
+                                        reservedVehicleColor: '');
 
                                     //we bewaren de nieuwe marker:
                                     await saveMarkerToDatabase(newMarker);
