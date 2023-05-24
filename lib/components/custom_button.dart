@@ -19,10 +19,10 @@ class BlackButton extends StatelessWidget {
     final backgroundColor = isRed ? color6 : color7;
 
     return SizedBox(
-      width: 200,
+      width: 250,
       height: 60,
       child: Material(
-        borderRadius: BorderRadius.circular(cornerRadius),
+        borderRadius: BorderRadius.circular(cornerRadiusButton),
         color: backgroundColor,
         child: InkWell(
           onTap: onPressed,

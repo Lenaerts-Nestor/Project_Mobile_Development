@@ -48,8 +48,8 @@ void showPopupReserve(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cornerRadius),
-                      topRight: Radius.circular(cornerRadius),
+                      topLeft: Radius.circular(cornerRadiusButton),
+                      topRight: Radius.circular(cornerRadiusButton),
                     ),
                   ),
                   child: Padding(
