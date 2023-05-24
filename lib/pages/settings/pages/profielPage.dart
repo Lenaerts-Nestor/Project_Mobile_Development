@@ -37,7 +37,7 @@ class _ProfielPageState extends State<ProfielPage> {
           backgroundcolor: color4,
           icon: Icons.arrow_back,
           titleText: "Profiel",
-          marginleft: 90,
+          marginleft: 0,
           onPressed: () => widget.onBackButtonPressed?.call(),
         ),
         body: Center(

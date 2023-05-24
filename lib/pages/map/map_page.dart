@@ -40,7 +40,7 @@ class _MapPageState extends State<MapPage> {
     super.initState();
 
     _determinePosition();
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async{
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
       updateMarkerState();
       _updateMarkers();
     });
@@ -138,10 +138,19 @@ class _MapPageState extends State<MapPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (userLocation != null) {
-            showPopupPark(context, userLocation, userLogged.email);
-          } else {
-            showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
+          bool markerExists =
+              checkMarker(_markers, currentLatitude!, currentLongitude!);
+
+          if (!markerExists) {
+            if (userLocation != null) {
+              showPopupPark(context, userLocation, userLogged.email);
+            } else {
+              //geen locatie gevonden
+              showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
+            }
+          }
+          else{
+            //marker bestaat al op deze locatie
           }
 
           // setState(() {
@@ -154,4 +163,14 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+}
+
+bool checkMarker(List<Marker> markers, double latitude, double longitude) {
+  for (var marker in markers) {
+    if (marker.point.latitude == latitude &&
+        marker.point.longitude == longitude) {
+      return true; // Found a marker with the same latitude and longitude
+    }
+  }
+  return false; // No marker found with the same latitude and longitude
 }
