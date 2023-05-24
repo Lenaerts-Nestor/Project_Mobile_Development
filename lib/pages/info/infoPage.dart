@@ -94,8 +94,8 @@ class _InfoPageState extends State<InfoPage> {
                             trailing: SizedBox(
                               width: 50,
                               height: 50,
-                              child: getSvg(
-                                  marker.parkedVehicleBrand, Colors.black),
+                              child: getSvg(marker.parkedVehicleBrand,
+                                  getColor(marker.parkedVehicleColor)),
                             ),
                             onTap: userLogged.email == marker.parkedUserId &&
                                     marker.reservedUserId == "" &&
@@ -108,25 +108,25 @@ class _InfoPageState extends State<InfoPage> {
                                     //een messenger tonen dat je kan niet aanpassen ofzo
                                   }),
                         if (marker.reservedUserId != '')
-                        ListTile(
-                          isThreeLine: true,
-                          title: Text(
-                              'Reserved Vehicle: ${marker.reservedVehicleBrand}'),
-                          subtitle: Text(
-                              'From: ${formatDateTime(marker.prevEndTime)} - To: ${formatDateTime(marker.endTime)}'),
-                          trailing: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: getSvg(
-                                marker.reservedVehicleBrand, Colors.black),
+                          ListTile(
+                            isThreeLine: true,
+                            title: Text(
+                                'Reserved Vehicle: ${marker.reservedVehicleBrand}'),
+                            subtitle: Text(
+                                'From: ${formatDateTime(marker.prevEndTime)} - To: ${formatDateTime(marker.endTime)}'),
+                            trailing: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: getSvg(marker.reservedVehicleBrand,
+                                  getColor(marker.reservedVehicleColor)),
+                            ),
+                            onTap: userLogged.email == marker.reservedUserId
+                                ? () {
+                                    showPopupEdit(
+                                        context, marker, userLogged.email);
+                                  }
+                                : () {},
                           ),
-                          onTap: userLogged.email == marker.reservedUserId
-                              ? () {
-                                  showPopupEdit(
-                                      context, marker, userLogged.email);
-                                }
-                              : () {},
-                        ),
                       ],
                     ),
                   ),

@@ -31,12 +31,19 @@ void getMarkersFromDatabase(BuildContext context,
   List<Marker> markers = markersSnapshot.docs.map((doc) {
     double latitude = doc['latitude'];
     double longitude = doc['longitude'];
+
+    //parked user =>
     String parkedUserId = doc['parkedUserId'];
-    String reservedUserId = doc['reservedUserId'];
     String parkedVehicleId = doc['parkedVehicleId'];
     String parkedVehicleBrand = doc['parkedVehicleBrand'];
+    String parkedVehicleColor = doc['parkedVehicleColor'];
+
+    //reserved user =>
+    String reservedUserId = doc['reservedUserId'];
     String reservedVehicleBrand = doc['reservedVehicleBrand'];
     String reservedVehicleId = doc['reservedVehicleId'];
+    String reservedVehicleColor = doc['reservedVehicleColor'];
+
     DateTime startTime = doc['startTime'].toDate();
     DateTime endTime = doc['endTime'].toDate();
     DateTime prevEndTime = doc['prevEndTime'].toDate();
@@ -54,7 +61,9 @@ void getMarkersFromDatabase(BuildContext context,
         prevEndTime: prevEndTime,
         isGreenMarker: isGreenMarker,
         parkedVehicleBrand: parkedVehicleBrand,
-        reservedVehicleBrand: reservedVehicleBrand);
+        reservedVehicleBrand: reservedVehicleBrand,
+        parkedVehicleColor: parkedVehicleColor,
+        reservedVehicleColor: reservedVehicleColor);
 
     return createMarkersFromDatabase(context, theMarker);
   }).toList();
@@ -148,6 +157,8 @@ Future<void> saveMarkerToDatabase(MarkerInfo theMarker) async {
     'parkedVehicleId': theMarker.parkedVehicleId,
     'parkedVehicleBrand': theMarker.parkedVehicleBrand,
     'reservedVehicleBrand': theMarker.reservedVehicleBrand,
+    'reservedVehicleColor': theMarker.reservedVehicleColor,
+    'parkedVehicleColor': theMarker.parkedVehicleColor,
     'startTime': theMarker.startTime,
     'endTime': theMarker.endTime,
     'prevEndTime': theMarker.prevEndTime,

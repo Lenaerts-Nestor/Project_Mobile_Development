@@ -156,7 +156,11 @@ void showPopupReserve(
                                           parkedVehicleBrand:
                                               deMarker.parkedVehicleBrand,
                                           reservedVehicleBrand:
-                                              currentVehicle.brand);
+                                              currentVehicle.brand,
+                                          parkedVehicleColor:
+                                              deMarker.parkedVehicleColor,
+                                          reservedVehicleColor:
+                                              currentVehicle.color);
                                       await updateMarker(
                                           newMarker, newMarker.isGreenMarker);
 

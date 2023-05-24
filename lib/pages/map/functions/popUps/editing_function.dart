@@ -134,6 +134,8 @@ void showPopupEdit(
                                 isGreenMarker: true,
                                 parkedVehicleBrand: deMarker.parkedVehicleBrand,
                                 reservedVehicleBrand: "",
+                                parkedVehicleColor: deMarker.parkedVehicleColor,
+                                reservedVehicleColor: "",
                               );
 
                               //dit zet de auto op beschikbaar
@@ -159,7 +161,13 @@ void showPopupEdit(
                                 prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: deMarker.isGreenMarker,
                                 parkedVehicleBrand: deMarker.parkedVehicleBrand,
-                                reservedVehicleBrand: "",
+                                reservedVehicleBrand: deMarker
+                                    .reservedVehicleBrand, //mogelijkerror.
+
+                                //niew toegeveoegd
+                                parkedVehicleColor: deMarker.parkedVehicleColor,
+                                reservedVehicleColor:
+                                    deMarker.reservedVehicleColor,
                               );
                             }
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.
