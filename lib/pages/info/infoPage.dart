@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 import 'package:provider/provider.dart';
@@ -65,19 +66,19 @@ class _InfoPageState extends State<InfoPage> {
           }).toList();
 
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(padding),
             child: ListView.builder(
               itemCount: markers.length,
               itemBuilder: (context, index) {
                 final marker = markers[index];
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: verticalSpacing1),
                   child: Container(
                     height: marker.reservedUserId == '' ? 100 : 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.black),
-                      color: Colors.black12,
+                      border: Border.all(color: Colors.black12),
+                      color: color2,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
