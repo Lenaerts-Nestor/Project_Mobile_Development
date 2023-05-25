@@ -66,7 +66,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
                               key: Key(vehicle.id),
                               confirmDismiss: (direction) async {
                                 if (!vehicle.availability) {
-                                  // Check if the vehicle is in use (red icon)
+                                  
                                   await showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -147,7 +147,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                bottom: 30.0), // Added padding to the bottom
+                bottom: 30.0), 
             child: BlackButton(
               onPressed: () {
                 Navigator.of(context).push(
@@ -171,7 +171,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
 }
 
 Vehicle? getVehicleFromUserAccount(UserAccount user, String vehicleId) {
-  // Find the vehicle in the user's vehicles list
+
   for (Vehicle vehicle in user.vehicles) {
     if (vehicle.id == vehicleId) {
       return vehicle;

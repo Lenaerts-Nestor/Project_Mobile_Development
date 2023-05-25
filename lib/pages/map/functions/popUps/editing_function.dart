@@ -18,6 +18,12 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
+
+///Beschrijving: Deze methode toont een pop-up venster waarin je gegevens kunt bewerken. Het pop-up venster wordt geopend wanneer je aan bepaalde voorwaarden voldoet, 
+///zoals het hebben van een marker en een gebruikers-ID. Je kunt de [parkeertijd] aanpassen en kiezen tussen [annuleren] of [bewerken].
+//Nadat je een actie hebt gekozen, worden de bijgewerkte gegevens opgeslagen en wordt het pop-up venster gesloten.
+
+
 void showPopupEdit(
   BuildContext context,
   MarkerInfo deMarker,

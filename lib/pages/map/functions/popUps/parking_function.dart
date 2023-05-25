@@ -20,7 +20,13 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
-//naam van de straat krijgen =>
+
+/// Beschrijving: Deze methode toont een pop-up venster waarin je gegevens kunt bewerken. Het pop-up venster wordt geopend wanneer je aan bepaalde voorwaarden voldoet, 
+/// zoals het hebben van een marker en een gebruikers-ID. Je kunt de [parkeertijd] zetten op bassis van je [gewenste] uren.
+/// Nadat je een actie hebt gekozen, worden de bijgewerkte gegevens opgeslagen en wordt het pop-up venster gesloten.
+
+
+
 void showPopupPark(
     BuildContext context, LatLng latLng, String currentUserId) async {
   late String currentVehicleId = '';

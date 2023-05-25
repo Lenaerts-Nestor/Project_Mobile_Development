@@ -14,6 +14,8 @@ import '../register/services/name_service.dart';
 import '../register/services/password_confirm_service.dart';
 import '../register/services/password_service.dart';
 
+///Beschrijving: Pagina om acounts te creeren en het in de database te zetten,
+///deze pagina heeft een paar methodes om condities te controleren
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-// houd bij als de user ingelogd is.
-// we sturen de email terug, de email = de document ID bij firestore. 
+///korte Beschrijving: houd bij als de user ingelogd is.
+/// we sturen de email terug, de email = de [Document_ID] bij [Firestore]. 
 class UserLogged with ChangeNotifier {
   String _email = '';
 

@@ -1,5 +1,6 @@
-//naam van de straat krijgen =>
 import 'package:osm_nominatim/osm_nominatim.dart';
+
+/// Beschrijving: Haalt de straatnaam op basis van de opgegeven [Latitude] en [Longitude] door gebruik te maken van de *Nominatim-service* [dependency].
 
 Future<String> getStreetName(double latitude, double longitude) async {
   // Create a Nominatim instance

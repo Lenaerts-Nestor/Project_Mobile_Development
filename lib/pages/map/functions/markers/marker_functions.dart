@@ -25,6 +25,8 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
+/// Beschrijving: Haalt markers op uit de database en roept een [callback_functie] aan met de opgehaalde markers.
+
 void getMarkersFromDatabase(BuildContext context,
     void Function(List<Marker> markers) onMarkersFetched) async {
   final markersSnapshot = await _firestore.collection('markers').get();
@@ -102,6 +104,9 @@ void getMarkersFromDatabase(BuildContext context,
 //   onMarkerCreated(newMarker);
 // }
 
+/// Beschrijving: Creëert een marker op basis van de gegeven [MarkerInfo] en het huidige gebruikerscontext.
+/// De marker wordt teruggegeven en kan worden gebruikt in de kaartweergave.
+
 Marker createMarkersFromDatabase(BuildContext context, MarkerInfo newMarker) {
   final userLogged = Provider.of<UserLogged>(context, listen: false);
   final currentUserId = userLogged.email.trim();
@@ -137,6 +142,9 @@ Marker createMarkersFromDatabase(BuildContext context, MarkerInfo newMarker) {
   );
 }
 
+/// Beschrijving: Slaat de gegeven [MarkerInfo] op in de database.
+/// Als er al een marker bestaat met dezelfde [Latidude] en [longitude], wordt deze eerst verwijderd en vervolgens wordt de nieuwe [marker] toegevoegd.
+
 Future<void> saveMarkerToDatabase(MarkerInfo theMarker) async {
   QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
       .collection('markers')
@@ -166,6 +174,9 @@ Future<void> saveMarkerToDatabase(MarkerInfo theMarker) async {
   });
 }
 
+/// Beschrijving: Werkt de gegeven [MarkerInfo] bij in de database.
+/// Zoekt naar de marker met dezelfde [Latidude] en [longitude] en werkt de relevante velden bij met de nieuwe gegevens.
+
 Future<void> updateMarker(MarkerInfo updatedMarker, bool isGreenMarker) async {
   try {
     final markerSnapshot = await _firestore
@@ -193,6 +204,13 @@ Future<void> updateMarker(MarkerInfo updatedMarker, bool isGreenMarker) async {
     print('Error updating marker: $e');
   }
 }
+
+/// Beschrijving: Werkt de status van de [markers] bij in de database op basis van de eindtijden. 
+/// Als de eindtijd van een marker voorbij is, wordt de marker [verwijderd] en wordt de beschikbaarheid van het geparkeerde voertuig [gewijzigd]. 
+/// Als de vorige eindtijd van een marker voorbij is en er een gereserveerde gebruiker is, wordt de marker bijgewerkt om [groen] te zijn, 
+/// met de vorige eindtijd als nieuwe starttijd en de originele eindtijd als nieuwe vorige eindtijd. 
+/// De gereserveerde gebruiker wordt de geparkeerde gebruiker en de bijbehorende voertuiggegevens worden bijgewerkt.
+/// De beschikbaarheid van het geparkeerde voertuig wordt ook gewijzigd.
 
 Future<void> updateMarkerState() async {
   final markersSnapshot = await _firestore.collection('markers').get();
