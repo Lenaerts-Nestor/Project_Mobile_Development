@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:parkflow/components/style/designStyle.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
@@ -27,20 +29,21 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  bool _isAddingMarkers = false;
+  final bool _isAddingMarkers = false;
   List<Marker> _markers = [];
   late Timer _timer;
+  double? currentLatitude;
+  double? currentLongitude;
 
   @override
   void initState() {
     super.initState();
-    //refresh de map elke seconde
+
+    _determinePosition();
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
       updateMarkerState();
-
       _updateMarkers();
     });
-    _updateMarkers();
   }
 
   //zet de markers op de map van de database
@@ -52,47 +55,107 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled on the device.
+      // Handle it according to your app's requirements.
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle it accordingly.
+      return;
+    }
+
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, request them.
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Permissions are denied, handle it accordingly.
+        return;
+      }
+    }
+
+    Position? position = await Geolocator.getLastKnownPosition();
+    if (position != null) {
+      setState(() {
+        currentLatitude = position.latitude;
+        currentLongitude = position.longitude;
+      });
+    }
+  }
+
   @override
   void dispose() {
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    _timer.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final userLogged = Provider.of<UserLogged>(context);
+    LatLng? userLocation;
+
+    if (currentLatitude != null && currentLongitude != null) {
+      userLocation = LatLng(currentLatitude!, currentLongitude!);
+    }
     return Scaffold(
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(51.2172, 4.4212),
-          zoom: 16,
-          maxZoom: 30,
-          maxBounds: LatLngBounds(
-            LatLng(51.18, 4.33), // southwest corner
-            LatLng(51.25, 4.46), // northeast corner
-          ),
-          onTap: _isAddingMarkers
-              ? (position, latlng) {
-                  showPopupPark(context, latlng, userLogged.email);
-                }
-              : null,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: mapboxUrl,
-            //om errors te voorkomen =>
-            additionalOptions: {'accessToken': mapboxAccessToken},
-          ),
-          MarkerLayer(markers: _markers),
-        ],
-      ),
+      body: userLocation != null
+          ? FlutterMap(
+              options: MapOptions(
+                center: userLocation == null
+                    ? LatLng(51.2172, 4.4212)
+                    : LatLng(currentLatitude!, currentLongitude!),
+                zoom: 16,
+                maxZoom: 30,
+                maxBounds: LatLngBounds(
+                  LatLng(51.18, 4.33), // southwest corner
+                  LatLng(51.25, 4.46), // northeast corner
+                ),
+                onTap: _isAddingMarkers
+                    ? (position, latlng) {
+                        showPopupPark(context, latlng, userLogged.email);
+                      }
+                    : null,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: mapboxUrl,
+                  //om errors te voorkomen =>
+                  additionalOptions: {'accessToken': mapboxAccessToken},
+                ),
+                MarkerLayer(markers: _markers),
+              ],
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _isAddingMarkers = !_isAddingMarkers;
-          });
+          bool markerExists =
+              checkMarker(_markers, currentLatitude!, currentLongitude!);
+
+          if (!markerExists) {
+            if (userLocation != null) {
+              showPopupPark(context, userLocation, userLogged.email);
+            } else {
+              //geen locatie gevonden
+              showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
+            }
+          }
+          else{
+            //marker bestaat al op deze locatie
+          }
+
+          // setState(() {
+          //   _isAddingMarkers = !_isAddingMarkers;
+          // });
         },
         backgroundColor: color4,
         foregroundColor: color1,
@@ -100,4 +163,14 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+}
+
+bool checkMarker(List<Marker> markers, double latitude, double longitude) {
+  for (var marker in markers) {
+    if (marker.point.latitude == latitude &&
+        marker.point.longitude == longitude) {
+      return true; // Found a marker with the same latitude and longitude
+    }
+  }
+  return false; // No marker found with the same latitude and longitude
 }

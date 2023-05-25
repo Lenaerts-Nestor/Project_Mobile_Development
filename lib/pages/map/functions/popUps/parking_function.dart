@@ -3,8 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:parkflow/components/custom_brand_dropdown.dart';
 import 'package:parkflow/components/custom_button.dart';
-import 'package:parkflow/components/custom_dropdown.dart';
 import 'package:parkflow/model/user/user_account.dart';
 import 'package:intl/intl.dart';
 import 'package:parkflow/components/style/designStyle.dart';
@@ -42,7 +42,7 @@ void showPopupPark(
                   user.vehicles.where((v) => v.availability).toList();
               bool buttonDisabled = vehicles.isEmpty;
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
-                currentVehicleId = vehicles.first.model;
+                currentVehicleId = vehicles.first.id;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime endTime = DateTime.now().add(selectedTime);
@@ -51,8 +51,8 @@ void showPopupPark(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cornerRadius),
-                      topRight: Radius.circular(cornerRadius),
+                      topLeft: Radius.circular(cornerRadiusButton),
+                      topRight: Radius.circular(cornerRadiusButton),
                     ),
                   ),
                   child: Padding(
@@ -123,17 +123,15 @@ void showPopupPark(
                         Text('tot  ${formatDateTime(endTime)}'),
                         const SizedBox(height: verticalSpacing2),
                         vehicles.isNotEmpty
-                            ? VehicleDropdown(
-                                items: vehicles
-                                    .map((vehicle) => vehicle.model)
-                                    .toList(),
-                                value: currentVehicleId,
-                                onChanged: (value) {
-                                  if (value == null) {
-                                    return;
-                                  }
+                            ? VehicleDropdown_brand(
+                                vehicles: vehicles,
+                                selectedVehicle: vehicles.firstWhere(
+                                  (vehicle) => vehicle.id == currentVehicleId,
+                                  orElse: () => vehicles.first,
+                                ),
+                                onChanged: (vehicle) {
                                   setState(() {
-                                    currentVehicleId = value;
+                                    currentVehicleId = vehicle?.id ?? '';
                                   });
                                 },
                               )
@@ -151,28 +149,34 @@ void showPopupPark(
                                   );
                                 }
                               : () async {
-                                  //we creeren een variabele met dat info:
-                                  MarkerInfo newMarker = MarkerInfo(
-                                      latitude: latLng.latitude,
-                                      longitude: latLng.longitude,
-                                      parkedUserId: currentUserId,
-                                      reservedUserId: '',
-                                      parkedVehicleId: currentVehicleId,
-                                      reservedVehicleId: '',
-                                      startTime: DateTime.now(),
-                                      endTime: endTime,
-                                      prevEndTime: DateTime.now(),
-                                      isGreenMarker: true);
-
-                                  //we bewaren de nieuwe marker:
-                                  await saveMarkerToDatabase(newMarker);
-
                                   final selectedVehicleIndex =
                                       vehicles.indexWhere((vehicle) =>
-                                          vehicle.model == currentVehicleId);
+                                          vehicle.id == currentVehicleId);
                                   if (selectedVehicleIndex >= 0) {
                                     final selectedVehicle2 =
                                         vehicles[selectedVehicleIndex];
+
+                                    //we creeren een variabele met dat info:
+                                    MarkerInfo newMarker = MarkerInfo(
+                                        latitude: latLng.latitude,
+                                        longitude: latLng.longitude,
+                                        parkedUserId: currentUserId,
+                                        reservedUserId: '',
+                                        parkedVehicleId: currentVehicleId,
+                                        reservedVehicleId: '',
+                                        startTime: DateTime.now(),
+                                        endTime: endTime,
+                                        prevEndTime: DateTime.now(),
+                                        isGreenMarker: true,
+                                        parkedVehicleBrand:
+                                            selectedVehicle2.brand,
+                                        reservedVehicleBrand: '',
+                                        parkedVehicleColor:
+                                            selectedVehicle2.color,
+                                        reservedVehicleColor: '');
+
+                                    //we bewaren de nieuwe marker:
+                                    await saveMarkerToDatabase(newMarker);
 
                                     //we veranderen de auto status van beschikbaarheid:
                                     await toggleVehicleAvailability(

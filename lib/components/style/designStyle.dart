@@ -31,7 +31,8 @@ const double verticalSpacing1 = 10;
 const double verticalSpacing2 = 30;
 
 //corners
-const double cornerRadius = 30;
+const double cornerRadiusTile = 15;
+const double cornerRadiusButton = 30;
 
 // iconsizes
 const double iconSizeNav = 35;

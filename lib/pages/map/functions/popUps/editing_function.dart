@@ -39,7 +39,7 @@ void showPopupEdit(
               final vehicles =
                   user.vehicles.where((v) => !v.availability).toList();
               if (currentVehicleId == '' && vehicles.isNotEmpty) {
-                currentVehicleId = vehicles.first.model;
+                currentVehicleId = vehicles.first.id;
               }
               return StatefulBuilder(builder: (context, setState) {
                 DateTime replacingEndTime = DateTime(0);
@@ -53,8 +53,8 @@ void showPopupEdit(
                   decoration: const BoxDecoration(
                     color: color3,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cornerRadius),
-                      topRight: Radius.circular(cornerRadius),
+                      topLeft: Radius.circular(cornerRadiusButton),
+                      topRight: Radius.circular(cornerRadiusButton),
                     ),
                   ),
                   child: Padding(
@@ -132,11 +132,15 @@ void showPopupEdit(
                                 endTime: replacingEndTime,
                                 prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: true,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand: "",
+                                parkedVehicleColor: deMarker.parkedVehicleColor,
+                                reservedVehicleColor: "",
                               );
 
                               //dit zet de auto op beschikbaar
                               final selectedVehicleIndex = vehicles.indexWhere(
-                                (vehicle) => vehicle.model == currentVehicleId,
+                                (vehicle) => vehicle.id == currentVehicleId,
                               );
                               if (selectedVehicleIndex >= 0) {
                                 Vehicle currentVehicle =
@@ -153,9 +157,17 @@ void showPopupEdit(
                                 parkedVehicleId: deMarker.parkedVehicleId,
                                 reservedVehicleId: deMarker.reservedVehicleId,
                                 startTime: deMarker.startTime,
-                                endTime: deMarker.prevEndTime,
-                                prevEndTime: deMarker.startTime,
+                                endTime: replacingEndTime,
+                                prevEndTime: deMarker.prevEndTime,
                                 isGreenMarker: deMarker.isGreenMarker,
+                                parkedVehicleBrand: deMarker.parkedVehicleBrand,
+                                reservedVehicleBrand: deMarker
+                                    .reservedVehicleBrand, //mogelijkerror.
+
+                                //niew toegeveoegd
+                                parkedVehicleColor: deMarker.parkedVehicleColor,
+                                reservedVehicleColor:
+                                    deMarker.reservedVehicleColor,
                               );
                             }
                             //we bewaren de gegeven marker in een nieuwe marker met de verschil.

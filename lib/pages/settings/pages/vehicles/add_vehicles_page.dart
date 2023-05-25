@@ -48,11 +48,14 @@ class AddVehicleState extends State<AddVehicle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(
+      appBar: MyAppBar(
         backgroundcolor: color4,
         icon: Icons.arrow_back,
-        titleText: "Voeg een vervoer toe",
+        titleText: "Nieuw voertuig",
         marginleft: 0,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -155,7 +158,7 @@ class AddVehicleState extends State<AddVehicle> {
                       Navigator.of(context).pop();
                     }
                   },
-                  text: 'voertuig toevoegen',
+                  text: 'Toevoegen',
                 ),
               ),
             ],

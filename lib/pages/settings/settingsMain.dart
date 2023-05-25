@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, unused_element
+// ignore_for_file: file_names, library_private_types_in_public_api, unused_element, constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:parkflow/components/style/designStyle.dart';
