@@ -20,6 +20,12 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM HHumm').format(dateTime);
 }
 
+
+/// Beschrijving: Deze methode toont een pop-up venster waarin je gegevens kunt bewerken. Het pop-up venster wordt geopend wanneer je aan bepaalde voorwaarden voldoet, 
+/// zoals het hebben van een marker en een gebruikers-ID. Je kunt de [reservatietijd] zetten op bassis van je gewenste uren,.
+/// Nadat je een actie hebt gekozen, worden de bijgewerkte gegevens opgeslagen en wordt het pop-up venster gesloten.
+ 
+
 void showPopupReserve(
     BuildContext context, MarkerInfo deMarker, String currentUserId) {
   DateTime previousEndTime = deMarker.endTime;

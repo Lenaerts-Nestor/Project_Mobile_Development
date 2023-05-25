@@ -61,23 +61,18 @@ class _MapPageState extends State<MapPage> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled on the device.
-      // Handle it according to your app's requirements.
       return;
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle it accordingly.
       return;
     }
 
     if (permission == LocationPermission.denied) {
-      // Permissions are denied, request them.
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        // Permissions are denied, handle it accordingly.
         return;
       }
     }
@@ -115,8 +110,8 @@ class _MapPageState extends State<MapPage> {
                 zoom: 16,
                 maxZoom: 30,
                 maxBounds: LatLngBounds(
-                  LatLng(51.18, 4.33), // southwest corner
-                  LatLng(51.25, 4.46), // northeast corner
+                  LatLng(51.18, 4.33),
+                  LatLng(51.25, 4.46),
                 ),
                 onTap: _isAddingMarkers
                     ? (position, latlng) {
@@ -148,8 +143,7 @@ class _MapPageState extends State<MapPage> {
               //geen locatie gevonden
               showPopupPark(context, LatLng(51.2172, 4.4212), userLogged.email);
             }
-          }
-          else{
+          } else {
             //marker bestaat al op deze locatie
           }
 
@@ -169,8 +163,8 @@ bool checkMarker(List<Marker> markers, double latitude, double longitude) {
   for (var marker in markers) {
     if (marker.point.latitude == latitude &&
         marker.point.longitude == longitude) {
-      return true; // Found a marker with the same latitude and longitude
+      return true;
     }
   }
-  return false; // No marker found with the same latitude and longitude
+  return false;
 }

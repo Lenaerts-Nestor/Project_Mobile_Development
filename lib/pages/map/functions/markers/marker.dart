@@ -28,11 +28,12 @@ class MarkerInfo {
     required this.prevEndTime,
     required this.isGreenMarker,
     required this.parkedVehicleBrand,
-    required this.parkedVehicleColor, // Added
+    required this.parkedVehicleColor, 
     required this.reservedVehicleBrand,
-    required this.reservedVehicleColor, // Added
+    required this.reservedVehicleColor, 
   });
 
+//naam zegt het zelfd
   factory MarkerInfo.fromJson(Map<String, dynamic> json) {
     return MarkerInfo(
       parkedUserId: json['parkedUserId'] ?? '',
@@ -46,9 +47,9 @@ class MarkerInfo {
       prevEndTime: (json['prevEndTime'] as Timestamp).toDate(),
       isGreenMarker: json['isGreenMarker'] ?? false,
       parkedVehicleBrand: json['parkedVehicleBrand'] ?? '',
-      parkedVehicleColor: json['parkedVehicleColor'] ?? '', // Added
+      parkedVehicleColor: json['parkedVehicleColor'] ?? '', 
       reservedVehicleBrand: json['reservedVehicleBrand'] ?? '',
-      reservedVehicleColor: json['reservedVehicleColor'] ?? '', // Added
+      reservedVehicleColor: json['reservedVehicleColor'] ?? '', 
     );
   }
 }

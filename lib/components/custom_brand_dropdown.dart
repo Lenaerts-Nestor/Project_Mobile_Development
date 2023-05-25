@@ -1,5 +1,6 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 
