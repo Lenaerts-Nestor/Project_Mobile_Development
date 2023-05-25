@@ -12,11 +12,13 @@ import 'package:parkflow/pages/map/functions/popUps/editing_function.dart';
 import 'package:parkflow/pages/settings/pages/vehicles/set_vehicle_properties.dart';
 import 'package:provider/provider.dart';
 import 'package:parkflow/model/user/user_logged_controller.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../map/functions/markers/marker.dart';
 import '../map/functions/markers/marker_functions.dart';
 
+
+///Beschrijving: pagina waar ik de [reservatie], [parkeringen] zie, ik kan ook hier in deze file de [editing] function aanroepen,
+///op basis van de [listTile] met de gewenste vervoer/vehicle
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
 

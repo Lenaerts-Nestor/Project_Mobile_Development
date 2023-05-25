@@ -10,6 +10,9 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/pages/home/home_page.dart';
 import 'package:provider/provider.dart';
 
+///Beschrijving: deze file is waar ik een paar methodes die duidelijkzijn en geen beschrijving nodig heeft,
+/// hier wordt basic methodes van [increpty] en [condities] gezset
+
 //passwoord hashen =>
 String hashPassword(String password) {
   final bytes = utf8.encode(password);
@@ -50,7 +53,7 @@ Future<void> signin(BuildContext context, TextEditingController emailController,
           ),
         );
       } else {
-        Navigator.of(context).pop(); //verwijder de circular progress indicator.
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('E-mailadres of wachtwoord is onjuist'),
@@ -58,7 +61,7 @@ Future<void> signin(BuildContext context, TextEditingController emailController,
         );
       }
     } else {
-      Navigator.of(context).pop(); //verwijder de circular progress indicator.
+      Navigator.of(context).pop(); 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('E-mailadres of wachtwoord is onjuist'),
@@ -66,7 +69,7 @@ Future<void> signin(BuildContext context, TextEditingController emailController,
       );
     }
   } else {
-    Navigator.of(context).pop(); //verwijder de circular progress indicator.
+    Navigator.of(context).pop(); 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('E-mailadres of wachtwoord is onjuist'),

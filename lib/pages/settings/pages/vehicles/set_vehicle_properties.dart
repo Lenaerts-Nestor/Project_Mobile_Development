@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/// Beschrijving: Geeft een [SvgPicture] terug op basis van het merknaam en de kleur. Het zoekt de bijbehorende SVG-bestand op in de assets en past de [kleur] aan.
+/// parkflow\assets\vehicle_brands_icons <= [assets] path hier.
+
 SvgPicture getSvg(String brandName, Color color) {
   switch (brandName) {
     case 'Mercedes':

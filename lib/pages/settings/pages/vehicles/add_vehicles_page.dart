@@ -10,7 +10,8 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/model/vehicle.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
+/// Beschrijving: pagina waar ik vervoeren kan toevoegen op basis van de 3 dropdowns dat we hebben in de file parkflow/lib/components.
+/// zet de gecreerde vervoeren in de database enzovoort.
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
 
