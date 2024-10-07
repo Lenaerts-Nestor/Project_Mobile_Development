@@ -40,7 +40,7 @@ const double negativeSizePP = 200;
 
 final ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSwatch().copyWith(
-        background: color4,
+        surface: color4,
         primary: color6,
         secondary: color4,
         tertiary: color3),

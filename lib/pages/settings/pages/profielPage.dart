@@ -13,7 +13,7 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 
 class ProfielPage extends StatefulWidget {
   final Function? onBackButtonPressed;
-  const ProfielPage({Key? key, this.onBackButtonPressed}) : super(key: key);
+  const ProfielPage({super.key, this.onBackButtonPressed});
 
   @override
   _ProfielPageState createState() => _ProfielPageState();

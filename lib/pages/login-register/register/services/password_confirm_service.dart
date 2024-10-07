@@ -4,7 +4,7 @@ class ConfirmPasswordTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?) validator;
 
-  const ConfirmPasswordTextField({Key? key, required this.controller, required this.validator}) : super(key: key);
+  const ConfirmPasswordTextField({super.key, required this.controller, required this.validator});
 
   @override
   Widget build(BuildContext context) {

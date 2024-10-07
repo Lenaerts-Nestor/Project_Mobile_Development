@@ -13,7 +13,7 @@ import 'package:flutter_svg/svg.dart';
 
 ///Beschrijving: de login pagina, met een paar [validators] en basic [methodes] om text te controleren
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();

@@ -17,7 +17,7 @@ import '../register/services/password_service.dart';
 ///Beschrijving: Pagina om acounts te creeren en het in de database te zetten,
 ///deze pagina heeft een paar methodes om condities te controleren
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _SignUpPageState();

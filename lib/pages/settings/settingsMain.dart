@@ -14,7 +14,7 @@ enum SettingsPageState { DefaultPage, ProfielPage, VehiclesPage }
 SettingsPageState _currentPage = SettingsPageState.DefaultPage;
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
