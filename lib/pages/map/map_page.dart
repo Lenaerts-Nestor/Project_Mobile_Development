@@ -11,7 +11,7 @@ import 'package:parkflow/model/user/user_logged_controller.dart';
 import 'package:parkflow/pages/map/functions/popUps/parking_function.dart';
 import 'package:provider/provider.dart';
 import 'functions/markers/marker_functions.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 String username = 'krupuks';
 String tilesize = '256';
 String scale = '2';
@@ -55,28 +55,43 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
+
+void _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return;
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.deniedForever) {
+    return;
+  }
+
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       return;
     }
+  }
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      return;
+  if (kIsWeb) {
+    // For web, use getCurrentPosition instead of getLastKnownPosition
+    try {
+      Position position = await Geolocator.getCurrentPosition();
+      setState(() {
+        currentLatitude = position.latitude;
+        currentLongitude = position.longitude;
+      });
+    } catch (e) {
+      print('Error getting current position: $e');
     }
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        return;
-      }
-    }
-
+  } else {
+    // For mobile platforms, use getLastKnownPosition as before
     Position? position = await Geolocator.getLastKnownPosition();
     if (position != null) {
       setState(() {
@@ -85,6 +100,7 @@ class _MapPageState extends State<MapPage> {
       });
     }
   }
+}
 
   @override
   void dispose() {
@@ -104,25 +120,26 @@ class _MapPageState extends State<MapPage> {
       body: userLocation != null
           ? FlutterMap(
               options: MapOptions(
-                center: userLocation == null
+                initialCenter: userLocation == null
                     ? LatLng(51.2172, 4.4212)
                     : LatLng(currentLatitude!, currentLongitude!),
-                zoom: 16,
+                minZoom: 16,
                 maxZoom: 30,
-                maxBounds: LatLngBounds(
-                  LatLng(51.18, 4.33),
-                  LatLng(51.25, 4.46),
+                cameraConstraint: CameraConstraint.contain(
+                  bounds: LatLngBounds(
+                    LatLng(51.18, 4.33),
+                    LatLng(51.25, 4.46),
+                  ),
                 ),
                 onTap: _isAddingMarkers
-                    ? (position, latlng) {
-                        showPopupPark(context, latlng, userLogged.email);
+                    ? (tapPosition, point) {
+                        showPopupPark(context, point, userLogged.email);
                       }
                     : null,
               ),
               children: [
                 TileLayer(
                   urlTemplate: mapboxUrl,
-                  //om errors te voorkomen =>
                   additionalOptions: {'accessToken': mapboxAccessToken},
                 ),
                 MarkerLayer(markers: _markers),

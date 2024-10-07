@@ -20,7 +20,7 @@ import '../map/functions/markers/marker_functions.dart';
 ///Beschrijving: pagina waar ik de [reservatie], [parkeringen] zie, ik kan ook hier in deze file de [editing] function aanroepen,
 ///op basis van de [listTile] met de gewenste vervoer/vehicle
 class InfoPage extends StatefulWidget {
-  const InfoPage({Key? key}) : super(key: key);
+  const InfoPage({super.key});
 
   @override
   State<InfoPage> createState() => _InfoPageState();

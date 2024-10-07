@@ -10,11 +10,11 @@ class VehicleDropdown_brand extends StatelessWidget {
   final Function(Vehicle?) onChanged;
 
   const VehicleDropdown_brand({
-    Key? key,
+    super.key,
     required this.vehicles,
     required this.selectedVehicle,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

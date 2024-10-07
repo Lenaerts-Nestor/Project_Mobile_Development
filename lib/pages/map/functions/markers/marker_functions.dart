@@ -72,38 +72,6 @@ void getMarkersFromDatabase(BuildContext context,
   onMarkersFetched(markers);
 }
 
-// void createMarker(
-//     LatLng latlng,
-//     String parkedUserId,
-//     String reservedUserId,
-//     String parkedVehicleId,
-//     String reservedVehicleId,
-//     BuildContext context,
-//     void Function(Marker newMarker) onMarkerCreated) {
-//   DateTime startTime = DateTime.now();
-//   DateTime endTime = DateTime.now().add(const Duration(minutes: 1));
-//   DateTime prevEndTime = startTime;
-//   bool isGreenMarker = true;
-//   //de marker =>
-//   MarkerInfo theMarker = MarkerInfo(
-//       latitude: latlng.latitude,
-//       longitude: latlng.longitude,
-//       parkedUserId: parkedUserId,
-//       reservedUserId: reservedUserId,
-//       parkedVehicleId: parkedVehicleId,
-//       reservedVehicleId: reservedVehicleId,
-//       startTime: startTime,
-//       endTime: endTime,
-//       prevEndTime: prevEndTime,
-//       isGreenMarker: isGreenMarker,
-//       parkedVehicleBrand: '',
-//       reservedVehicleBrand: '');
-
-//   saveMarkerToDatabase(theMarker);
-//   Marker newMarker = createMarkersFromDatabase(context, theMarker);
-//   onMarkerCreated(newMarker);
-// }
-
 /// Beschrijving: Creëert een marker op basis van de gegeven [MarkerInfo] en het huidige gebruikerscontext.
 /// De marker wordt teruggegeven en kan worden gebruikt in de kaartweergave.
 
@@ -124,7 +92,7 @@ Marker createMarkersFromDatabase(BuildContext context, MarkerInfo newMarker) {
     width: 60.0,
     height: 60.0,
     point: LatLng(newMarker.latitude, newMarker.longitude),
-    builder: (ctx) => GestureDetector(
+    child: GestureDetector(
       onTap: () {
         if (newMarker.isGreenMarker &&
             currentUserId != newMarker.parkedUserId) {

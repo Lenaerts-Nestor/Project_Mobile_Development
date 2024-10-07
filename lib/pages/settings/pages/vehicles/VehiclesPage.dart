@@ -15,7 +15,7 @@ import 'package:parkflow/components/custom_button.dart';
 
 class VehiclesPage extends StatefulWidget {
   final Function? onBackButtonPressed;
-  const VehiclesPage({Key? key, this.onBackButtonPressed}) : super(key: key);
+  const VehiclesPage({super.key, this.onBackButtonPressed});
 
   @override
   State<VehiclesPage> createState() => _VehiclesPageState();

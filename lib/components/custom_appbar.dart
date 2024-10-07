@@ -9,13 +9,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double marginleft;
 
   const MyAppBar({
-    Key? key,
+    super.key,
     this.icon,
     this.onPressed,
     required this.titleText,
     required this.backgroundcolor,
     required this.marginleft,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -6,10 +6,10 @@ class CustomText extends StatelessWidget {
   final double maxWidth;
 
   const CustomText({
-    Key? key,
+    super.key,
     required this.text,
     this.maxWidth = 500, // default value is infinite width
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

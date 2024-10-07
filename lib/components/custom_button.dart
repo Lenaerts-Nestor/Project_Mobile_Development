@@ -7,12 +7,12 @@ class BlackButton extends StatelessWidget {
   final bool isRed;
 
   const BlackButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.isRed = true,
     MaterialColor? color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

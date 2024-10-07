@@ -7,30 +7,34 @@ environment:
   sdk: ">=2.19.5 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^4.5.0
-  crypto: ^3.0.2
-  firebase_auth: ^4.4.0
-  firebase_core: ^2.9.0
   flutter:
     sdk: flutter
-  flutter_map: ^3.1.0
-  flutter_svg: ^0.22.0
+  flutter_localizations:
+    sdk: flutter
+  cloud_firestore: ^5.4.3
+  crypto: ^3.0.3
+  firebase_auth: ^5.3.1
+  firebase_core: ^3.6.0
+  flutter_map: ^7.0.2
+  flutter_map_location_marker: ^9.1.1
+  flutter_svg: ^2.0.5
   google_nav_bar: ^5.0.6
-  latlong2: ^0.8.1
+  latlong2: ^0.9.1
   provider: ^6.0.5
-  uuid: ^3.0.7
-  intl: ^0.17.0
-  geolocator: ^9.0.2
-  osm_nominatim: ^2.0.1
-  geocoding: ^2.1.0
-  rxdart: ^0.27.7
+  uuid: ^4.5.1
+  intl: ^0.19.0
+  geolocator: ^13.0.1
+  geolocator_web: ^4.1.1
+  osm_nominatim: ^3.0.1
+  geocoding: ^3.0.0
+  rxdart: ^0.28.0
   flutter_pw_validator: ^1.5.0
-  flutter_map_location_marker: ^5.3.0
+  google_fonts: ^6.2.1 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true

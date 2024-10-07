@@ -5,8 +5,7 @@ class EmailTextField extends StatelessWidget {
   final String? Function(String?) validator;
 
   const EmailTextField(
-      {Key? key, required this.controller, required this.validator})
-      : super(key: key);
+      {super.key, required this.controller, required this.validator});
 
   @override
   Widget build(BuildContext context) {
